@@ -723,7 +723,7 @@
             <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No tau provided, defaulting to 1.&quot;</span><span class="p">)</span>
             <span class="n">tau</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
 
         <span class="c1"># This is really only used for nAtoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="n">refPDBfile</span><span class="p">)</span>
