@@ -85,6 +85,7 @@
       ~modelWE.plot_committor
       ~modelWE.plot_flux
       ~modelWE.plot_flux_committor
+      ~modelWE.plot_flux_committor_pcoordcolor
       ~modelWE.print_pseudocommittor_warning
       ~modelWE.progress_disable
       ~modelWE.progress_enable
