@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; msm_we 0.1.0 documentation</title>
+  <title>Index &mdash; msm_we 0.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -27,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> msm_we
           </a>
               <div class="version">
-                0.1.0
+                0.1.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -121,6 +123,10 @@
       <li><a href="api.html#msm_we.msm_we.modelWE.build_analyze_model">build_analyze_model() (msm_we.msm_we.modelWE method)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#msm_we.msm_we.modelWE.build_flux_matrix">build_flux_matrix() (msm_we.msm_we.modelWE static method)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="C">C</h2>
@@ -132,15 +138,17 @@
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.cluster_aggregated">cluster_aggregated() (msm_we.msm_we.modelWE method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.msm_we.modelWE.cluster_stratified">cluster_stratified() (msm_we.msm_we.modelWE method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.msm_we.modelWE.cluster_structure_weights">cluster_structure_weights (msm_we.msm_we.modelWE attribute)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.collect_iter_coordinates">collect_iter_coordinates() (msm_we.msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.nmm.NonMarkovModel.corr_function">corr_function() (msm_we.nmm.NonMarkovModel method)</a>
+</li>
+      <li><a href="api.html#msm_we.optimization.OptimizedBinMapper.create_new">create_new() (msm_we.optimization.OptimizedBinMapper method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -226,6 +234,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_cluster_centers">get_cluster_centers() (msm_we.msm_we.modelWE method)</a>
 </li>
+      <li><a href="api.html#msm_we.optimization.get_clustered_mfpt_bins">get_clustered_mfpt_bins() (in module msm_we.optimization)</a>
+</li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_committor">get_committor() (msm_we.msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_coordinates">get_coordinates() (msm_we.msm_we.modelWE method)</a>
@@ -240,16 +250,14 @@
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_iter_coordinates">get_iter_coordinates() (msm_we.msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.msm_we.modelWE.get_iter_fluxMatrix">get_iter_fluxMatrix() (msm_we.msm_we.modelWE method)</a>
-</li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0">get_iter_pcoord1D_fluxMatrix_lag0() (msm_we.msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_iterations">get_iterations() (msm_we.msm_we.modelWE method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_iterations_iters">get_iterations_iters() (msm_we.msm_we.modelWE method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_model_clusters">get_model_clusters() (msm_we.msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_seg_histories">get_seg_histories() (msm_we.msm_we.modelWE method)</a>
@@ -269,6 +277,8 @@
       <li><a href="api.html#msm_we.msm_we.modelWE.get_transition_data">get_transition_data() (msm_we.msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_transition_data_lag0">get_transition_data_lag0() (msm_we.msm_we.modelWE method)</a>
+</li>
+      <li><a href="api.html#msm_we.optimization.get_uniform_mfpt_bins">get_uniform_mfpt_bins() (in module msm_we.optimization)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE.get_warps_from_parent">get_warps_from_parent() (msm_we.msm_we.modelWE method)</a>
 </li>
@@ -348,10 +358,10 @@
 </li>
       <li><a href="api.html#msm_we.msm_we.modelWE">modelWE (class in msm_we.msm_we)</a>, <a href="stubs/msm_we.msm_we.modelWE.html#msm_we.msm_we.modelWE">[1]</a>
 </li>
+      <li><a href="api.html#msm_we.msm_we.modelWE.BlockValidationError">modelWE.BlockValidationError</a>
+</li>
       <li><a href="api.html#msm_we.msm_we.modelWE.Coordinates">modelWE.Coordinates (class in msm_we.msm_we)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     module
 
@@ -364,9 +374,13 @@
 </li>
         <li><a href="api.html#module-msm_we.nmm">msm_we.nmm</a>, <a href="stubs/msm_we.nmm.html#module-msm_we.nmm">[1]</a>
 </li>
+        <li><a href="api.html#module-msm_we.optimization">msm_we.optimization</a>, <a href="stubs/msm_we.optimization.html#module-msm_we.optimization">[1]</a>
+</li>
         <li><a href="api.html#module-msm_we.utils">msm_we.utils</a>, <a href="stubs/msm_we.utils.html#module-msm_we.utils">[1]</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     msm_we.ensembles
 
@@ -393,6 +407,13 @@
 
       <ul>
         <li><a href="api.html#module-msm_we.nmm">module</a>, <a href="stubs/msm_we.nmm.html#module-msm_we.nmm">[1]</a>
+</li>
+      </ul></li>
+      <li>
+    msm_we.optimization
+
+      <ul>
+        <li><a href="api.html#module-msm_we.optimization">module</a>, <a href="stubs/msm_we.optimization.html#module-msm_we.optimization">[1]</a>
 </li>
       </ul></li>
       <li>
@@ -436,10 +457,12 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.msm_we.modelWE.organize_aggregated">organize_aggregated() (msm_we.msm_we.modelWE method)</a>
+      <li><a href="api.html#msm_we.optimization.OptimizedBinMapper">OptimizedBinMapper (class in msm_we.optimization)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#msm_we.msm_we.modelWE.organize_aggregated">organize_aggregated() (msm_we.msm_we.modelWE method)</a>
+</li>
       <li><a href="api.html#msm_we.msm_we.modelWE.organize_stratified">organize_stratified() (msm_we.msm_we.modelWE method)</a>
 </li>
   </ul></td>
@@ -499,6 +522,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.msm_we.modelWE.set_topology">set_topology() (msm_we.msm_we.modelWE method)</a>
+</li>
+      <li><a href="api.html#msm_we.optimization.solve_discrepancy">solve_discrepancy() (in module msm_we.optimization)</a>
 </li>
       <li><a href="api.html#msm_we.msm_we.StratifiedClusters">StratifiedClusters (class in msm_we.msm_we)</a>
 </li>

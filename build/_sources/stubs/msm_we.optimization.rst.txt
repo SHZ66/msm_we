@@ -1,0 +1,37 @@
+﻿msm\_we.optimization
+====================
+
+.. automodule:: msm_we.optimization
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_clustered_mfpt_bins
+      get_uniform_mfpt_bins
+      solve_discrepancy
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      OptimizedBinMapper
+   
+   
+
+   
+   
+   
+
+
+

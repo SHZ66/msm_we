@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msm_we.msm_we.modelWE &mdash; msm_we 0.1.0 documentation</title>
+  <title>msm_we.msm_we.modelWE &mdash; msm_we 0.1.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,11 +14,13 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="msm_we.fpt" href="msm_we.fpt.html" />
+    <link rel="next" title="msm_we.optimization" href="msm_we.optimization.html" />
     <link rel="prev" title="API Reference" href="../api.html" /> 
 </head>
 
@@ -30,7 +32,7 @@
             <a href="../index.html" class="icon icon-home"> msm_we
           </a>
               <div class="version">
-                0.1.0
+                0.1.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -44,11 +46,50 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">msm_we</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">msm_we.msm_we.modelWE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">msm_we.msm_we.modelWE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.__init__"><code class="docutils literal notranslate"><span class="pre">modelWE.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="msm_we.optimization.html">msm_we.optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.fpt.html">msm_we.fpt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.ensembles.html">msm_we.ensembles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.nmm.html">msm_we.nmm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.utils.html">msm_we.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.find_connected_sets"><code class="docutils literal notranslate"><span class="pre">find_connected_sets()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.is_connected"><code class="docutils literal notranslate"><span class="pre">is_connected()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.inverse_iteration"><code class="docutils literal notranslate"><span class="pre">inverse_iteration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.StratifiedClusters"><code class="docutils literal notranslate"><span class="pre">StratifiedClusters</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.solve_discrepancy"><code class="docutils literal notranslate"><span class="pre">solve_discrepancy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.get_uniform_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_uniform_mfpt_bins()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.get_clustered_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_clustered_mfpt_bins()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.OptimizedBinMapper"><code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.fpt.MatrixFPT"><code class="docutils literal notranslate"><span class="pre">MatrixFPT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.fpt.MarkovFPT"><code class="docutils literal notranslate"><span class="pre">MarkovFPT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.fpt.NonMarkovFPT"><code class="docutils literal notranslate"><span class="pre">NonMarkovFPT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.Ensemble"><code class="docutils literal notranslate"><span class="pre">Ensemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.PathEnsemble"><code class="docutils literal notranslate"><span class="pre">PathEnsemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.DiscreteEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscreteEnsemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.DiscretePathEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.nmm.NonMarkovModel"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.nmm.MarkovPlusColorModel"><code class="docutils literal notranslate"><span class="pre">MarkovPlusColorModel</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.Interval"><code class="docutils literal notranslate"><span class="pre">Interval</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.reverse_sort_lists"><code class="docutils literal notranslate"><span class="pre">reverse_sort_lists()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.weighted_choice"><code class="docutils literal notranslate"><span class="pre">weighted_choice()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.get_shape"><code class="docutils literal notranslate"><span class="pre">get_shape()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.num_of_nonzero_elements"><code class="docutils literal notranslate"><span class="pre">num_of_nonzero_elements()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.normalize_markov_matrix"><code class="docutils literal notranslate"><span class="pre">normalize_markov_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.random_markov_matrix"><code class="docutils literal notranslate"><span class="pre">random_markov_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.check_tmatrix"><code class="docutils literal notranslate"><span class="pre">check_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.clean_tmatrix"><code class="docutils literal notranslate"><span class="pre">clean_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.pops_from_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.pops_from_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_nm_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.map_to_integers"><code class="docutils literal notranslate"><span class="pre">map_to_integers()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.pseudo_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pseudo_nm_tmatrix()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Installation/Usage</a></li>
@@ -83,7 +124,7 @@
            <div itemprop="articleBody">
              
   <section id="msm-we-msm-we-modelwe">
-<h1>msm_we.msm_we.modelWE<a class="headerlink" href="#msm-we-msm-we-modelwe" title="Permalink to this headline"></a></h1>
+<h1>msm_we.msm_we.modelWE<a class="headerlink" href="#msm-we-msm-we-modelwe" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.</span></span><span class="sig-name descname"><span class="pre">modelWE</span></span><a class="reference internal" href="../_modules/msm_we/msm_we.html#modelWE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE" title="Permalink to this definition"></a></dt>
@@ -140,245 +181,248 @@ microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_analyze_model</span></code></a>(file_paths, ref_struct, ...)</p></td>
 <td><p>One-shot function to build the model and analyze all at once.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_connect_ray</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_flux_matrix" title="msm_we.msm_we.modelWE.build_flux_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_flux_matrix</span></code></a>(n_clusters, index_pairs, ...)</p></td>
+<td><p>Build the flux matrix for an iteration.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_connect_ray</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.cluster_aggregated" title="msm_we.msm_we.modelWE.cluster_aggregated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_aggregated</span></code></a>(n_clusters[, streaming, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.cluster_aggregated" title="msm_we.msm_we.modelWE.cluster_aggregated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_aggregated</span></code></a>(n_clusters[, streaming, ...])</p></td>
 <td><p>Use k-means to cluster coordinates into <cite>n_clusters</cite> cluster centers, and saves the resulting cluster object to a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_coordinates</span></code>(n_clusters[, streaming, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_coordinates</span></code>(n_clusters[, streaming, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.cluster_stratified" title="msm_we.msm_we.modelWE.cluster_stratified"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_stratified</span></code></a>(n_clusters[, streaming, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.cluster_stratified" title="msm_we.msm_we.modelWE.cluster_stratified"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_stratified</span></code></a>(n_clusters[, streaming, ...])</p></td>
 <td><p>Perform full-stratified clustering, enforcing independent clustering for trajectories within each WE bin.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.collect_iter_coordinates" title="msm_we.msm_we.modelWE.collect_iter_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_iter_coordinates</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.collect_iter_coordinates" title="msm_we.msm_we.modelWE.collect_iter_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_iter_coordinates</span></code></a>()</p></td>
 <td><p>Goes through the generated trajectory segments, and adds data from the segments to an H5 file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.dimReduce" title="msm_we.msm_we.modelWE.dimReduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimReduce</span></code></a>([first_iter, first_rough_iter, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.dimReduce" title="msm_we.msm_we.modelWE.dimReduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimReduce</span></code></a>([first_iter, first_rough_iter, ...])</p></td>
 <td><p>Dimensionality reduction using the scheme specified in initialization.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_block_validation</span></code>(cross_validation_groups, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_block_validation</span></code>(cross_validation_groups, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_clustering</span></code>(arg)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_clustering</span></code>(arg)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_discretization</span></code>(arg)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_discretization</span></code>(arg)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_full_pca</span></code>(arg)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_full_pca</span></code>(arg)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_pca</span></code>(arg)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_pca</span></code>(arg)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_step</span></code>(table, row, step[, args, kwargs, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_step</span></code>(table, row, step[, args, kwargs, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.do_stratified_clustering" title="msm_we.msm_we.modelWE.do_stratified_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_stratified_clustering</span></code></a>(arg)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.do_stratified_clustering" title="msm_we.msm_we.modelWE.do_stratified_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_stratified_clustering</span></code></a>(arg)</p></td>
 <td><p>Perform the full-stratified clustering.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_probability</span></code>(nEvolve, nStore)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_probability</span></code>(nEvolve, nStore)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_probability2</span></code>(nEvolve, nStore)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_probability2</span></code>(nEvolve, nStore)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_probability_from_initial</span></code>(p0, nEvolve, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_probability_from_initial</span></code>(p0, nEvolve, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_target_flux</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve_target_flux</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.find_nearest_bin" title="msm_we.msm_we.modelWE.find_nearest_bin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_nearest_bin</span></code></a>(bin_mapper, bin_idx, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.find_nearest_bin" title="msm_we.msm_we.modelWE.find_nearest_bin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_nearest_bin</span></code></a>(bin_mapper, bin_idx, ...)</p></td>
 <td><p>Given a bin mapper, find the bin closest to bin_idx (that isn't bin_idx).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_Tmatrix" title="msm_we.msm_we.modelWE.get_Tmatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_Tmatrix</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_Tmatrix" title="msm_we.msm_we.modelWE.get_Tmatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_Tmatrix</span></code></a>()</p></td>
 <td><p>Compute the transition matrix from the flux matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_backwards_committor</span></code>(conv)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_backwards_committor</span></code>(conv)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bin_kh_var</span></code>(x)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bin_kh_var</span></code>(x)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bin_total_var</span></code>(x)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bin_total_var</span></code>(x)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_cluster_centers" title="msm_we.msm_we.modelWE.get_cluster_centers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cluster_centers</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_cluster_centers" title="msm_we.msm_we.modelWE.get_cluster_centers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cluster_centers</span></code></a>()</p></td>
 <td><p>Standalone method to obtain average pcoords of all segments in each cluster.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_committor" title="msm_we.msm_we.modelWE.get_committor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_committor</span></code></a>([conv])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_committor" title="msm_we.msm_we.modelWE.get_committor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_committor</span></code></a>([conv])</p></td>
 <td><p>Iteratively obtain an estimate of the committor.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_coordSet" title="msm_we.msm_we.modelWE.get_coordSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_coordSet</span></code></a>(last_iter[, streaming])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_coordSet" title="msm_we.msm_we.modelWE.get_coordSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_coordSet</span></code></a>(last_iter[, streaming])</p></td>
 <td><p>Loads all coordinates and progress coordinates into memory for later usage.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_coordinates" title="msm_we.msm_we.modelWE.get_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_coordinates</span></code></a>(first_iter, last_iter)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_coordinates" title="msm_we.msm_we.modelWE.get_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_coordinates</span></code></a>(first_iter, last_iter)</p></td>
 <td><p>Unused</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_direct_target_flux</span></code>(first_iter, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_direct_target_flux</span></code>(first_iter, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_eqTmatrix</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_eqTmatrix</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_flux" title="msm_we.msm_we.modelWE.get_flux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_flux</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_flux" title="msm_we.msm_we.modelWE.get_flux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_flux</span></code></a>()</p></td>
 <td><p>Get the measured flux (i.e.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_fluxMatrix" title="msm_we.msm_we.modelWE.get_fluxMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fluxMatrix</span></code></a>(n_lag[, first_iter, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_fluxMatrix" title="msm_we.msm_we.modelWE.get_fluxMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_fluxMatrix</span></code></a>(n_lag[, first_iter, ...])</p></td>
 <td><p>Compute the matrix of fluxes at a given lag time, for a range of iterations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_flux_committor" title="msm_we.msm_we.modelWE.get_flux_committor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_flux_committor</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_flux_committor" title="msm_we.msm_we.modelWE.get_flux_committor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_flux_committor</span></code></a>()</p></td>
 <td><p>Get the flux binned according to committors</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hflux</span></code>(conv)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hflux</span></code>(conv)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_khbins</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_khbins</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_khbins_equalAlloc</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_khbins_equalAlloc</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_aristoffian</span></code>(iter)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_aristoffian</span></code>(iter)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iter_coordinates" title="msm_we.msm_we.modelWE.get_iter_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_coordinates</span></code></a>(iteration)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iter_coordinates" title="msm_we.msm_we.modelWE.get_iter_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_coordinates</span></code></a>(iteration)</p></td>
 <td><p>Return the valid coordinates for a certain iteration</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iter_fluxMatrix" title="msm_we.msm_we.modelWE.get_iter_fluxMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_fluxMatrix</span></code></a>(n_iter)</p></td>
-<td><p>Get the flux matrix for an iteration.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_fluxMatrix</span></code>(n_iter)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0" title="msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_pcoord1D_fluxMatrix_lag0</span></code></a>(n_iter, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0" title="msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_pcoord1D_fluxMatrix_lag0</span></code></a>(n_iter, ...)</p></td>
 <td><p>Compute a flux-matrix in the space of the 1D progress coordinate, at a given iteration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iterations" title="msm_we.msm_we.modelWE.get_iterations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iterations</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iterations" title="msm_we.msm_we.modelWE.get_iterations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iterations</span></code></a>()</p></td>
 <td><p>Updates internal state with the maximum number of iterations, and the number of segments in each section.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iterations_iters" title="msm_we.msm_we.modelWE.get_iterations_iters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iterations_iters</span></code></a>(first_iter, last_iter)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_iterations_iters" title="msm_we.msm_we.modelWE.get_iterations_iters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iterations_iters</span></code></a>(first_iter, last_iter)</p></td>
 <td><p>Updates internal state with the maximum number of iterations, and the number of segments in each section.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_aristoffian</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_aristoffian</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_model_clusters" title="msm_we.msm_we.modelWE.get_model_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_clusters</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_model_clusters" title="msm_we.msm_we.modelWE.get_model_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_clusters</span></code></a>()</p></td>
 <td><p>Used by get_iter_aristoffian().</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_steady_state_aristoffian</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_steady_state_aristoffian</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pcoord1D_fluxMatrix</span></code>(n_lag, first_iter, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pcoord1D_fluxMatrix</span></code>(n_lag, first_iter, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_seg_histories" title="msm_we.msm_we.modelWE.get_seg_histories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_seg_histories</span></code></a>(n_hist)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_seg_histories" title="msm_we.msm_we.modelWE.get_seg_histories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_seg_histories</span></code></a>(n_hist)</p></td>
 <td><p><strong>TODO: What does this do exactly?</strong></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state" title="msm_we.msm_we.modelWE.get_steady_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state</span></code></a>([...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state" title="msm_we.msm_we.modelWE.get_steady_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state</span></code></a>([...])</p></td>
 <td><p><p>&quot;</p>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state_algebraic" title="msm_we.msm_we.modelWE.get_steady_state_algebraic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state_algebraic</span></code></a>([max_iters, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state_algebraic" title="msm_we.msm_we.modelWE.get_steady_state_algebraic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state_algebraic</span></code></a>([max_iters, ...])</p></td>
 <td><p>Compute the steady-state distribution as the eigenvectors of the transition matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state_matrixpowers" title="msm_we.msm_we.modelWE.get_steady_state_matrixpowers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state_matrixpowers</span></code></a>(conv)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state_matrixpowers" title="msm_we.msm_we.modelWE.get_steady_state_matrixpowers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state_matrixpowers</span></code></a>(conv)</p></td>
 <td><p>Compute the steady-state distribution using the matrix power method.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state_target_flux" title="msm_we.msm_we.modelWE.get_steady_state_target_flux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state_target_flux</span></code></a>([pSS, _set])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_steady_state_target_flux" title="msm_we.msm_we.modelWE.get_steady_state_target_flux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_steady_state_target_flux</span></code></a>([pSS, _set])</p></td>
 <td><p>Get the total flux into the target state(s).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_traj_coordinates</span></code>(from_iter, traj_length)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_traj_coordinates</span></code>(from_iter, traj_length)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_transition_data" title="msm_we.msm_we.modelWE.get_transition_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transition_data</span></code></a>(n_lag)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_transition_data" title="msm_we.msm_we.modelWE.get_transition_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transition_data</span></code></a>(n_lag)</p></td>
 <td><p>This function analyzes pairs of coordinates at the current iteration, set by <code class="code docutils literal notranslate"><span class="pre">self.n_iter</span></code>, and at some</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_transition_data_lag0" title="msm_we.msm_we.modelWE.get_transition_data_lag0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transition_data_lag0</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_transition_data_lag0" title="msm_we.msm_we.modelWE.get_transition_data_lag0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transition_data_lag0</span></code></a>()</p></td>
 <td><p>Get coordinate pairs at the beginning and end of this iteration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_warps_from_parent" title="msm_we.msm_we.modelWE.get_warps_from_parent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_warps_from_parent</span></code></a>(first_iter, last_iter)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.get_warps_from_parent" title="msm_we.msm_we.modelWE.get_warps_from_parent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_warps_from_parent</span></code></a>(first_iter, last_iter)</p></td>
 <td><p>Get all warps and weights over a range of iterations.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_warps_from_pcoord</span></code>(first_iter, last_iter)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_warps_from_pcoord</span></code>(first_iter, last_iter)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.initialize" title="msm_we.msm_we.modelWE.initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code></a>(fileSpecifier, refPDBfile, modelName)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.initialize" title="msm_we.msm_we.modelWE.initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code></a>(fileSpecifier, refPDBfile, modelName)</p></td>
 <td><p>Initialize the model-builder.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.initialize_from_h5" title="msm_we.msm_we.modelWE.initialize_from_h5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize_from_h5</span></code></a>(refPDBfile, initPDBfile, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.initialize_from_h5" title="msm_we.msm_we.modelWE.initialize_from_h5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize_from_h5</span></code></a>(refPDBfile, initPDBfile, ...)</p></td>
 <td><p>Like initialize, but sets state without :param refPDBfile: :param initPDBfile: :param modelName:</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.is_WE_basis" title="msm_we.msm_we.modelWE.is_WE_basis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_WE_basis</span></code></a>(pcoords)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.is_WE_basis" title="msm_we.msm_we.modelWE.is_WE_basis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_WE_basis</span></code></a>(pcoords)</p></td>
 <td><p>Checks if the input progress coordinates are in the basis state.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.is_WE_target" title="msm_we.msm_we.modelWE.is_WE_target"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_WE_target</span></code></a>(pcoords)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.is_WE_target" title="msm_we.msm_we.modelWE.is_WE_target"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_WE_target</span></code></a>(pcoords)</p></td>
 <td><p>Checks if the input progress coordinates are in the target state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.launch_ray_discretization" title="msm_we.msm_we.modelWE.launch_ray_discretization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_ray_discretization</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.launch_ray_discretization" title="msm_we.msm_we.modelWE.launch_ray_discretization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_ray_discretization</span></code></a>()</p></td>
 <td><p>Apply discretization in parallel, through Ray</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.load_clusters" title="msm_we.msm_we.modelWE.load_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_clusters</span></code></a>(clusterFile)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.load_clusters" title="msm_we.msm_we.modelWE.load_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_clusters</span></code></a>(clusterFile)</p></td>
 <td><p>Load clusters from a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.load_iter_coordinates" title="msm_we.msm_we.modelWE.load_iter_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iter_coordinates</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.load_iter_coordinates" title="msm_we.msm_we.modelWE.load_iter_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iter_coordinates</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iter_coordinates0</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iter_coordinates0</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.load_iter_data" title="msm_we.msm_we.modelWE.load_iter_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iter_data</span></code></a>(n_iter)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.load_iter_data" title="msm_we.msm_we.modelWE.load_iter_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iter_data</span></code></a>(n_iter)</p></td>
 <td><p>Update state with the data (including pcoord but not including coords) corresponding to an iteration.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_table</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_table</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.organize_aggregated" title="msm_we.msm_we.modelWE.organize_aggregated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">organize_aggregated</span></code></a>([use_ray, do_cleaning, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.organize_aggregated" title="msm_we.msm_we.modelWE.organize_aggregated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">organize_aggregated</span></code></a>([use_ray, do_cleaning, ...])</p></td>
 <td><p>Do some cleaning on the flux matrix, and update state with the cleaned flux matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">organize_fluxMatrix</span></code>([use_ray])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">organize_fluxMatrix</span></code>([use_ray])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.organize_stratified" title="msm_we.msm_we.modelWE.organize_stratified"><code class="xref py py-obj docutils literal notranslate"><span class="pre">organize_stratified</span></code></a>([use_ray])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.organize_stratified" title="msm_we.msm_we.modelWE.organize_stratified"><code class="xref py py-obj docutils literal notranslate"><span class="pre">organize_stratified</span></code></a>([use_ray])</p></td>
 <td><p>Alternative to organize_fluxMatrix, for stratified clustering.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_committor</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_committor</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.plot_flux" title="msm_we.msm_we.modelWE.plot_flux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux</span></code></a>([custom_name, ax, save, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.plot_flux" title="msm_we.msm_we.modelWE.plot_flux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux</span></code></a>([custom_name, ax, save, ...])</p></td>
 <td><p>Make, and save, a plot of the fluxes along the RMSD.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_committor</span></code>([nwin, ax, save, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_committor</span></code>([nwin, ax, save, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_committor_pcoordcolor</span></code>([nwin, ax, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_committor_pcoordcolor</span></code>([nwin, ax, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_pseudocommittor_warning</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_pseudocommittor_warning</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.progress_disable" title="msm_we.msm_we.modelWE.progress_disable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">progress_disable</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.progress_disable" title="msm_we.msm_we.modelWE.progress_disable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">progress_disable</span></code></a>()</p></td>
 <td><p>Disable all progress bars</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.progress_enable" title="msm_we.msm_we.modelWE.progress_enable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">progress_enable</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.progress_enable" title="msm_we.msm_we.modelWE.progress_enable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">progress_enable</span></code></a>()</p></td>
 <td><p>Enable all progress bars</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.reduceCoordinates" title="msm_we.msm_we.modelWE.reduceCoordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduceCoordinates</span></code></a>(coords)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.reduceCoordinates" title="msm_we.msm_we.modelWE.reduceCoordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduceCoordinates</span></code></a>(coords)</p></td>
 <td><p>This performs the dimensionality reduction.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.set_basis" title="msm_we.msm_we.modelWE.set_basis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_basis</span></code></a>(basis)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.set_basis" title="msm_we.msm_we.modelWE.set_basis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_basis</span></code></a>(basis)</p></td>
 <td><p>Updates internal state with a new basis.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_note</span></code>(table, row, text)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_note</span></code>(table, row, text)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.set_topology" title="msm_we.msm_we.modelWE.set_topology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_topology</span></code></a>(topology)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.set_topology" title="msm_we.msm_we.modelWE.set_topology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_topology</span></code></a>(topology)</p></td>
 <td><p>Updates internal state with a new topology.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.update_cluster_structures" title="msm_we.msm_we.modelWE.update_cluster_structures"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_cluster_structures</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.update_cluster_structures" title="msm_we.msm_we.modelWE.update_cluster_structures"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_cluster_structures</span></code></a>()</p></td>
 <td><p>Find structures (i.e.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_iter_kh_pcoord</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_iter_kh_pcoord</span></code>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -399,67 +443,70 @@ microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">basis_pcoord_bounds</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_ray_discretization</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_flux_matrix_remote</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_stratified_ray_discretization</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_ray_discretization</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_fluxMatrix_ray</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_stratified_ray_discretization</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_lag</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iter_fluxMatrix_ray</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">target_pcoord_bounds</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_lag</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.modelName" title="msm_we.msm_we.modelWE.modelName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modelName</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">target_pcoord_bounds</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.modelName" title="msm_we.msm_we.modelWE.modelName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modelName</span></code></a></p></td>
 <td><p>Name used for storing files</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.fileList" title="msm_we.msm_we.modelWE.fileList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fileList</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.fileList" title="msm_we.msm_we.modelWE.fileList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fileList</span></code></a></p></td>
 <td><p>List of all filenames with data</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.n_data_files" title="msm_we.msm_we.modelWE.n_data_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data_files</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.n_data_files" title="msm_we.msm_we.modelWE.n_data_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data_files</span></code></a></p></td>
 <td><p>Number of files in <code class="code docutils literal notranslate"><span class="pre">fileList</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.pcoord_ndim" title="msm_we.msm_we.modelWE.pcoord_ndim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcoord_ndim</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.pcoord_ndim" title="msm_we.msm_we.modelWE.pcoord_ndim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcoord_ndim</span></code></a></p></td>
 <td><p>Number of dimensions in the progress coordinate</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.pcoord_len" title="msm_we.msm_we.modelWE.pcoord_len"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcoord_len</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.pcoord_len" title="msm_we.msm_we.modelWE.pcoord_len"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcoord_len</span></code></a></p></td>
 <td><p>Number of stored progress coordinates for each iteration, per-segment.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.tau" title="msm_we.msm_we.modelWE.tau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tau</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.tau" title="msm_we.msm_we.modelWE.tau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tau</span></code></a></p></td>
 <td><p>Resampling time for weighted ensemble.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.WEtargetp1_max" title="msm_we.msm_we.modelWE.WEtargetp1_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEtargetp1_max</span></code></a></p></td>
-<td><p>Progress coordinate value at target state.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.WEtargetp1_max" title="msm_we.msm_we.modelWE.WEtargetp1_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEtargetp1_max</span></code></a></p></td>
+<td><p>Progress coordinate value at target state.optimization flow Used to check if a progress coord is in the target, and to set the RMSD of the target cluster when cleaning the fluxmatrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.WEbasisp1_min" title="msm_we.msm_we.modelWE.WEbasisp1_min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEbasisp1_min</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.WEbasisp1_min" title="msm_we.msm_we.modelWE.WEbasisp1_min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEbasisp1_min</span></code></a></p></td>
 <td><p>Minimum progress coordinate value within basis state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.WEbasisp1_max" title="msm_we.msm_we.modelWE.WEbasisp1_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEbasisp1_max</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.WEbasisp1_max" title="msm_we.msm_we.modelWE.WEbasisp1_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEbasisp1_max</span></code></a></p></td>
 <td><p>Maximum progress coordinate value within basis state.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.dimReduceMethod" title="msm_we.msm_we.modelWE.dimReduceMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimReduceMethod</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.dimReduceMethod" title="msm_we.msm_we.modelWE.dimReduceMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimReduceMethod</span></code></a></p></td>
 <td><p>Dimensionality reduction method.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.min_walkers" title="msm_we.msm_we.modelWE.min_walkers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_walkers</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.min_walkers" title="msm_we.msm_we.modelWE.min_walkers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_walkers</span></code></a></p></td>
 <td><p>Test description for minwalkers</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.segindList" title="msm_we.msm_we.modelWE.segindList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segindList</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.segindList" title="msm_we.msm_we.modelWE.segindList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segindList</span></code></a></p></td>
 <td><p>List of segment indices(?)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.weightList" title="msm_we.msm_we.modelWE.weightList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weightList</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.weightList" title="msm_we.msm_we.modelWE.weightList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weightList</span></code></a></p></td>
 <td><p>List of segment weights in an iteration</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.n_hist" title="msm_we.msm_we.modelWE.n_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_hist</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.n_hist" title="msm_we.msm_we.modelWE.n_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_hist</span></code></a></p></td>
 <td><p>Number of steps of history information to use when building transitions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.targetRMSD_centers" title="msm_we.msm_we.modelWE.targetRMSD_centers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">targetRMSD_centers</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.targetRMSD_centers" title="msm_we.msm_we.modelWE.targetRMSD_centers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">targetRMSD_centers</span></code></a></p></td>
 <td><p>List of RMSDs corresponding to each cluster.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.cluster_structure_weights" title="msm_we.msm_we.modelWE.cluster_structure_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_structure_weights</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.cluster_structure_weights" title="msm_we.msm_we.modelWE.cluster_structure_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_structure_weights</span></code></a></p></td>
 <td><p>Mapping of cluster indices to structures in that cluster</p></td>
 </tr>
 </tbody>
@@ -473,7 +520,7 @@ microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../api.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="msm_we.fpt.html" class="btn btn-neutral float-right" title="msm_we.fpt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="msm_we.optimization.html" class="btn btn-neutral float-right" title="msm_we.optimization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

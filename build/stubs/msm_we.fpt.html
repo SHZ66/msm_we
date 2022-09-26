@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msm_we.fpt &mdash; msm_we 0.1.0 documentation</title>
+  <title>msm_we.fpt &mdash; msm_we 0.1.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,12 +14,14 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="msm_we.ensembles" href="msm_we.ensembles.html" />
-    <link rel="prev" title="msm_we.msm_we.modelWE" href="msm_we.msm_we.modelWE.html" /> 
+    <link rel="prev" title="msm_we.optimization" href="msm_we.optimization.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,7 +32,7 @@
             <a href="../index.html" class="icon icon-home"> msm_we
           </a>
               <div class="version">
-                0.1.0
+                0.1.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -45,10 +47,43 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">msm_we</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="msm_we.msm_we.modelWE.html">msm_we.msm_we.modelWE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msm_we.optimization.html">msm_we.optimization</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">msm_we.fpt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.ensembles.html">msm_we.ensembles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.nmm.html">msm_we.nmm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="msm_we.utils.html">msm_we.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.find_connected_sets"><code class="docutils literal notranslate"><span class="pre">find_connected_sets()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.is_connected"><code class="docutils literal notranslate"><span class="pre">is_connected()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.inverse_iteration"><code class="docutils literal notranslate"><span class="pre">inverse_iteration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.StratifiedClusters"><code class="docutils literal notranslate"><span class="pre">StratifiedClusters</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.solve_discrepancy"><code class="docutils literal notranslate"><span class="pre">solve_discrepancy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.get_uniform_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_uniform_mfpt_bins()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.get_clustered_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_clustered_mfpt_bins()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.optimization.OptimizedBinMapper"><code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.fpt.MatrixFPT"><code class="docutils literal notranslate"><span class="pre">MatrixFPT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.fpt.MarkovFPT"><code class="docutils literal notranslate"><span class="pre">MarkovFPT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.fpt.NonMarkovFPT"><code class="docutils literal notranslate"><span class="pre">NonMarkovFPT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.Ensemble"><code class="docutils literal notranslate"><span class="pre">Ensemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.PathEnsemble"><code class="docutils literal notranslate"><span class="pre">PathEnsemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.DiscreteEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscreteEnsemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.ensembles.DiscretePathEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.nmm.NonMarkovModel"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.nmm.MarkovPlusColorModel"><code class="docutils literal notranslate"><span class="pre">MarkovPlusColorModel</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.Interval"><code class="docutils literal notranslate"><span class="pre">Interval</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.reverse_sort_lists"><code class="docutils literal notranslate"><span class="pre">reverse_sort_lists()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.weighted_choice"><code class="docutils literal notranslate"><span class="pre">weighted_choice()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.get_shape"><code class="docutils literal notranslate"><span class="pre">get_shape()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.num_of_nonzero_elements"><code class="docutils literal notranslate"><span class="pre">num_of_nonzero_elements()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.normalize_markov_matrix"><code class="docutils literal notranslate"><span class="pre">normalize_markov_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.random_markov_matrix"><code class="docutils literal notranslate"><span class="pre">random_markov_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.check_tmatrix"><code class="docutils literal notranslate"><span class="pre">check_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.clean_tmatrix"><code class="docutils literal notranslate"><span class="pre">clean_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.pops_from_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.pops_from_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_nm_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.map_to_integers"><code class="docutils literal notranslate"><span class="pre">map_to_integers()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#msm_we.utils.pseudo_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pseudo_nm_tmatrix()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Installation/Usage</a></li>
@@ -82,11 +117,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-msm_we.fpt">
-<span id="msm-we-fpt"></span><h1>msm_we.fpt<a class="headerlink" href="#module-msm_we.fpt" title="Permalink to this headline"></a></h1>
+  <section id="msm-we-fpt">
+<h1>msm_we.fpt<a class="headerlink" href="#msm-we-fpt" title="Permalink to this heading"></a></h1>
 <p>Adapted from the original NMpathAnalysis package,
 <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
-<p class="rubric">Classes</p>
+<span class="target" id="module-msm_we.fpt"></span><p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -113,7 +148,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="msm_we.msm_we.modelWE.html" class="btn btn-neutral float-left" title="msm_we.msm_we.modelWE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="msm_we.optimization.html" class="btn btn-neutral float-left" title="msm_we.optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="msm_we.ensembles.html" class="btn btn-neutral float-right" title="msm_we.ensembles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

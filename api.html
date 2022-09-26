@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Reference &mdash; msm_we 0.1.0 documentation</title>
+  <title>API Reference &mdash; msm_we 0.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,10 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -30,7 +33,7 @@
             <a href="index.html" class="icon icon-home"> msm_we
           </a>
               <div class="version">
-                0.1.0
+                0.1.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -45,10 +48,162 @@
 <li class="toctree-l1"><a class="reference internal" href="readme.html">msm_we</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="stubs/msm_we.msm_we.modelWE.html">msm_we.msm_we.modelWE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stubs/msm_we.optimization.html">msm_we.optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stubs/msm_we.fpt.html">msm_we.fpt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stubs/msm_we.ensembles.html">msm_we.ensembles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stubs/msm_we.nmm.html">msm_we.nmm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stubs/msm_we.utils.html">msm_we.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.msm_we.find_connected_sets"><code class="docutils literal notranslate"><span class="pre">find_connected_sets()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.msm_we.is_connected"><code class="docutils literal notranslate"><span class="pre">is_connected()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.msm_we.inverse_iteration"><code class="docutils literal notranslate"><span class="pre">inverse_iteration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.msm_we.StratifiedClusters"><code class="docutils literal notranslate"><span class="pre">StratifiedClusters</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.StratifiedClusters.predict"><code class="docutils literal notranslate"><span class="pre">StratifiedClusters.predict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.BlockValidationError"><code class="docutils literal notranslate"><span class="pre">modelWE.BlockValidationError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.modelName"><code class="docutils literal notranslate"><span class="pre">modelWE.modelName</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.fileList"><code class="docutils literal notranslate"><span class="pre">modelWE.fileList</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.n_data_files"><code class="docutils literal notranslate"><span class="pre">modelWE.n_data_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.pcoord_ndim"><code class="docutils literal notranslate"><span class="pre">modelWE.pcoord_ndim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.pcoord_len"><code class="docutils literal notranslate"><span class="pre">modelWE.pcoord_len</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.tau"><code class="docutils literal notranslate"><span class="pre">modelWE.tau</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.WEtargetp1_max"><code class="docutils literal notranslate"><span class="pre">modelWE.WEtargetp1_max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.WEbasisp1_min"><code class="docutils literal notranslate"><span class="pre">modelWE.WEbasisp1_min</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.WEbasisp1_max"><code class="docutils literal notranslate"><span class="pre">modelWE.WEbasisp1_max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.dimReduceMethod"><code class="docutils literal notranslate"><span class="pre">modelWE.dimReduceMethod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.min_walkers"><code class="docutils literal notranslate"><span class="pre">modelWE.min_walkers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.segindList"><code class="docutils literal notranslate"><span class="pre">modelWE.segindList</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.weightList"><code class="docutils literal notranslate"><span class="pre">modelWE.weightList</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.n_hist"><code class="docutils literal notranslate"><span class="pre">modelWE.n_hist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.targetRMSD_centers"><code class="docutils literal notranslate"><span class="pre">modelWE.targetRMSD_centers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.cluster_structure_weights"><code class="docutils literal notranslate"><span class="pre">modelWE.cluster_structure_weights</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.initialize"><code class="docutils literal notranslate"><span class="pre">modelWE.initialize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.progress_disable"><code class="docutils literal notranslate"><span class="pre">modelWE.progress_disable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.progress_enable"><code class="docutils literal notranslate"><span class="pre">modelWE.progress_enable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.initialize_from_h5"><code class="docutils literal notranslate"><span class="pre">modelWE.initialize_from_h5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.is_WE_basis"><code class="docutils literal notranslate"><span class="pre">modelWE.is_WE_basis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.is_WE_target"><code class="docutils literal notranslate"><span class="pre">modelWE.is_WE_target()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.build_analyze_model"><code class="docutils literal notranslate"><span class="pre">modelWE.build_analyze_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.load_iter_data"><code class="docutils literal notranslate"><span class="pre">modelWE.load_iter_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_iterations"><code class="docutils literal notranslate"><span class="pre">modelWE.get_iterations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_iterations_iters"><code class="docutils literal notranslate"><span class="pre">modelWE.get_iterations_iters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.set_topology"><code class="docutils literal notranslate"><span class="pre">modelWE.set_topology()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.set_basis"><code class="docutils literal notranslate"><span class="pre">modelWE.set_basis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_transition_data"><code class="docutils literal notranslate"><span class="pre">modelWE.get_transition_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_transition_data_lag0"><code class="docutils literal notranslate"><span class="pre">modelWE.get_transition_data_lag0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_warps_from_parent"><code class="docutils literal notranslate"><span class="pre">modelWE.get_warps_from_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_seg_histories"><code class="docutils literal notranslate"><span class="pre">modelWE.get_seg_histories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.collect_iter_coordinates"><code class="docutils literal notranslate"><span class="pre">modelWE.collect_iter_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_iter_coordinates"><code class="docutils literal notranslate"><span class="pre">modelWE.get_iter_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.load_iter_coordinates"><code class="docutils literal notranslate"><span class="pre">modelWE.load_iter_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_coordinates"><code class="docutils literal notranslate"><span class="pre">modelWE.get_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_coordSet"><code class="docutils literal notranslate"><span class="pre">modelWE.get_coordSet()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.dimReduce"><code class="docutils literal notranslate"><span class="pre">modelWE.dimReduce()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.Coordinates"><code class="docutils literal notranslate"><span class="pre">modelWE.Coordinates</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.reduceCoordinates"><code class="docutils literal notranslate"><span class="pre">modelWE.reduceCoordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.update_cluster_structures"><code class="docutils literal notranslate"><span class="pre">modelWE.update_cluster_structures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.cluster_aggregated"><code class="docutils literal notranslate"><span class="pre">modelWE.cluster_aggregated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.cluster_stratified"><code class="docutils literal notranslate"><span class="pre">modelWE.cluster_stratified()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.find_nearest_bin"><code class="docutils literal notranslate"><span class="pre">modelWE.find_nearest_bin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.do_stratified_clustering"><code class="docutils literal notranslate"><span class="pre">modelWE.do_stratified_clustering()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.organize_stratified"><code class="docutils literal notranslate"><span class="pre">modelWE.organize_stratified()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.launch_ray_discretization"><code class="docutils literal notranslate"><span class="pre">modelWE.launch_ray_discretization()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_cluster_centers"><code class="docutils literal notranslate"><span class="pre">modelWE.get_cluster_centers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.load_clusters"><code class="docutils literal notranslate"><span class="pre">modelWE.load_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.build_flux_matrix"><code class="docutils literal notranslate"><span class="pre">modelWE.build_flux_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0"><code class="docutils literal notranslate"><span class="pre">modelWE.get_iter_pcoord1D_fluxMatrix_lag0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">modelWE.get_fluxMatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.organize_aggregated"><code class="docutils literal notranslate"><span class="pre">modelWE.organize_aggregated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_model_clusters"><code class="docutils literal notranslate"><span class="pre">modelWE.get_model_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_Tmatrix"><code class="docutils literal notranslate"><span class="pre">modelWE.get_Tmatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state"><code class="docutils literal notranslate"><span class="pre">modelWE.get_steady_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state_algebraic"><code class="docutils literal notranslate"><span class="pre">modelWE.get_steady_state_algebraic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state_matrixpowers"><code class="docutils literal notranslate"><span class="pre">modelWE.get_steady_state_matrixpowers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state_target_flux"><code class="docutils literal notranslate"><span class="pre">modelWE.get_steady_state_target_flux()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_flux"><code class="docutils literal notranslate"><span class="pre">modelWE.get_flux()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_flux_committor"><code class="docutils literal notranslate"><span class="pre">modelWE.get_flux_committor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux"><code class="docutils literal notranslate"><span class="pre">modelWE.plot_flux()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_committor"><code class="docutils literal notranslate"><span class="pre">modelWE.get_committor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.optimization.solve_discrepancy"><code class="docutils literal notranslate"><span class="pre">solve_discrepancy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.optimization.get_uniform_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_uniform_mfpt_bins()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.optimization.get_clustered_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_clustered_mfpt_bins()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.optimization.OptimizedBinMapper"><code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.optimization.OptimizedBinMapper.create_new"><code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper.create_new()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.fpt.MatrixFPT"><code class="docutils literal notranslate"><span class="pre">MatrixFPT</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.mean_fpts"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.mean_fpts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.directional_mfpt"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.directional_mfpt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.mfpts_to_target_microstate"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.mfpts_to_target_microstate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.mfpts_matrix"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.mfpts_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.min_commute_time"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.min_commute_time()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.max_commute_time"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.max_commute_time()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.fpt_distribution"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.fpt_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MatrixFPT.adaptive_fpt_distribution"><code class="docutils literal notranslate"><span class="pre">MatrixFPT.adaptive_fpt_distribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.fpt.MarkovFPT"><code class="docutils literal notranslate"><span class="pre">MarkovFPT</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MarkovFPT.mean_fpts"><code class="docutils literal notranslate"><span class="pre">MarkovFPT.mean_fpts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.MarkovFPT.markov_commute_time"><code class="docutils literal notranslate"><span class="pre">MarkovFPT.markov_commute_time()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.fpt.NonMarkovFPT"><code class="docutils literal notranslate"><span class="pre">NonMarkovFPT</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.fpt.NonMarkovFPT.mean_fpts"><code class="docutils literal notranslate"><span class="pre">NonMarkovFPT.mean_fpts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.ensembles.Ensemble"><code class="docutils literal notranslate"><span class="pre">Ensemble</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.Ensemble.add_trajectory"><code class="docutils literal notranslate"><span class="pre">Ensemble.add_trajectory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.Ensemble.empirical_mfpts"><code class="docutils literal notranslate"><span class="pre">Ensemble.empirical_mfpts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.Ensemble.empirical_corr_function"><code class="docutils literal notranslate"><span class="pre">Ensemble.empirical_corr_function()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.ensembles.PathEnsemble"><code class="docutils literal notranslate"><span class="pre">PathEnsemble</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.PathEnsemble.from_ensemble"><code class="docutils literal notranslate"><span class="pre">PathEnsemble.from_ensemble()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.ensembles.DiscreteEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscreteEnsemble</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.DiscreteEnsemble.from_ensemble"><code class="docutils literal notranslate"><span class="pre">DiscreteEnsemble.from_ensemble()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.DiscreteEnsemble.from_transition_matrix"><code class="docutils literal notranslate"><span class="pre">DiscreteEnsemble.from_transition_matrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.ensembles.DiscretePathEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.DiscretePathEnsemble.from_transition_matrix"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble.from_transition_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.DiscretePathEnsemble.from_ensemble"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble.from_ensemble()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.DiscretePathEnsemble.nm_mfpt"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble.nm_mfpt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.ensembles.DiscretePathEnsemble.weighted_fundamental_sequences"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble.weighted_fundamental_sequences()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.n_states"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.n_states</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.nm_cmatrix"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.nm_cmatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.populations"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.populations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.fit"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.from_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.from_nm_tmatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.empirical_mfpts"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.empirical_mfpts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel.corr_function"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel.corr_function()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.nmm.MarkovPlusColorModel"><code class="docutils literal notranslate"><span class="pre">MarkovPlusColorModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.nmm.MarkovPlusColorModel.fit"><code class="docutils literal notranslate"><span class="pre">MarkovPlusColorModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.Interval"><code class="docutils literal notranslate"><span class="pre">Interval</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.reverse_sort_lists"><code class="docutils literal notranslate"><span class="pre">reverse_sort_lists()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.weighted_choice"><code class="docutils literal notranslate"><span class="pre">weighted_choice()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.get_shape"><code class="docutils literal notranslate"><span class="pre">get_shape()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.num_of_nonzero_elements"><code class="docutils literal notranslate"><span class="pre">num_of_nonzero_elements()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.normalize_markov_matrix"><code class="docutils literal notranslate"><span class="pre">normalize_markov_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.random_markov_matrix"><code class="docutils literal notranslate"><span class="pre">random_markov_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.check_tmatrix"><code class="docutils literal notranslate"><span class="pre">check_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.clean_tmatrix"><code class="docutils literal notranslate"><span class="pre">clean_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.pops_from_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.pops_from_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_nm_tmatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.map_to_integers"><code class="docutils literal notranslate"><span class="pre">map_to_integers()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msm_we.utils.pseudo_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pseudo_nm_tmatrix()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Installation/Usage</a></li>
@@ -82,7 +237,7 @@
            <div itemprop="articleBody">
              
   <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -92,22 +247,25 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="stubs/msm_we.msm_we.modelWE.html#msm_we.msm_we.modelWE" title="msm_we.msm_we.modelWE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.msm_we.modelWE</span></code></a></p></td>
 <td><p>Implementation of haMSM model building, particularly for steady-state estimation (but there are lots of extras), from WE sampling with basis (source) and target (sink) states with recycling.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="stubs/msm_we.fpt.html#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="stubs/msm_we.optimization.html#module-msm_we.optimization" title="msm_we.optimization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.optimization</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="stubs/msm_we.fpt.html#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
 <td><p>Adapted from the original NMpathAnalysis package, <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="stubs/msm_we.ensembles.html#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="stubs/msm_we.ensembles.html#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
 <td><p>Adapted from the original NMpathAnalysis package, <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="stubs/msm_we.nmm.html#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="stubs/msm_we.nmm.html#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
 <td><p>Adapted from the original NMpathAnalysis package, <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="stubs/msm_we.utils.html#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="stubs/msm_we.utils.html#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
 <td><p>Adapted from the original NMpathAnalysis package, <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p></td>
 </tr>
 </tbody>
 </table>
-<span class="target" id="module-msm_we.msm_we"></span><p>Main module.</p>
-<dl class="py function">
+<p>Main module.</p>
+<span class="target" id="module-msm_we.msm_we"></span><dl class="py function">
 <dt class="sig sig-object py" id="msm_we.msm_we.find_connected_sets">
 <span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.</span></span><span class="sig-name descname"><span class="pre">find_connected_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#find_connected_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.find_connected_sets" title="Permalink to this definition"></a></dt>
 <dd><p>This implementation is taken from msmtools.estimation.sparse.connectivity, at commit 9312660.
@@ -236,6 +394,11 @@ accessor if necessary.</p>
 <p>Copperman and Zuckerman,
 <em>Accelerated estimation of long-timescale kinetics by combining weighted ensemble simulation with Markov model
 microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.BlockValidationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BlockValidationError</span></span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.BlockValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.BlockValidationError" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE.modelName">
 <span class="sig-name descname"><span class="pre">modelName</span></span><a class="headerlink" href="#msm_we.msm_we.modelWE.modelName" title="Permalink to this definition"></a></dt>
@@ -306,7 +469,7 @@ microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE.WEtargetp1_max">
 <span class="sig-name descname"><span class="pre">WEtargetp1_max</span></span><a class="headerlink" href="#msm_we.msm_we.modelWE.WEtargetp1_max" title="Permalink to this definition"></a></dt>
-<dd><p>Progress coordinate value at target state.
+<dd><p>Progress coordinate value at target state.optimization flow
 Used to check if a progress coord is in the target, and to set the RMSD of the target cluster when cleaning the
 fluxmatrix.</p>
 <dl class="field-list simple">
@@ -421,7 +584,7 @@ fluxmatrix.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE.initialize">
-<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileSpecifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refPDBfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reduce_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coord'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_suppress_boundary_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.initialize" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileSpecifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refPDBfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reduce_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coord'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_suppress_boundary_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights_in_clustering</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.initialize" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the model-builder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -516,7 +679,7 @@ function signature.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE.build_analyze_model">
-<span class="sig-name descname"><span class="pre">build_analyze_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimreduce_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">-</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_live_display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.build_analyze_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.build_analyze_model" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">build_analyze_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimreduce_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">-1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_live_display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.build_analyze_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.build_analyze_model" title="Permalink to this definition"></a></dt>
 <dd><p>One-shot function to build the model and analyze all at once. This provides a convenient interface for running
 the blockwise estimation.</p>
 <p>This may not be desirable for very long workflows, or workflows still being debugged, where it might make sense
@@ -627,8 +790,14 @@ Seems like some of this iteration can be removed/optimized.</p>
 <dd><p>Updates internal state with a new topology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>topology</strong> (<em>str</em>) – Path to a file containing the PDB with the topology, OR, an mdtraj Trajectory object describing
-the new basis structure.</p>
+<dd class="field-odd"><p><strong>topology</strong> (<em>str</em><em>, </em><em>md.Trajectory</em><em>, </em><em>dict</em>) – <p>Path to a file containing the PDB with the topology,
+an mdtraj Trajectory object describing the new basis structure,
+or a dictionary with keys</p>
+<blockquote>
+<div><p>’basis_coords’: the coordinates of the basis structure and
+‘nAtoms’: the number of features in the coordinates</p>
+</div></blockquote>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None</p>
@@ -642,8 +811,9 @@ the new basis structure.</p>
 <dd><p>Updates internal state with a new basis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>basis</strong> (<em>str</em><em> or </em><em>mdtraj.Trajectory</em>) – Path to a file containing the PDB with the new basis state, OR, an mdtraj Trajectory object describing
-the new basis structure.</p>
+<dd class="field-odd"><p><strong>basis</strong> (<em>str</em><em>, </em><em>mdtraj.Trajectory</em><em>, or </em><em>dict</em>) – Path to a file containing the PDB with the new basis state,
+an mdtraj Trajectory object describing the new basis structure,
+or a dictionary with key ‘basis_coords’: the coordinates of the basis structure</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>None</p>
@@ -794,7 +964,7 @@ That means trying to replace usage of all_coords here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE.dimReduce">
-<span class="sig-name descname"><span class="pre">dimReduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_rough_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rough_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.dimReduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.dimReduce" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dimReduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_rough_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rough_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.dimReduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.dimReduce" title="Permalink to this definition"></a></dt>
 <dd><p>Dimensionality reduction using the scheme specified in initialization.</p>
 <p>This just defines the dimensionality reduction scheme and builds the model – it does NOT actually transform
 the data!</p>
@@ -1017,21 +1187,16 @@ Add flag to toggle between stratified and regular do_ray_discretization</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_iter_fluxMatrix">
-<span class="sig-name descname"><span class="pre">get_iter_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.get_iter_fluxMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.get_iter_fluxMatrix" title="Permalink to this definition"></a></dt>
-<dd><p>Get the flux matrix for an iteration.</p>
-<ol class="arabic simple">
-<li><p>Update state with data from the iteration you want to compute the flux matrix for</p></li>
-<li><p>Load transition data at the requested lag</p></li>
-</ol>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_iter</strong> – </p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.build_flux_matrix">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_flux_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_start_in_basis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_end_in_basis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_end_in_target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition_weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.build_flux_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.build_flux_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Build the flux matrix for an iteration.</p>
 <div class="admonition-todo admonition" id="id12">
 <p class="admonition-title">Todo</p>
-<p>This function is slow because of the call to get_transition_data_lag0(). See that function for more info.</p>
+<dl class="simple">
+<dt>This function is slow because of the call to get_transition_data_lag0(). See that function for more info.</dt><dd><p>Removed!</p>
+</dd>
+</dl>
+<p>This can be refactored to be static</p>
 </div>
 </dd></dl>
 
@@ -1054,7 +1219,7 @@ Add flag to toggle between stratified and regular do_ray_discretization</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_fluxMatrix">
-<span class="sig-name descname"><span class="pre">get_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.get_fluxMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.get_fluxMatrix" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE.get_fluxMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE.get_fluxMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the matrix of fluxes at a given lag time, for a range of iterations.</p>
 <p>Checks if a file has been written named
 “&lt;<cite>self.modelName</cite>&gt;_s&lt;<cite>first_iter</cite>&gt;_e&lt;<cite>last_iter</cite>&gt;_lag&lt;<cite>n_lag</cite>&gt;_clust&lt;<cite>self.n_clusters</cite>&gt;.h5”.
@@ -1297,9 +1462,111 @@ is less than this.</p>
 
 </dd></dl>
 
-<span class="target" id="module-msm_we.fpt"></span><p>Adapted from the original NMpathAnalysis package,
-<a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<span class="target" id="module-msm_we.optimization"></span><dl class="py function">
+<dt class="sig sig-object py" id="msm_we.optimization.solve_discrepancy">
+<span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">solve_discrepancy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmatrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#solve_discrepancy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.solve_discrepancy" title="Permalink to this definition"></a></dt>
+<dd><p>Given a transition matrix, solves for the discrepancy function.</p>
+<p>The Poisson equation for the discrepancy function is
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K</span><span class="p">)</span><span class="n">h</span> <span class="o">=</span> <span class="mi">1</span><span class="n">_B</span> <span class="o">-</span> \<span class="n">pi</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> \<span class="p">:</span>\<span class="p">:</span> <span class="n">h</span> \<span class="n">cdot</span> \<span class="n">pi</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>however, since <span class="math notranslate nohighlight">\(I-K\)</span> is singular, we instead solve
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K</span> <span class="o">+</span> \<span class="n">pi</span> \<span class="n">pi</span><span class="o">^</span><span class="n">T</span> <span class="o">/</span> <span class="o">||</span> \<span class="n">pi</span> <span class="o">||^</span><span class="mi">2_2</span><span class="p">)</span><span class="n">h</span> <span class="o">=</span> <span class="mi">1</span><span class="n">_B</span> <span class="o">-</span> \<span class="n">pi</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> \<span class="p">:</span>\<span class="p">:</span> <span class="n">h</span> \<span class="n">cdot</span> \<span class="n">pi</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(h\)</span> is a volumn vector, <cite>1_B</cite> is an indicator function which is 1 in B and 0 everywhere
+else, <span class="math notranslate nohighlight">\(\pi\)</span> is the steady-state solution of <span class="math notranslate nohighlight">\(K\)</span>, and <cite>pi(B)</cite> is a column vector with
+the steady-state value of <span class="math notranslate nohighlight">\(\pi(B)\)</span> in every element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tmatrix</strong> (<em>Transition matrix</em>) – </p></li>
+<li><p><strong>array-like</strong> (<em>Indices</em><em> of </em><em>target states B</em>) – </p></li>
+<li><p><strong>pi</strong> (<em>Steady-state distribution for the input transition matrix</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>B</strong> (<em>Indices</em><em> of </em><em>target states B</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(discrepancy, variance)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.optimization.get_uniform_mfpt_bins">
+<span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">get_uniform_mfpt_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrepancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steady_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_desired_we_bins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#get_uniform_mfpt_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.get_uniform_mfpt_bins" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the MFPT-binning strategy described in [1], where bins are groups of microstates that are uniformly
+spaced in the integral of pi * v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variance</strong> (<em>Variance function</em>) – </p></li>
+<li><p><strong>array-like</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>discrepancy</strong> (<em>Discrepancy function</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>steady_state</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>int</strong> (<em>n_desired_we_bins</em>) – less any recycling or basis bins</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>[1] Aristoff, D., Copperman, J., Simpson, G., Webber, R. J. &amp; Zuckerman, D. M.
+Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.optimization.get_clustered_mfpt_bins">
+<span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">get_clustered_mfpt_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrepancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steady_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_desired_we_bins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#get_clustered_mfpt_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.get_clustered_mfpt_bins" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the MFPT-binning strategy described in [1], where bins are groups of microstates that are uniformly
+spaced in the integral of pi * v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variance</strong> (<em>Variance function</em>) – </p></li>
+<li><p><strong>array-like</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>discrepancy</strong> (<em>Discrepancy function</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>steady_state</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>int</strong> (<em>n_desired_we_bins</em>) – less any recycling or basis bins</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>[1] Aristoff, D., Copperman, J., Simpson, G., Webber, R. J. &amp; Zuckerman, D. M.
+Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
+</dd></dl>
+
 <dl class="py class">
+<dt class="sig sig-object py" id="msm_we.optimization.OptimizedBinMapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizedBinMapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#OptimizedBinMapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.OptimizedBinMapper" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="msm_we.optimization.OptimizedBinMapper.create_new">
+<span class="sig-name descname"><span class="pre">create_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nbins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_original_pcoord_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_binmapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">microstate_mapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified_clusterer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_on_pcoord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#OptimizedBinMapper.create_new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.OptimizedBinMapper.create_new" title="Permalink to this definition"></a></dt>
+<dd><p>Creates an OptimizedBinMapper, suitable for use with the optimization workflow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nbins</strong> (<em>int</em><em>, </em><em>Number</em><em> of </em><em>WE bins</em>) – </p></li>
+<li><p><strong>n_original_pcoord_dims</strong> (<em>int</em><em>, </em><em>Number</em><em> of </em><em>dimensions in the original user-supplied progress coordinate</em>) – </p></li>
+<li><p><strong>microstate_mapper</strong> (<em>dict</em><em>, </em><em>Mapping</em><em> of </em><em>microstates to WE bins</em>) – </p></li>
+<li><p><strong>stratified_clusterer</strong> (<a class="reference internal" href="#msm_we.msm_we.StratifiedClusters" title="msm_we.msm_we.StratifiedClusters"><em>StratifiedClusters</em></a>) – </p></li>
+<li><p><strong>cluster_on_pcoord</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>Adapted from the original NMpathAnalysis package,
+<a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<span class="target" id="module-msm_we.fpt"></span><dl class="py class">
 <dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.fpt.</span></span><span class="sig-name descname"><span class="pre">MatrixFPT</span></span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT" title="Permalink to this definition"></a></dt>
 <dd><p>Define a base class for calculating FPTs using transition matrix</p>
@@ -1478,7 +1745,7 @@ the result is like a probability CDF, not a probability distribution.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Tmatrix</strong> (<em>array-like</em>) – Transition matrix</p></li>
-<li><p><strong>initial_states</strong> (<em>array-like of ints</em>) – List of initial states to start probability in</p></li>
+<li><p><strong>initial_states</strong> (<em>array-like</em><em> of </em><em>ints</em>) – List of initial states to start probability in</p></li>
 <li><p><strong>initial_state_probs</strong> (<em>array-like</em>) – Probability distribution across the initial states.</p></li>
 <li><p><strong>target_states</strong> (<em>array-like</em>) – Target states for MFPT.</p></li>
 <li><p><strong>tau</strong> – </p></li>
@@ -1587,9 +1854,9 @@ time steps</p>
 
 </dd></dl>
 
-<span class="target" id="module-msm_we.ensembles"></span><p>Adapted from the original NMpathAnalysis package,
+<p>Adapted from the original NMpathAnalysis package,
 <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
-<dl class="py class">
+<span class="target" id="module-msm_we.ensembles"></span><dl class="py class">
 <dt class="sig sig-object py" id="msm_we.ensembles.Ensemble">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.ensembles.</span></span><span class="sig-name descname"><span class="pre">Ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble" title="Permalink to this definition"></a></dt>
 <dd><p>Define a base class to store a list of space-continuous trajectories</p>
@@ -1693,9 +1960,9 @@ that should be used to generate the ensemble</p>
 
 </dd></dl>
 
-<span class="target" id="module-msm_we.nmm"></span><p>Adapted from the original NMpathAnalysis package,
+<p>Adapted from the original NMpathAnalysis package,
 <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
-<dl class="py class">
+<span class="target" id="module-msm_we.nmm"></span><dl class="py class">
 <dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.nmm.</span></span><span class="sig-name descname"><span class="pre">NonMarkovModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sliding_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reversible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markovian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coarse_macrostates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel" title="Permalink to this definition"></a></dt>
 <dd><p>Define a class for analyzing MD trajectories using Markovian or non-Markovian Model</p>
@@ -1797,9 +2064,9 @@ transition matrix</p>
 
 </dd></dl>
 
-<span class="target" id="module-msm_we.utils"></span><p>Adapted from the original NMpathAnalysis package,
+<p>Adapted from the original NMpathAnalysis package,
 <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
-<dl class="py class">
+<span class="target" id="module-msm_we.utils"></span><dl class="py class">
 <dt class="sig sig-object py" id="msm_we.utils.Interval">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">Interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#Interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.Interval" title="Permalink to this definition"></a></dt>
 <dd><p>Intervals are in general defined as half-open interval [start,end).</p>

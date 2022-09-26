@@ -15,6 +15,7 @@
    
       ~modelWE.__init__
       ~modelWE.build_analyze_model
+      ~modelWE.build_flux_matrix
       ~modelWE.check_connect_ray
       ~modelWE.cluster_aggregated
       ~modelWE.cluster_coordinates
@@ -107,6 +108,7 @@
       ~modelWE.WEbasisp1_bounds
       ~modelWE.WEtargetp1_bounds
       ~modelWE.basis_pcoord_bounds
+      ~modelWE.build_flux_matrix_remote
       ~modelWE.do_ray_discretization
       ~modelWE.do_stratified_ray_discretization
       ~modelWE.get_iter_fluxMatrix_ray
