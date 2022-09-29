@@ -42,8 +42,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">msm_we</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Installation/Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_todos.html">TODOs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
@@ -74,7 +75,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for msm_we.msm_we</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Main module.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;haMSM estimation and analysis&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="n">__metaclass__</span> <span class="o">=</span> <span class="nb">type</span>
@@ -127,7 +128,7 @@
 <span class="c1">#   after importing msm_we</span>
 <span class="n">SUPPORTED_MAPPERS</span> <span class="o">=</span> <span class="p">{</span><span class="n">RectilinearBinMapper</span><span class="p">,</span> <span class="n">VoronoiBinMapper</span><span class="p">}</span>
 
-<div class="viewcode-block" id="find_connected_sets"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.find_connected_sets">[docs]</a><span class="k">def</span> <span class="nf">find_connected_sets</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">find_connected_sets</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This implementation is taken from msmtools.estimation.sparse.connectivity, at commit 9312660.</span>
 <span class="sd">    See the original at https://github.com/markovmodel/msmtools/blob/devel/msmtools/estimation/sparse/connectivity.py#L30</span>
@@ -187,10 +188,10 @@
     <span class="sd">&quot;&quot;&quot;Sort by size of component - largest component first&quot;&quot;&quot;</span>
     <span class="n">cc</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">cc</span></div>
+    <span class="k">return</span> <span class="n">cc</span>
 
 
-<div class="viewcode-block" id="is_connected"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.is_connected">[docs]</a><span class="k">def</span> <span class="nf">is_connected</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">source_states</span><span class="p">,</span> <span class="n">target_states</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">is_connected</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">source_states</span><span class="p">,</span> <span class="n">target_states</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check for connectivity between two states.</span>
 <span class="sd">    If directed is True, then checks for directional connectivity from source_states to target_states.</span>
@@ -216,10 +217,10 @@
         <span class="ow">not</span> <span class="ow">in</span> <span class="n">csgraph</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">source_states</span><span class="p">)[</span>
             <span class="p">:,</span> <span class="n">target_states</span>
         <span class="p">]</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
 
 
-<div class="viewcode-block" id="inverse_iteration"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.inverse_iteration">[docs]</a><span class="k">def</span> <span class="nf">inverse_iteration</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">inverse_iteration</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Do one iteration of inverse iteration.</span>
 
@@ -264,10 +265,10 @@
     <span class="c1"># Normalize</span>
     <span class="n">result</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">result</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
-<div class="viewcode-block" id="StratifiedClusters"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.StratifiedClusters">[docs]</a><span class="k">class</span> <span class="nc">StratifiedClusters</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">StratifiedClusters</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a class that provides semi-seamless integration of stratified clusters into the</span>
 <span class="sd">    existing msm_we code.</span>
@@ -362,7 +363,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">target_bins</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basis_bins</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-<div class="viewcode-block" id="StratifiedClusters.predict"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.StratifiedClusters.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Map input coordinates to a WE bin, and then discretize using that bin&#39;s clusterer.</span>
 
@@ -459,35 +460,18 @@
                 <span class="sa">f</span><span class="s2">&quot;Finished and toggling... Next iteration will use pcoord</span><span class="si">{</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">processing_from</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">List&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">discrete</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">discrete</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="modelWE"><a class="viewcode-back" href="../../stubs/msm_we.msm_we.modelWE.html#msm_we.msm_we.modelWE">[docs]</a><span class="k">class</span> <span class="nc">modelWE</span><span class="p">:</span>
+<div class="viewcode-block" id="modelWE"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE">[docs]</a><span class="k">class</span> <span class="nc">modelWE</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implementation of haMSM model building, particularly for steady-state estimation (but there are lots of extras),</span>
-<span class="sd">    from WE sampling with basis (source) and target (sink) states with recycling.</span>
+<span class="sd">    History-augmented Markov state model estimation from WE data</span>
+
+<span class="sd">    Implementation of haMSM model building, particularly for steady-state estimation</span>
+<span class="sd">    from recycling WE sampling with basis (source) and target (sink) states.</span>
 
 <span class="sd">    Set up for typical west.h5 file structure, with coordinates to be stored in west.h5 /iterations/auxdata/coord and</span>
-<span class="sd">    basis and target definitions from progress coordinates.</span>
-
-<span class="sd">    Check out run_msmWE.slurm and run_msmWE_flux.py in scripts folder for an implementation example.</span>
-
-<span class="sd">    Danger</span>
-<span class="sd">    -------</span>
-<span class="sd">    This code currently, in general, appears to assume a 1-D progress coordinate.</span>
-
-<span class="sd">    Todo</span>
-<span class="sd">    ----</span>
-<span class="sd">    Refactor</span>
-<span class="sd">        In general, this class&#39;s methods generally handle data by holding state in the object.</span>
-<span class="sd">        The functions that update state with the result of a calculation, though, tend to update a lot of state on the way.</span>
-<span class="sd">        The state being updated along the way is usually &quot;helper&quot; quantities (an example would be the number of bins</span>
-<span class="sd">        or number of walkers, which is computed &quot;along the way&quot; in a number of functions, and the object state updated.)</span>
-
-<span class="sd">        I think it would be prudent to refactor these in such a way that these are updated in as few places as possible --</span>
-<span class="sd">        one example of this might be setting them as properties, and then updating the value in state as part of that</span>
-<span class="sd">        accessor if necessary.</span>
-
+<span class="sd">    basis and target definitions in progress coordinate space.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    --------</span>
@@ -497,10 +481,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="modelWE.BlockValidationError"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.BlockValidationError">[docs]</a>    <span class="k">class</span> <span class="nc">BlockValidationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+    <span class="k">class</span> <span class="nc">BlockValidationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="k">pass</span>
 
-<div class="viewcode-block" id="modelWE.__init__"><a class="viewcode-back" href="../../stubs/msm_we.msm_we.modelWE.html#msm_we.msm_we.modelWE.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Work-in-progress init function. For now, just start adding attribute definitions in here.</span>
 
@@ -636,9 +620,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">use_weights_in_clustering</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pre_discretization_model</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_discretization_model</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="modelWE.initialize"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="c1"># self, fileSpecifier: str, refPDBfile: str, initPDBfile: str, modelName: str</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">fileSpecifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -646,7 +630,7 @@
         <span class="n">modelName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">basis_pcoord_bounds</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target_pcoord_bounds</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">dim_reduce_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pca&quot;</span><span class="p">,</span>
+        <span class="n">dim_reduce_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
         <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pcoord_ndim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">auxpath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;coord&quot;</span><span class="p">,</span>
@@ -675,14 +659,17 @@
 <span class="sd">            List of [[pcoord0 lower bound, pcoord1 upper bound], [pcoord1 lower bound, pcoord1 upper bound], ...]</span>
 <span class="sd">            in pcoord-space for the target state</span>
 
-<span class="sd">        dim_reduce_method: str</span>
+<span class="sd">        dim_reduce_method: str, default=&quot;none&quot;</span>
 <span class="sd">            Dimensionality reduction method. &quot;pca&quot;, &quot;vamp&quot;, or &quot;none&quot;.</span>
 
 <span class="sd">        tau: float</span>
 <span class="sd">            Resampling time (i.e. time of 1 WE iteration). Used to map fluxes to physical times.</span>
 
-<span class="sd">        pcoord_ndim: int</span>
+<span class="sd">        pcoord_ndim: int, default=1</span>
 <span class="sd">            Defaults to 1. Dimensionality of progress coordinates.</span>
+
+<span class="sd">        auxpath: str, default=&quot;coord&quot;</span>
+<span class="sd">            Augmented coordinates used for MSM construction are stored in west.h5 under auxdata/auxpath</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -691,8 +678,7 @@
 
 <span class="sd">        Todo</span>
 <span class="sd">        ----</span>
-<span class="sd">        Some of this logic should be broken into a constructor, and default arguments handled in the constructor&#39;s</span>
-<span class="sd">        function signature.</span>
+<span class="sd">        This should probably just be merged into the constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing msm_we model&quot;</span><span class="p">)</span>
@@ -780,7 +766,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">use_weights_in_clustering</span> <span class="o">=</span> <span class="n">use_weights_in_clustering</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msm_we model successfully initialized&quot;</span><span class="p">)</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msm_we model successfully initialized&quot;</span><span class="p">)</span>
 
     <span class="c1"># TODO: Deprecate this for an N-dimensional version</span>
     <span class="nd">@property</span>
@@ -894,13 +880,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">target_pcoord_bounds</span> <span class="o">=</span> <span class="n">bounds</span>
 
-<div class="viewcode-block" id="modelWE.progress_disable"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.progress_disable">[docs]</a>    <span class="k">def</span> <span class="nf">progress_disable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">progress_disable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Disable all progress bars&quot;&quot;&quot;</span>
-        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.progress_enable"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.progress_enable">[docs]</a>    <span class="k">def</span> <span class="nf">progress_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">progress_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Enable all progress bars&quot;&quot;&quot;</span>
-        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">target_pcoord_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -967,7 +953,7 @@
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;However, available resources are </span><span class="si">{</span><span class="n">ray</span><span class="o">.</span><span class="n">available_resources</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
-<div class="viewcode-block" id="modelWE.initialize_from_h5"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.initialize_from_h5">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_from_h5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refPDBfile</span><span class="p">,</span> <span class="n">initPDBfile</span><span class="p">,</span> <span class="n">modelName</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initialize_from_h5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refPDBfile</span><span class="p">,</span> <span class="n">initPDBfile</span><span class="p">,</span> <span class="n">modelName</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Like initialize, but sets state without</span>
 <span class="sd">        Parameters</span>
@@ -980,9 +966,9 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+        <span class="k">pass</span>
 
-<div class="viewcode-block" id="modelWE.is_WE_basis"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.is_WE_basis">[docs]</a>    <span class="k">def</span> <span class="nf">is_WE_basis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pcoords</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_WE_basis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pcoords</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the input progress coordinates are in the basis state.</span>
 
@@ -1012,9 +998,9 @@
 
         <span class="n">in_basis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">in_basis</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">in_basis</span></div>
+        <span class="k">return</span> <span class="n">in_basis</span>
 
-<div class="viewcode-block" id="modelWE.is_WE_target"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.is_WE_target">[docs]</a>    <span class="k">def</span> <span class="nf">is_WE_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pcoords</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_WE_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pcoords</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the input progress coordinates are in the target state.</span>
 
@@ -1047,7 +1033,7 @@
 
         <span class="n">in_target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">in_target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">in_target</span></div>
+        <span class="k">return</span> <span class="n">in_target</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">do_step</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">in_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1108,7 +1094,7 @@
 
         <span class="k">return</span> <span class="n">table</span>
 
-<div class="viewcode-block" id="modelWE.build_analyze_model"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.build_analyze_model">[docs]</a>    <span class="k">def</span> <span class="nf">build_analyze_model</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">build_analyze_model</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_paths</span><span class="p">,</span>
         <span class="n">ref_struct</span><span class="p">,</span>
@@ -1359,7 +1345,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_note</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">step_idx</span><span class="p">,</span> <span class="n">flux_text</span><span class="p">)</span>
 
             <span class="c1"># If live updating was disabled, write to the table once now. (Doesn&#39;t do anything if it was enabled)</span>
-            <span class="n">live</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+            <span class="n">live</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">do_block_validation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">cross_validation_groups</span><span class="p">,</span> <span class="n">cross_validation_blocks</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">True</span>
@@ -1453,7 +1439,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">validation_iterations</span> <span class="o">=</span> <span class="n">validation_iterations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validation_models</span> <span class="o">=</span> <span class="n">validation_models</span>
 
-<div class="viewcode-block" id="modelWE.load_iter_data"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.load_iter_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_iter_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_iter_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update state with the data (including pcoord but not including coords) corresponding to an iteration.</span>
 
@@ -1567,9 +1553,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="n">weightList</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nSeg</span> <span class="o">=</span> <span class="n">n_segs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pcoord0List</span> <span class="o">=</span> <span class="n">pcoord0List</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pcoord1List</span> <span class="o">=</span> <span class="n">pcoord1List</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcoord1List</span> <span class="o">=</span> <span class="n">pcoord1List</span>
 
-<div class="viewcode-block" id="modelWE.get_iterations"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_iterations">[docs]</a>    <span class="k">def</span> <span class="nf">get_iterations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_iterations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates internal state with the maximum number of iterations, and the number of segments in each section.</span>
 
@@ -1628,9 +1614,9 @@
 
         <span class="c1"># Warning: These are not defined until this is run for the first time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numSegments</span> <span class="o">=</span> <span class="n">numSegments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maxIter</span> <span class="o">=</span> <span class="n">numSegments</span><span class="o">.</span><span class="n">size</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxIter</span> <span class="o">=</span> <span class="n">numSegments</span><span class="o">.</span><span class="n">size</span>
 
-<div class="viewcode-block" id="modelWE.get_iterations_iters"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_iterations_iters">[docs]</a>    <span class="k">def</span> <span class="nf">get_iterations_iters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_iterations_iters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates internal state with the maximum number of iterations, and the number of segments in each section.</span>
 
@@ -1675,9 +1661,9 @@
                     <span class="s2">&quot;Iteration &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; has &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nSeg</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; segments...</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numSegments</span> <span class="o">=</span> <span class="n">numSegments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maxIter</span> <span class="o">=</span> <span class="n">last_iter</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxIter</span> <span class="o">=</span> <span class="n">last_iter</span>
 
-<div class="viewcode-block" id="modelWE.set_topology"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.set_topology">[docs]</a>    <span class="k">def</span> <span class="nf">set_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topology</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topology</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates internal state with a new topology.</span>
 
@@ -1744,9 +1730,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">coord_ndim</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;coord_ndim&#39;</span><span class="p">]</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Unsupported topology&#39;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Unsupported topology&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.set_basis"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.set_basis">[docs]</a>    <span class="k">def</span> <span class="nf">set_basis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basis</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_basis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basis</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates internal state with a new basis.</span>
 
@@ -1794,9 +1780,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">basis_coords</span> <span class="o">=</span> <span class="n">basis</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Unsupported topology&#39;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Unsupported topology&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.get_transition_data"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_transition_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_transition_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_lag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_transition_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_lag</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function analyzes pairs of coordinates at the current iteration, set by :code:`self.n_iter`, and at some</span>
 <span class="sd">            lag in the past, :code:`self.n_iter - n_lag`.</span>
@@ -2000,9 +1986,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">coordPairList</span> <span class="o">=</span> <span class="n">coordPairList</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transitionWeights</span> <span class="o">=</span> <span class="n">transitionWeights</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">departureWeights</span> <span class="o">=</span> <span class="n">departureWeights</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">departureWeights</span> <span class="o">=</span> <span class="n">departureWeights</span>
 
-<div class="viewcode-block" id="modelWE.get_transition_data_lag0"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_transition_data_lag0">[docs]</a>    <span class="k">def</span> <span class="nf">get_transition_data_lag0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_transition_data_lag0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get coordinate pairs at the beginning and end of this iteration.</span>
 
@@ -2068,9 +2054,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">coordPairList</span> <span class="o">=</span> <span class="n">coordPairList</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transitionWeights</span> <span class="o">=</span> <span class="n">transitionWeights</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">departureWeights</span> <span class="o">=</span> <span class="n">departureWeights</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">departureWeights</span> <span class="o">=</span> <span class="n">departureWeights</span>
 
-<div class="viewcode-block" id="modelWE.get_warps_from_parent"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_warps_from_parent">[docs]</a>    <span class="k">def</span> <span class="nf">get_warps_from_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_warps_from_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all warps and weights over a range of iterations.</span>
 
@@ -2094,7 +2080,7 @@
             <span class="n">parentList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seg_histories</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">warpList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parentList</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">warpedWeights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">[</span><span class="n">warpList</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">warpedWeights</span></div>
+        <span class="k">return</span> <span class="n">warpedWeights</span>
 
     <span class="k">def</span> <span class="nf">get_warps_from_pcoord</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">,</span> <span class="n">last_iter</span>
@@ -2175,7 +2161,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Jdirect</span> <span class="o">=</span> <span class="n">Jdirect</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_data_files</span>  <span class="c1"># correct for number of trees</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">JdirectTimes</span> <span class="o">=</span> <span class="n">JdirectTimes</span>
 
-<div class="viewcode-block" id="modelWE.get_seg_histories"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_seg_histories">[docs]</a>    <span class="k">def</span> <span class="nf">get_seg_histories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_hist</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_seg_histories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_hist</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        **TODO: What does this do exactly?**</span>
 
@@ -2271,12 +2257,12 @@
                             <span class="o">+</span> <span class="s2">&quot; iters ago</span><span class="se">\n</span><span class="s2">&quot;</span>
                         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seg_histories</span> <span class="o">=</span> <span class="n">seg_histories</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight_histories</span> <span class="o">=</span> <span class="n">weight_histories</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight_histories</span> <span class="o">=</span> <span class="n">weight_histories</span>
         <span class="c1"># FIXME:</span>
         <span class="c1">#   weight histories and segment histories go in reverse order,</span>
         <span class="c1">#   so final current iter is first of 0 index</span>
 
-<div class="viewcode-block" id="modelWE.collect_iter_coordinates"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.collect_iter_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">collect_iter_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># grab coordinates from WE traj_segs folder</span>
+    <span class="k">def</span> <span class="nf">collect_iter_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># grab coordinates from WE traj_segs folder</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Goes through the generated trajectory segments, and adds data from the segments to an H5 file.</span>
 
@@ -2380,9 +2366,9 @@
                     <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segindList</span><span class="p">[</span><span class="n">iS</span><span class="p">])</span>
                     <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.get_iter_coordinates"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_iter_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">get_iter_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_iter_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the valid coordinates for a certain iteration</span>
 
@@ -2406,9 +2392,9 @@
         <span class="c1"># iter_coords = self.cur_iter_coords[indGood]</span>
         <span class="n">iter_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_iter_coords</span><span class="p">[</span><span class="n">good_coords</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">iter_coords</span></div>
+        <span class="k">return</span> <span class="n">iter_coords</span>
 
-<div class="viewcode-block" id="modelWE.load_iter_coordinates"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.load_iter_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">load_iter_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_iter_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Returns</span>
@@ -2459,7 +2445,7 @@
                     <span class="n">coords</span> <span class="o">=</span> <span class="n">dset</span>
                     <span class="n">cur_iter_coords</span><span class="p">[</span><span class="n">segs_contained</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cur_iter_coords</span> <span class="o">=</span> <span class="n">cur_iter_coords</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cur_iter_coords</span> <span class="o">=</span> <span class="n">cur_iter_coords</span>
 
     <span class="k">def</span> <span class="nf">load_iter_coordinates0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># get iteration initial coordinates</span>
         <span class="n">coordList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nSeg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nAtoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_ndim</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -2486,7 +2472,7 @@
             <span class="n">coordList</span><span class="p">[</span><span class="n">iS</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">coord</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">segindList</span><span class="p">[</span><span class="n">iS</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cur_iter_coords</span> <span class="o">=</span> <span class="n">coordList</span>
 
-<div class="viewcode-block" id="modelWE.get_coordinates"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">get_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unused</span>
 
@@ -2514,9 +2500,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">load_iter_coordinates</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordsExist</span><span class="p">:</span>
                 <span class="n">coordSet</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coordSet</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur_iter_coords</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">all_coords</span> <span class="o">=</span> <span class="n">coordSet</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_coords</span> <span class="o">=</span> <span class="n">coordSet</span>
 
-<div class="viewcode-block" id="modelWE.get_coordSet"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_coordSet">[docs]</a>    <span class="k">def</span> <span class="nf">get_coordSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_coordSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads all coordinates and progress coordinates into memory for later usage.</span>
 
@@ -2590,7 +2576,7 @@
 
         <span class="n">first_iter_cluster</span> <span class="o">=</span> <span class="n">i</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">first_iter</span> <span class="o">=</span> <span class="n">first_iter_cluster</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_iter</span> <span class="o">=</span> <span class="n">last_iter</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_iter</span> <span class="o">=</span> <span class="n">last_iter</span>
 
     <span class="k">def</span> <span class="nf">get_traj_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_iter</span><span class="p">,</span> <span class="n">traj_length</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">traj_length</span> <span class="o">&gt;</span> <span class="n">from_iter</span><span class="p">:</span>
@@ -2679,7 +2665,7 @@
 
         <span class="k">return</span> <span class="n">ipca</span><span class="p">,</span> <span class="n">used_iters</span>
 
-<div class="viewcode-block" id="modelWE.dimReduce"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.dimReduce">[docs]</a>    <span class="k">def</span> <span class="nf">dimReduce</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">dimReduce</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">first_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">first_rough_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2884,9 +2870,9 @@
             <span class="c1"># self.coordinates.transform = self.processCoordinates</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="modelWE.Coordinates"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.Coordinates">[docs]</a>    <span class="k">class</span> <span class="nc">Coordinates</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Coordinates</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fake Coordinates class, in case you don&#39;t want to use either PCA or VAMP for dimensionality reduction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2896,9 +2882,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">explanation</span> <span class="o">=</span> <span class="s2">&quot;coordinate object&quot;</span>
 
         <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">coords</span></div>
+            <span class="k">return</span> <span class="n">coords</span>
 
-<div class="viewcode-block" id="modelWE.reduceCoordinates"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.reduceCoordinates">[docs]</a>    <span class="k">def</span> <span class="nf">reduceCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reduceCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This performs the dimensionality reduction.</span>
 
@@ -2933,9 +2919,9 @@
             <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">coords</span>
 
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;dimReduceMethod undefined in reduceCoordinates&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;dimReduceMethod undefined in reduceCoordinates&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.update_cluster_structures"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.update_cluster_structures">[docs]</a>    <span class="k">def</span> <span class="nf">update_cluster_structures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_cluster_structures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find structures (i.e. sets of coordinates) corresponding to each clusters.</span>
 
@@ -3032,7 +3018,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster_structure_weights</span> <span class="o">=</span> <span class="n">cluster_structure_weights</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cluster structure mapping completed.&quot;</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster keys are </span><span class="si">{</span><span class="n">cluster_structures</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster keys are </span><span class="si">{</span><span class="n">cluster_structures</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">do_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
 
@@ -3184,7 +3170,7 @@
         <span class="k">if</span> <span class="n">store_validation_model</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">post_cluster_model</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.cluster_aggregated"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.cluster_aggregated">[docs]</a>    <span class="k">def</span> <span class="nf">cluster_aggregated</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">cluster_aggregated</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_clusters</span><span class="p">,</span>
         <span class="n">streaming</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -3507,11 +3493,11 @@
         <span class="c1"># self.dtrajs = self.clusters.dtrajs</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtrajs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Clustering completed.&quot;</span><span class="p">)</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Clustering completed.&quot;</span><span class="p">)</span>
         <span class="c1"># log.debug(f&quot;Dtrajs: {self.clusters.dtrajs}&quot;)</span>
         <span class="c1"># self.clusters.save(self.clusterFile, save_streaming_chain=True, overwrite=True)</span>
 
-<div class="viewcode-block" id="modelWE.cluster_stratified"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.cluster_stratified">[docs]</a>    <span class="k">def</span> <span class="nf">cluster_stratified</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">cluster_stratified</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_clusters</span><span class="p">,</span>
         <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -3716,9 +3702,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">toggle</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">launch_ray_discretization</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_ray_discretization</span><span class="p">()</span>
 
-<div class="viewcode-block" id="modelWE.find_nearest_bin"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.find_nearest_bin">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">find_nearest_bin</span><span class="p">(</span><span class="n">bin_mapper</span><span class="p">,</span> <span class="n">bin_idx</span><span class="p">,</span> <span class="n">filled_bins</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given a bin mapper, find the bin closest to bin_idx (that isn&#39;t bin_idx).</span>
@@ -3783,9 +3769,9 @@
             <span class="k">if</span> <span class="n">closest</span> <span class="o">&gt;=</span> <span class="n">_bin_idx</span><span class="p">:</span>
                 <span class="n">closest</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">closest</span></div>
+        <span class="k">return</span> <span class="n">closest</span>
 
-<div class="viewcode-block" id="modelWE.do_stratified_clustering"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.do_stratified_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">do_stratified_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">do_stratified_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform the full-stratified clustering.</span>
 
@@ -3963,9 +3949,9 @@
                 <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error fitting k-means to bin </span><span class="si">{</span><span class="n">_bin</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">e</span>
 
-        <span class="k">return</span> <span class="n">kmeans_models</span><span class="p">,</span> <span class="n">used_iters</span><span class="p">,</span> <span class="n">unique_bins</span><span class="p">,</span> <span class="n">unfilled_bins</span></div>
+        <span class="k">return</span> <span class="n">kmeans_models</span><span class="p">,</span> <span class="n">used_iters</span><span class="p">,</span> <span class="n">unique_bins</span><span class="p">,</span> <span class="n">unfilled_bins</span>
 
-<div class="viewcode-block" id="modelWE.organize_stratified"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.organize_stratified">[docs]</a>    <span class="k">def</span> <span class="nf">organize_stratified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">organize_stratified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Alternative to organize_fluxMatrix, for stratified clustering.</span>
 
@@ -4176,9 +4162,9 @@
         <span class="p">)</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">connected_sets</span><span class="p">[</span><span class="n">start_cleaning_idx</span><span class="p">:])</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="p">),</span> <span class="s2">&quot;Still not clean after cleaning!&quot;</span></div>
+        <span class="p">),</span> <span class="s2">&quot;Still not clean after cleaning!&quot;</span>
 
-<div class="viewcode-block" id="modelWE.launch_ray_discretization"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.launch_ray_discretization">[docs]</a>    <span class="k">def</span> <span class="nf">launch_ray_discretization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">launch_ray_discretization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply discretization in parallel, through Ray</span>
 
@@ -4265,9 +4251,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pair_dtrajs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dtraj</span> <span class="k">for</span> <span class="n">dtraj</span> <span class="ow">in</span> <span class="n">pair_dtrajs</span> <span class="k">if</span> <span class="n">dtraj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
 
 
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Discretization complete&quot;</span><span class="p">)</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Discretization complete&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.get_cluster_centers"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_cluster_centers">[docs]</a>    <span class="k">def</span> <span class="nf">get_cluster_centers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_cluster_centers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Standalone method to obtain average pcoords of all segments in each cluster.</span>
 
@@ -4338,7 +4324,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">targetRMSD_minmax</span> <span class="o">=</span> <span class="n">cluster_pcoord_range</span><span class="p">[</span><span class="n">pcoord_sort_indices</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">targetRMSD_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cluster_pcoord_all</span><span class="p">)[</span><span class="n">pcoord_sort_indices</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">pcoord_sort_indices</span></div>
+        <span class="k">return</span> <span class="n">pcoord_sort_indices</span>
 
     <span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
     <span class="k">def</span> <span class="nf">do_stratified_ray_discretization</span><span class="p">(</span>
@@ -4412,7 +4398,7 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="n">parent_dtrajs</span><span class="p">,</span> <span class="n">child_dtrajs</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">kmeans_model</span><span class="o">.</span><span class="n">target_bins</span><span class="p">,</span> <span class="n">kmeans_model</span><span class="o">.</span><span class="n">basis_bins</span>
 
-<div class="viewcode-block" id="modelWE.load_clusters"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.load_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">load_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusterFile</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusterFile</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load clusters from a file.</span>
 
@@ -4433,7 +4419,7 @@
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found saved clusters -- loading from </span><span class="si">{</span><span class="n">clusterFile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span> <span class="o">=</span> <span class="n">pyemma</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">clusterFile</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">clustercenters</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">clustercenters</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
     <span class="k">def</span> <span class="nf">get_iter_fluxMatrix_ray</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">processCoordinates</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">):</span>
@@ -4528,7 +4514,7 @@
                                          <span class="n">transition_weights</span><span class="p">),</span> <span class="n">n_iter</span>
 
     <span class="c1"># def get_iter_fluxMatrix(self, n_iter):</span>
-<div class="viewcode-block" id="modelWE.build_flux_matrix"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.build_flux_matrix">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">build_flux_matrix</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">index_pairs</span><span class="p">,</span> <span class="n">ind_start_in_basis</span><span class="p">,</span> <span class="n">ind_end_in_basis</span><span class="p">,</span>
                           <span class="n">ind_end_in_target</span><span class="p">,</span> <span class="n">transition_weights</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -4660,7 +4646,7 @@
         <span class="c1">#   and fragile, and it&#39;s possible it&#39;ll be deprecated in the future.</span>
         <span class="c1"># fluxMatrix = fluxMatrix.A</span>
 
-        <span class="k">return</span> <span class="n">fluxMatrix</span></div>
+        <span class="k">return</span> <span class="n">fluxMatrix</span>
 
     <span class="k">def</span> <span class="nf">get_pcoord1D_fluxMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_lag</span><span class="p">,</span> <span class="n">first_iter</span><span class="p">,</span> <span class="n">last_iter</span><span class="p">,</span> <span class="n">binbounds</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_lag</span> <span class="o">=</span> <span class="n">n_lag</span>
@@ -4725,7 +4711,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pcoord1D_fluxMatrix</span> <span class="o">=</span> <span class="n">fluxMatrix</span>
 
-<div class="viewcode-block" id="modelWE.get_iter_pcoord1D_fluxMatrix_lag0"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_iter_pcoord1D_fluxMatrix_lag0">[docs]</a>    <span class="k">def</span> <span class="nf">get_iter_pcoord1D_fluxMatrix_lag0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">binbounds</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_iter_pcoord1D_fluxMatrix_lag0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">binbounds</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute a flux-matrix in the space of the 1D progress coordinate, at a given iteration.</span>
 
@@ -4789,9 +4775,9 @@
                 <span class="n">fluxMatrix</span><span class="p">[</span><span class="n">from_bin_index</span><span class="p">,</span> <span class="n">to_bin_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">weightList</span><span class="p">[</span><span class="n">seg_idx</span><span class="p">]</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">fluxMatrix</span></div>
+        <span class="k">return</span> <span class="n">fluxMatrix</span>
 
-<div class="viewcode-block" id="modelWE.get_fluxMatrix"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_fluxMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_fluxMatrix</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">get_fluxMatrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">n_lag</span><span class="p">,</span> <span class="n">first_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">last_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iters_to_use</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_batch_size</span><span class="o">=</span><span class="mi">5</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -5068,7 +5054,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="c1"># Update state with the new, updated, or loaded from file fluxMatrix.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrixRaw</span> <span class="o">=</span> <span class="n">fluxMatrix</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrixRaw</span> <span class="o">=</span> <span class="n">fluxMatrix</span>
 
     <span class="k">def</span> <span class="nf">organize_fluxMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
 
@@ -5138,7 +5124,7 @@
                 <span class="sa">f</span><span class="s2">&quot;Unrecognized clustering_method (Had: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clustering_method</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.organize_aggregated"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.organize_aggregated">[docs]</a>    <span class="k">def</span> <span class="nf">organize_aggregated</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">organize_aggregated</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">do_cleaning</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">states_to_keep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rediscretize</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -5457,9 +5443,9 @@
         <span class="p">)</span>  <span class="c1"># average weight transitioning or staying put should be 1</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrixRaw</span> <span class="o">=</span> <span class="n">original_fluxmatrix</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrix</span> <span class="o">=</span> <span class="n">new_fluxMatrix</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrix</span> <span class="o">=</span> <span class="n">new_fluxMatrix</span>
 
-<div class="viewcode-block" id="modelWE.get_model_clusters"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_model_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_model_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used by get_iter_aristoffian(). Untested and un-debugged, use at your own risk.</span>
 
@@ -5503,9 +5489,9 @@
                 <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.get_Tmatrix"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_Tmatrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_Tmatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_Tmatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the transition matrix from the flux matrix.</span>
 <span class="sd">        Corrects the &quot;target&quot; states to be true sink states.</span>
@@ -5561,7 +5547,7 @@
         <span class="n">tmatrix</span> <span class="o">=</span> <span class="n">fluxmatrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">tmatrix</span><span class="p">[</span><span class="n">sinkBins</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">sinkRates</span><span class="p">,</span> <span class="p">(</span><span class="n">n_sink_bins</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">Tmatrix</span> <span class="o">=</span> <span class="n">tmatrix</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tmatrix</span> <span class="o">=</span> <span class="n">tmatrix</span>
 
     <span class="k">def</span> <span class="nf">get_eqTmatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">Mt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -5579,7 +5565,7 @@
                 <span class="n">Mt</span><span class="p">[</span><span class="n">iR</span><span class="p">,</span> <span class="n">iR</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Tmatrix</span> <span class="o">=</span> <span class="n">Mt</span>
 
-<div class="viewcode-block" id="modelWE.get_steady_state"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_steady_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_steady_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flux_fractional_convergence</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_steady_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flux_fractional_convergence</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;&quot;</span>
 <span class="sd">        Get the steady-state distribution for the transition matrix.</span>
 <span class="sd">        Uses scipy eigensolver to obtain an initial guess, then refines that using inverse iteration.</span>
@@ -5671,9 +5657,9 @@
         <span class="k">assert</span> <span class="n">last_flux</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Negative flux estimate from this pSS&quot;</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done with steady-state estimation.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pSS</span> <span class="o">=</span> <span class="n">last_pSS</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pSS</span> <span class="o">=</span> <span class="n">last_pSS</span>
 
-<div class="viewcode-block" id="modelWE.get_steady_state_algebraic"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_steady_state_algebraic">[docs]</a>    <span class="k">def</span> <span class="nf">get_steady_state_algebraic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">check_negative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">set</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_steady_state_algebraic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iters</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">check_negative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">set</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the steady-state distribution as the eigenvectors of the transition matrix.</span>
 
@@ -5760,9 +5746,9 @@
         <span class="k">if</span> <span class="nb">set</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pSS</span> <span class="o">=</span> <span class="n">pSS</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pSS</span></div>
+            <span class="k">return</span> <span class="n">pSS</span>
 
-<div class="viewcode-block" id="modelWE.get_steady_state_matrixpowers"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_steady_state_matrixpowers">[docs]</a>    <span class="k">def</span> <span class="nf">get_steady_state_matrixpowers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conv</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_steady_state_matrixpowers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conv</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the steady-state distribution using the matrix power method.</span>
 
@@ -5793,9 +5779,9 @@
                 <span class="n">dconv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">pSS</span> <span class="o">-</span> <span class="n">pSSp</span><span class="p">))</span>
                 <span class="n">pSSp</span> <span class="o">=</span> <span class="n">pSS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;N=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; dconv: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dconv</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pSS</span> <span class="o">=</span> <span class="n">pSS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pSS</span> <span class="o">=</span> <span class="n">pSS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-<div class="viewcode-block" id="modelWE.get_steady_state_target_flux"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_steady_state_target_flux">[docs]</a>    <span class="k">def</span> <span class="nf">get_steady_state_target_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pSS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_set</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_steady_state_target_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pSS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_set</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the total flux into the target state(s).</span>
 
@@ -5862,7 +5848,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">lagtime</span> <span class="o">=</span> <span class="n">lagtime</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">JtargetSS</span> <span class="o">=</span> <span class="n">Jt</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lagtime</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Jt</span> <span class="o">/</span> <span class="n">lagtime</span></div>
+            <span class="k">return</span> <span class="n">Jt</span> <span class="o">/</span> <span class="n">lagtime</span>
 
     <span class="k">def</span> <span class="nf">evolve_probability</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">nEvolve</span><span class="p">,</span> <span class="n">nStore</span>
@@ -6039,7 +6025,7 @@
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">pass</span>
 
-<div class="viewcode-block" id="modelWE.get_flux"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_flux">[docs]</a>    <span class="k">def</span> <span class="nf">get_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the measured flux (i.e. from the flux matrix) into the target.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -6058,9 +6044,9 @@
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">indForward</span><span class="p">:</span>
                 <span class="n">JF</span> <span class="o">=</span> <span class="n">JF</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fluxMatrix</span><span class="p">[</span><span class="n">indBack</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">indBack</span><span class="p">)])</span>
             <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">JR</span> <span class="o">-</span> <span class="n">JF</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
 
-<div class="viewcode-block" id="modelWE.get_flux_committor"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_flux_committor">[docs]</a>    <span class="k">def</span> <span class="nf">get_flux_committor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_flux_committor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the flux binned according to committors</span>
 
@@ -6090,7 +6076,7 @@
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">indForward</span><span class="p">:</span>
                 <span class="n">JF</span> <span class="o">=</span> <span class="n">JF</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fluxMatrix</span><span class="p">[</span><span class="n">indBack</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">indBack</span><span class="p">)])</span>
             <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">JR</span> <span class="o">-</span> <span class="n">JF</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Jq</span> <span class="o">=</span> <span class="n">J</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Jq</span> <span class="o">=</span> <span class="n">J</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span>
             <span class="c1"># sys.stdout.write(&quot;%s &quot; % i)</span>
 
     <span class="k">def</span> <span class="nf">plot_flux_committor_pcoordcolor</span><span class="p">(</span>
@@ -6294,7 +6280,7 @@
 
         <span class="k">return</span> <span class="n">ax</span>
 
-<div class="viewcode-block" id="modelWE.plot_flux"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.plot_flux">[docs]</a>    <span class="k">def</span> <span class="nf">plot_flux</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">plot_flux</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">custom_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -6429,7 +6415,7 @@
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving flux plot to </span><span class="si">{</span><span class="n">plot_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">plot_filename</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ax</span></div>
+        <span class="k">return</span> <span class="n">ax</span>
 
     <span class="k">def</span> <span class="nf">evolve_target_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">Mss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tmatrix</span>
@@ -7028,7 +7014,7 @@
                     <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
-<div class="viewcode-block" id="modelWE.get_committor"><a class="viewcode-back" href="../../api.html#msm_we.msm_we.modelWE.get_committor">[docs]</a>    <span class="k">def</span> <span class="nf">get_committor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conv</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_committor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conv</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iteratively obtain an estimate of the committor.</span>
 
@@ -7107,7 +7093,7 @@
                 <span class="n">qp</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
     <span class="c1"># TODO: This should probably just be a call to get_committor, followed by self.q = 1 - self.q</span>
     <span class="k">def</span> <span class="nf">get_backwards_committor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conv</span><span class="p">):</span>

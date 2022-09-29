@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="TODOs" href="code_todos.html" />
-    <link rel="prev" title="msm_we.utils" href="stubs/msm_we.utils.html" /> 
+    <link rel="next" title="Documentation" href="api.html" />
+    <link rel="prev" title="msm_we" href="readme.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,14 +45,17 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">msm_we</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation/Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#model-building-and-preparation">Model building and preparation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#analysis">Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#streaming">Streaming</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parallelism">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-building-in-one-command">Model-building, in one command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optimization">Optimization</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code_todos.html">TODOs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
@@ -121,8 +124,8 @@ and produce an array of feature-coordinates.</p>
 <span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
 </pre></div>
 </div>
-<p>It’s important to do this monkey-patching at the module level, i.e. on <code class="code docutils literal notranslate"><span class="pre">msm_we.modelWE</span></code>, rather
-than on an instance of a <code class="code docutils literal notranslate"><span class="pre">msm_we.modelWE</span></code> object.</p>
+<p>It’s important to do this monkey-patching at the module level, i.e. on the <a class="reference internal" href="api.html#msm_we.msm_we.modelWE" title="msm_we.msm_we.modelWE"><code class="xref py py-class docutils literal notranslate"><span class="pre">msm_we.msm_we.modelWE</span></code></a>
+class itself, rather than on an instance of the class.</p>
 </div></blockquote>
 </li>
 <li><p>Create the model object.</p>
@@ -208,8 +211,6 @@ the user <em>before calling this</em>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">organize_fluxMatrix</span><span class="p">(</span><span class="n">use_ray</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="code docutils literal notranslate"><span class="pre">use_ray</span></code> enables parallelization with the Ray work manager. If enabled, a Ray cluster must be initialized by
-the user <em>before calling this</em>.</p>
 </div></blockquote>
 </li>
 </ol>
@@ -231,7 +232,7 @@ This can happen with either incomplete sampling to your target state, or with eq
 This is because it uses the flux estimate as a convergence criterion.
 If the flux is 0, then it’s not meaningful to  look at convergence of 0, so it’ll just run
 for the maximum number of iterations. You can specify <code class="code docutils literal notranslate"><span class="pre">max_iters=1</span></code> to avoid unnecessary
-iteration, or you can use <code class="code docutils literal notranslate"><span class="pre">model.get_steady_state_algebraic</span></code>.</p>
+iteration, or you can use <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_steady_state_algebraic()</span></code>.</p>
 </li>
 <li><p>Update cluster structures</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">update_cluster_structures</span><span class="p">()</span>
@@ -267,14 +268,81 @@ the analysis. In the simplest case, this can just be</p>
 However, this can be used on a cluster to initialize a Ray cluster with workers on a number of nodes, and the <code class="code docutils literal notranslate"><span class="pre">msm_we</span></code>
 running on the same node as the Ray head.</p>
 </section>
+<section id="model-building-in-one-command">
+<h2>Model-building, in one command<a class="headerlink" href="#model-building-in-one-command" title="Permalink to this heading"></a></h2>
+<p>The above steps are all wrapped in a single call by <a class="reference internal" href="api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a>,
+which can be called like</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msm_we.msm_we</span> <span class="kn">import</span> <span class="n">modelWE</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">modelWE</span><span class="p">()</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">build_analyze_model</span><span class="p">(</span>
+    <span class="n">file_paths</span><span class="o">=</span><span class="n">we_h5filenames</span><span class="p">,</span>
+    <span class="n">ref_struct</span><span class="o">=</span><span class="n">basis_ref_dict</span><span class="p">,</span>
+    <span class="n">modelName</span><span class="o">=</span><span class="n">msm_we_modelname</span><span class="p">,</span>
+    <span class="n">basis_pcoord_bounds</span><span class="o">=</span><span class="n">pcoord_bounds</span><span class="p">[</span><span class="s2">&quot;basis&quot;</span><span class="p">],</span>
+    <span class="n">target_pcoord_bounds</span><span class="o">=</span><span class="n">pcoord_bounds</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">],</span>
+    <span class="n">dimreduce_method</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span>
+    <span class="n">n_clusters</span><span class="o">=</span><span class="n">msm_we_n_clusters</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This performs all the steps manually outlined above, up to flux calculation.
+Additionally, this can split up your data to do block validation.</p>
+<p>Most arguments to <a class="reference internal" href="api.html#msm_we.msm_we.modelWE.initialize" title="msm_we.msm_we.modelWE.initialize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">initialize()</span></code></a> can also be passed to
+<a class="reference internal" href="api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a>.</p>
+<p>See the documentation for additional arguments that can be passed.</p>
+</section>
+<section id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this heading"></a></h2>
+<p>To use <a class="reference internal" href="api.html#module-msm_we.optimization" title="msm_we.optimization"><code class="xref py py-mod docutils literal notranslate"><span class="pre">msm_we.optimization</span></code></a>, first construct an haMSM as outlined above.</p>
+<p>The goal of the optimization algorithm is to group haMSM microbins into WE bins, in “some optimal” way.
+In this case, we optimize for minimizing flux variance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">msm_we.optimization</span> <span class="k">as</span> <span class="nn">mo</span>
+
+<span class="n">discrepancy</span><span class="p">,</span> <span class="n">variance</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">solve_discrepancy</span><span class="p">(</span>
+    <span class="n">tmatrix</span> <span class="o">=</span> <span class="n">transition_matrix</span><span class="p">,</span>
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">steady_state_distribution</span><span class="p">,</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">target_state_indices</span>
+<span class="p">)</span>
+
+<span class="c1"># This is a list with an element for each MSM microbin, which is the integer index of the</span>
+<span class="c1">#   WE bin it&#39;s assigned to.</span>
+<span class="c1"># In other words, microstate_assignments[microbin_index] == WE bin index of that microbin</span>
+<span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">get_uniform_mfpt_bins</span><span class="p">(</span>
+    <span class="n">variance</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">steady_state_distribution</span><span class="p">,</span> <span class="n">n_active_we_bins</span>
+<span class="p">)</span>
+
+<span class="c1"># Add entries for the basis/target states, since MSM-WE sets those as the last two clusters</span>
+<span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">microstate_assignments</span><span class="p">,</span> <span class="p">[</span><span class="n">n_active_bins</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_active_bins</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+
+<span class="c1"># Create the new bin mapper for WESTPA</span>
+<span class="n">we_bin_mapper</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">OptimizedBinMapper</span><span class="p">(</span>
+    <span class="n">n_active_we_bins</span><span class="p">,</span>
+    <span class="c1"># In case the pcoord is extended, this is the original pcoord dimensionality</span>
+    <span class="n">n_pcoord_dims</span><span class="p">,</span>
+    <span class="c1"># The original, non-Optimized BinMapper that WESTPA was run with.</span>
+    <span class="c1">#   Used for stratified clustering</span>
+    <span class="n">base_mapper</span><span class="p">,</span>
+    <span class="n">microstate_assignments</span><span class="p">,</span>
+    <span class="c1"># If the pcoord was extended, pcoord boundaries are in the original pcoord space</span>
+    <span class="n">basis_pcoord_bounds</span><span class="p">,</span>
+    <span class="n">target_pcoord_bounds</span><span class="p">,</span>
+    <span class="n">stratified_clusterer</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="stubs/msm_we.utils.html" class="btn btn-neutral float-left" title="msm_we.utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="code_todos.html" class="btn btn-neutral float-right" title="TODOs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="readme.html" class="btn btn-neutral float-left" title="msm_we" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
