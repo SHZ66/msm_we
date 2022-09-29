@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>msm_we.optimization &mdash; msm_we 0.1.4 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> msm_we
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">msm_we</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Installation/Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_todos.html">TODOs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">msm_we</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>msm_we.optimization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for msm_we.optimization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Discrepancy calculations and WE binning/allocation optimization</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">westpa.core.binning</span>
+<span class="kn">from</span> <span class="nn">rich.logging</span> <span class="kn">import</span> <span class="n">RichHandler</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">msm_we</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">RichHandler</span><span class="p">())</span>
+<span class="n">log</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="solve_discrepancy"><a class="viewcode-back" href="../../api.html#msm_we.optimization.solve_discrepancy">[docs]</a><span class="k">def</span> <span class="nf">solve_discrepancy</span><span class="p">(</span><span class="n">tmatrix</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a transition matrix, solves for the discrepancy function.</span>
+
+<span class="sd">    The Poisson equation for the discrepancy function is</span>
+<span class="sd">    .. math::</span>
+<span class="sd">        (I - K)h = 1_B - \pi(B), \:\: h \cdot \pi = 0</span>
+
+<span class="sd">    however, since :math:`I-K` is singular, we instead solve</span>
+<span class="sd">    .. math::</span>
+<span class="sd">        (I - K + \pi \pi^T / || \pi ||^2_2)h = 1_B - \pi(B), \:\: h \cdot \pi = 0</span>
+<span class="sd">    where :math:`h` is a volumn vector, `1_B` is an indicator function which is 1 in B and 0 everywhere</span>
+<span class="sd">    else, :math:`\pi` is the steady-state solution of :math:`K`, and `\pi(B)` is a column vector with</span>
+<span class="sd">    the steady-state value of :math:`\pi(B)` in every element.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tmatrix, 2D array-like: Transition matrix</span>
+<span class="sd">    pi, array-like: Steady-state distribution for the input transition matrix</span>
+<span class="sd">    B, array-like: Indices of target states B</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    (discrepancy, variance)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing pi matrix&quot;</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="n">pi_matrix</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">pi</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span>
+
+    <span class="n">b_indicator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">b_indicator</span><span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">pi_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">pi_b</span><span class="p">[:]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pi</span><span class="p">[</span><span class="n">B</span><span class="p">])</span>
+
+    <span class="n">discrepancy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">tmatrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">tmatrix</span> <span class="o">+</span> <span class="n">pi_matrix</span><span class="p">,</span>
+                                  <span class="n">b_indicator</span> <span class="o">-</span> <span class="n">pi_b</span><span class="p">)</span>
+
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmatrix</span><span class="p">,</span> <span class="n">discrepancy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmatrix</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;NaN elements in variance!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># TODO: Verify this is the correct sanity check</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">discrepancy</span> <span class="o">@</span> <span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Discrepancy solution failed normalization sanity check!&quot;</span>
+
+    <span class="k">return</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">variance</span></div>
+
+
+<div class="viewcode-block" id="get_uniform_mfpt_bins"><a class="viewcode-back" href="../../api.html#msm_we.optimization.get_uniform_mfpt_bins">[docs]</a><span class="k">def</span> <span class="nf">get_uniform_mfpt_bins</span><span class="p">(</span><span class="n">variance</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">steady_state</span><span class="p">,</span> <span class="n">n_desired_we_bins</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the MFPT-binning strategy described in [1], where bins are groups of microstates that are uniformly</span>
+<span class="sd">    spaced in the integral of pi * v</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    variance, array-like: Variance function</span>
+<span class="sd">    discrepancy, array-like: Discrepancy function</span>
+<span class="sd">    steady_state, array-like: Steady-state distribution</span>
+<span class="sd">    n_desired_we_bins int: Number of WE macrobins to assign microstates to -- typically the total number of bins,</span>
+<span class="sd">        less any recycling or basis bins</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Aristoff, D., Copperman, J., Simpson, G., Webber, R. J. &amp; Zuckerman, D. M.</span>
+<span class="sd">    Weighted ensemble: Recent mathematical developments. Arxiv (2022).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The last two elements of this are the basis and target states respectively</span>
+    <span class="n">pi_v</span> <span class="o">=</span> <span class="n">steady_state</span> <span class="o">*</span> <span class="n">variance</span>
+    <span class="n">pi_v_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">discrepancy</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="n">cumsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">pi_v</span><span class="p">[</span><span class="n">pi_v_sort</span><span class="p">])</span>
+
+    <span class="n">n_active_bins</span> <span class="o">=</span> <span class="n">n_desired_we_bins</span><span class="o">-</span><span class="mi">2</span>
+
+    <span class="n">bin_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cumsum</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_active_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">bin_assignments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">cumsum</span><span class="p">,</span> <span class="n">bin_bounds</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bin_states</span> <span class="o">=</span> <span class="n">bin_assignments</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pi_v_sort</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">bin_states</span></div>
+
+
+<div class="viewcode-block" id="get_clustered_mfpt_bins"><a class="viewcode-back" href="../../api.html#msm_we.optimization.get_clustered_mfpt_bins">[docs]</a><span class="k">def</span> <span class="nf">get_clustered_mfpt_bins</span><span class="p">(</span><span class="n">variance</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">steady_state</span><span class="p">,</span> <span class="n">n_desired_we_bins</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the MFPT-binning strategy described in [1], where bins are groups of microstates that are uniformly</span>
+<span class="sd">    spaced in the integral of pi * v</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    variance, array-like: Variance function</span>
+<span class="sd">    discrepancy, array-like: Discrepancy function</span>
+<span class="sd">    steady_state, array-like: Steady-state distribution</span>
+<span class="sd">    n_desired_we_bins int: Number of WE macrobins to assign microstates to -- typically the total number of bins,</span>
+<span class="sd">        less any recycling or basis bins</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Aristoff, D., Copperman, J., Simpson, G., Webber, R. J. &amp; Zuckerman, D. M.</span>
+<span class="sd">    Weighted ensemble: Recent mathematical developments. Arxiv (2022).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The last two elements of this are the basis and target states respectively</span>
+    <span class="n">pi_v</span> <span class="o">=</span> <span class="n">steady_state</span> <span class="o">*</span> <span class="n">variance</span>
+    <span class="n">n_active_bins</span> <span class="o">=</span> <span class="n">n_desired_we_bins</span><span class="o">-</span><span class="mi">2</span>
+    <span class="n">pi_v_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">discrepancy</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="n">cumsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">pi_v</span><span class="p">[</span><span class="n">pi_v_sort</span><span class="p">])</span>
+
+    <span class="n">clusterer</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">n_active_bins</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cumsum</span><span class="p">)))</span>
+
+    <span class="c1"># we_bin_assignments = clusterer.fit_predict(pi_v.reshape(-1, 1))</span>
+    <span class="n">we_bin_assignments</span> <span class="o">=</span> <span class="n">clusterer</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">cumsum</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">bin_states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">cumsum</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_active_bins</span><span class="p">):</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">we_bin_assignments</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="n">states_in_bin</span> <span class="o">=</span> <span class="n">pi_v_sort</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">bin_states</span><span class="p">[</span><span class="n">states_in_bin</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found that bin </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> contains microstates </span><span class="si">{</span><span class="n">states_in_bin</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bin_states</span></div>
+
+
+<div class="viewcode-block" id="OptimizedBinMapper"><a class="viewcode-back" href="../../api.html#msm_we.optimization.OptimizedBinMapper">[docs]</a><span class="k">class</span> <span class="nc">OptimizedBinMapper</span><span class="p">(</span><span class="n">westpa</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">binning</span><span class="o">.</span><span class="n">FuncBinMapper</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Single argument provided to binmapper initializer, attempting to unpickle&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unpickle</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;bytestring&#39;</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Multiple arguments provided to binmapper initializer, creating new object&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unpickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bytestring</span><span class="p">):</span>
+
+        <span class="c1"># TODO: This may need to be provided as a b64-encoded bytestring, rather than plain bytes,</span>
+        <span class="c1">#  in which case we need to quickly encode it back to bytes. This can be done with</span>
+        <span class="c1">#   pickle.loads(base64.b64decode(collection.metadata[&#39;bin_mapper&#39;]))</span>
+
+        <span class="n">loaded</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">bytestring</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">loaded</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="s2">&quot;Invalid pickled object provided&quot;</span>
+
+        <span class="c1"># TODO: Probably just update the attributes I explicitly care about, this seems a little insecure</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">loaded</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OptimizedBinMapper.create_new"><a class="viewcode-back" href="../../api.html#msm_we.optimization.OptimizedBinMapper.create_new">[docs]</a>    <span class="k">def</span> <span class="nf">create_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">nbins</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">n_original_pcoord_dims</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">target_pcoord_bounds</span><span class="p">,</span>
+                 <span class="n">basis_pcoord_bounds</span><span class="p">,</span>
+                 <span class="n">previous_binmapper</span><span class="p">,</span>
+                 <span class="n">microstate_mapper</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                 <span class="n">stratified_clusterer</span><span class="p">:</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">StratifiedClusters</span><span class="p">,</span>
+                 <span class="n">cluster_on_pcoord</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an OptimizedBinMapper, suitable for use with the optimization workflow</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nbins: int, Number of WE bins</span>
+<span class="sd">        n_original_pcoord_dims: int, Number of dimensions in the original user-supplied progress coordinate</span>
+<span class="sd">        microstate_mapper: dict, Mapping of microstates to WE bins</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="n">nbins</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">microstate_mapper</span> <span class="o">=</span> <span class="n">microstate_mapper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_original_pcoord_dims</span> <span class="o">=</span> <span class="n">n_original_pcoord_dims</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_mapper</span> <span class="o">=</span> <span class="n">previous_binmapper</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_model</span> <span class="o">=</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_model</span><span class="o">.</span><span class="n">pcoord_ndim</span> <span class="o">=</span> <span class="n">n_original_pcoord_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_model</span><span class="o">.</span><span class="n">basis_pcoord_bounds</span> <span class="o">=</span> <span class="n">basis_pcoord_bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_model</span><span class="o">.</span><span class="n">target_pcoord_bounds</span> <span class="o">=</span> <span class="n">target_pcoord_bounds</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span> <span class="o">=</span> <span class="n">stratified_clusterer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simple_model</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_on_pcoord</span> <span class="o">=</span> <span class="n">cluster_on_pcoord</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">cluster_model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">cluster_models</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cluster_model</span><span class="p">,</span> <span class="s1">&#39;cluster_centers_&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_model</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Clusterer has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_clusters</span><span class="si">}</span><span class="s2"> total clusters (include 1 for basis and 1 for target)&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Clusterer remap is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">we_remap</span><span class="si">}</span><span class="s2"> &quot;</span>
+                 <span class="sa">f</span><span class="s2">&quot;(last two correspond to basis, target states and can be ignored)&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="c1"># TODO: When analyzing augmented coordinates, this needs to pull just the child pcoord -- but when analyzing</span>
+        <span class="c1">#   non-augmented, that won&#39;t exist</span>
+        <span class="c1"># TODO: ^ What does that mean? What exactly is happening here, and how can I check for it more gracefully?</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">final_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">final_coords</span> <span class="o">=</span> <span class="n">coords</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping original coords of shape </span><span class="si">{</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping pcoords </span><span class="si">{</span><span class="n">final_coords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping pcoords of shape </span><span class="si">{</span><span class="n">final_coords</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># To use stratified clustering, first load the ORIGINAL pcoords into stratified.pcoord1List, then call</span>
+        <span class="c1">#   stratified.predict().</span>
+        <span class="c1"># Segments in the basis will be assigned to whatever n_clusters is, and targets will be assigned to whatever</span>
+        <span class="c1">#   n_clusters + 1 is.</span>
+        <span class="c1">#  This isn&#39;t actually used for anything else, and no clustering happens for these, so I can actually</span>
+        <span class="c1">#  set these arbitrarily.</span>
+        <span class="n">original_pcoords</span> <span class="o">=</span> <span class="n">final_coords</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_original_pcoord_dims</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cluster_on_pcoord&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cluster_on_pcoord</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_on_pcoord</span><span class="p">:</span>
+            <span class="n">extended_pcoords</span> <span class="o">=</span> <span class="n">final_coords</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_original_pcoord_dims</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">extended_pcoords</span> <span class="o">=</span> <span class="n">final_coords</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_original_pcoord_dims</span><span class="p">]</span>
+
+        <span class="n">basis_we_bin_idx</span><span class="p">,</span> <span class="n">target_we_bin_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original pcoords dimensionality was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_original_pcoord_dims</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original pcoords had shape </span><span class="si">{</span><span class="n">original_pcoords</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">pcoord1List</span> <span class="o">=</span> <span class="n">original_pcoords</span>
+
+        <span class="c1"># TODO: Get the basis and target state from this, and then I don&#39;t need to use the bounds here</span>
+        <span class="n">base_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mapper</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">original_pcoords</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base bin mapper mapped to </span><span class="si">{</span><span class="n">base_bins</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+        <span class="c1"># Now, do stratified clustering on the rest of the coordinates.</span>
+        <span class="c1"># Each segment will be</span>
+        <span class="c1">#   1. Assigned a WE bin, based on its pcoords and the provided bin mapper</span>
+        <span class="c1">#   2. Discretized, according to the k-means model associated with that WE bin</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;About to cluster coords of shape </span><span class="si">{</span><span class="n">extended_pcoords</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># TODO: Do I just want final_coords[:, self.n_original_pcoord_dims:]?</span>
+
+        <span class="n">stratified_cluster_assignments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">extended_pcoords</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Got microstate assignments </span><span class="si">{</span><span class="n">stratified_cluster_assignments</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># TODO: Map microstates to new WE bins, and populate we_bin_assignments</span>
+        <span class="c1"># I have a microstate for each segment now -- I need to refer to my mapping of microstates to WE bins, which</span>
+        <span class="c1">#   just comes from my optimization step</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping microstates to WE bins using </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">microstate_mapper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">we_bin_assignments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">microstate_mapper</span><span class="p">[</span><span class="n">microstate</span><span class="p">])</span>
+                                       <span class="k">if</span> <span class="n">microstate</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">microstate_mapper</span><span class="p">)</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+                                       <span class="k">for</span> <span class="n">microstate</span> <span class="ow">in</span> <span class="n">stratified_cluster_assignments</span>
+                                      <span class="p">])</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basis WE bin is labeled </span><span class="si">{</span><span class="n">basis_we_bin_idx</span><span class="si">}</span><span class="s2">, target WE bin is labeled </span><span class="si">{</span><span class="n">target_we_bin_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WE bin assignments before correcting basis/target are </span><span class="si">{</span><span class="n">we_bin_assignments</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">we_bin_assignments</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">is_WE_target</span><span class="p">(</span><span class="n">final_coords</span><span class="p">)]</span> <span class="o">=</span> <span class="n">target_we_bin_idx</span>
+        <span class="n">we_bin_assignments</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">clusterer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">is_WE_basis</span><span class="p">(</span><span class="n">final_coords</span><span class="p">)]</span> <span class="o">=</span> <span class="n">basis_we_bin_idx</span>
+
+        <span class="n">zipped_assignments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">original_pcoords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">we_bin_assignments</span><span class="p">)))</span>
+        <span class="n">zip_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">original_pcoords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WE bin assignments are </span><span class="si">{</span><span class="n">zipped_assignments</span><span class="p">[</span><span class="n">zip_sort</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)):</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">we_bin_assignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(),</span> <span class="s2">&quot;Some segments couldn&#39;t get assigned WE bins&quot;</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">output</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Some target/basis microstates didn&#39;t get correctly remapped&quot;</span>
+
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, John Russo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

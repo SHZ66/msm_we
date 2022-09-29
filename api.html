@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation &mdash; msm_we 0.1.4 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Installation/Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> msm_we
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">msm_we</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation/Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hamsm-model-building-and-analysis-msm-we-msm-we-modelwe">haMSM model building and analysis (msm_we.msm_we.modelWE)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#construction">Construction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.build_analyze_model"><code class="docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.initialize"><code class="docutils literal notranslate"><span class="pre">initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_coordSet"><code class="docutils literal notranslate"><span class="pre">get_coordSet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.dimReduce"><code class="docutils literal notranslate"><span class="pre">dimReduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.cluster_coordinates"><code class="docutils literal notranslate"><span class="pre">cluster_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">get_fluxMatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.organize_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">organize_fluxMatrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#analysis">Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_Tmatrix"><code class="docutils literal notranslate"><span class="pre">get_Tmatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state"><code class="docutils literal notranslate"><span class="pre">get_steady_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state_target_flux"><code class="docutils literal notranslate"><span class="pre">get_steady_state_target_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_committor"><code class="docutils literal notranslate"><span class="pre">get_committor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_flux"><code class="docutils literal notranslate"><span class="pre">get_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_model_clusters"><code class="docutils literal notranslate"><span class="pre">get_model_clusters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_cluster_centers"><code class="docutils literal notranslate"><span class="pre">get_cluster_centers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux"><code class="docutils literal notranslate"><span class="pre">plot_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux_committor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor_pcoordcolor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#full-api">Full API</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-msm_we.optimization">Optimization (msm_we.optimization)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.optimization.solve_discrepancy"><code class="docutils literal notranslate"><span class="pre">solve_discrepancy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.optimization.get_uniform_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_uniform_mfpt_bins()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.optimization.get_clustered_mfpt_bins"><code class="docutils literal notranslate"><span class="pre">get_clustered_mfpt_bins()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.optimization.OptimizedBinMapper"><code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.optimization.OptimizedBinMapper.create_new"><code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper.create_new()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fpt-calculations">FPT Calculations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-msm_we.fpt">msm_we.fpt</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.fpt.MatrixFPT"><code class="docutils literal notranslate"><span class="pre">MatrixFPT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.fpt.MarkovFPT"><code class="docutils literal notranslate"><span class="pre">MarkovFPT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.fpt.NonMarkovFPT"><code class="docutils literal notranslate"><span class="pre">NonMarkovFPT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-msm_we.ensembles">msm_we.ensembles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.ensembles.Ensemble"><code class="docutils literal notranslate"><span class="pre">Ensemble</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.ensembles.PathEnsemble"><code class="docutils literal notranslate"><span class="pre">PathEnsemble</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.ensembles.DiscreteEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscreteEnsemble</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.ensembles.DiscretePathEnsemble"><code class="docutils literal notranslate"><span class="pre">DiscretePathEnsemble</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-msm_we.nmm">msm_we.nmm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.nmm.NonMarkovModel"><code class="docutils literal notranslate"><span class="pre">NonMarkovModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.nmm.MarkovPlusColorModel"><code class="docutils literal notranslate"><span class="pre">MarkovPlusColorModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-msm_we.utils">msm_we.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.Interval"><code class="docutils literal notranslate"><span class="pre">Interval</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.reverse_sort_lists"><code class="docutils literal notranslate"><span class="pre">reverse_sort_lists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.weighted_choice"><code class="docutils literal notranslate"><span class="pre">weighted_choice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.get_shape"><code class="docutils literal notranslate"><span class="pre">get_shape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.num_of_nonzero_elements"><code class="docutils literal notranslate"><span class="pre">num_of_nonzero_elements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.normalize_markov_matrix"><code class="docutils literal notranslate"><span class="pre">normalize_markov_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.random_markov_matrix"><code class="docutils literal notranslate"><span class="pre">random_markov_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.check_tmatrix"><code class="docutils literal notranslate"><span class="pre">check_tmatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.clean_tmatrix"><code class="docutils literal notranslate"><span class="pre">clean_tmatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.pops_from_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_tmatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.pops_from_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pops_from_nm_tmatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.map_to_integers"><code class="docutils literal notranslate"><span class="pre">map_to_integers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.pseudo_nm_tmatrix"><code class="docutils literal notranslate"><span class="pre">pseudo_nm_tmatrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_todos.html">TODOs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">msm_we</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h1>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.msm_we</span></code></p></td>
+<td><p>haMSM estimation and analysis</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.optimization" title="msm_we.optimization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.optimization</span></code></a></p></td>
+<td><p>Discrepancy calculations and WE binning/allocation optimization</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
+<td><p>First-passage time (FPT) calculations from trajectories or matrices</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
+<td><p>Implements Ensemble class for managing trajectories</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
+<td><p>&quot;Non-Markovian&quot; trajectory analysis</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
+<td><p>Miscellaneous convenience functions</p></td>
+</tr>
+</tbody>
+</table>
+<section id="hamsm-model-building-and-analysis-msm-we-msm-we-modelwe">
+<h2>haMSM model building and analysis (msm_we.msm_we.modelWE)<a class="headerlink" href="#hamsm-model-building-and-analysis-msm-we-msm-we-modelwe" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.</span></span><span class="sig-name descname"><span class="pre">modelWE</span></span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE" title="Permalink to this definition"></a></dt>
+<dd><p>History-augmented Markov state model estimation from WE data</p>
+<p>Implementation of haMSM model building, particularly for steady-state estimation
+from recycling WE sampling with basis (source) and target (sink) states.</p>
+<p>Set up for typical west.h5 file structure, with coordinates to be stored in west.h5 /iterations/auxdata/coord and
+basis and target definitions in progress coordinate space.</p>
+<p class="rubric">References</p>
+<p>Copperman and Zuckerman,
+<em>Accelerated estimation of long-timescale kinetics by combining weighted ensemble simulation with Markov model
+microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
+</dd></dl>
+
+<section id="construction">
+<h3>Construction<a class="headerlink" href="#construction" title="Permalink to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.build_analyze_model">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">build_analyze_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimreduce_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">-1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_live_display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.build_analyze_model" title="Permalink to this definition"></a></dt>
+<dd><p>One-shot function to build the model and analyze all at once. This provides a convenient interface for running
+the blockwise estimation.</p>
+<p>This may not be desirable for very long workflows, or workflows still being debugged, where it might make sense
+to run the individual steps one by one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_paths</strong> (<em>list</em>) – List of paths to H5 files to analyze.</p></li>
+<li><p><strong>ref_struct</strong> (<em>string</em>) – Path to PDB file that defines topology.</p></li>
+<li><p><strong>modelName</strong> (<em>string</em>) – Name to use in output filenames.</p></li>
+<li><p><strong>basis_pcoord_bounds</strong> (<em>list</em>) – List of [[pcoord0 lower bound, pcoord1 upper bound], [pcoord1 lower bound, pcoord1 upper bound], …]
+in pcoord-space for the basis state</p></li>
+<li><p><strong>target_pcoord_bounds</strong> (<em>list</em>) – List of [[pcoord0 lower bound, pcoord1 upper bound], [pcoord1 lower bound, pcoord1 upper bound], …]
+in pcoord-space for the target state</p></li>
+<li><p><strong>dimreduce_method</strong> (<em>str</em>) – Dimensionality reduction method. “pca”, “vamp”, or “none”.</p></li>
+<li><p><strong>tau</strong> (<em>float</em>) – Resampling time (i.e. time of 1 WE iteration). Used to map fluxes to physical times.</p></li>
+<li><p><strong>n_clusters</strong> (<em>int</em>) – Number of clusters to use when clustering. This is clusters per bin for stratified, or total clusters for
+aggregate.</p></li>
+<li><p><strong>ray_kwargs</strong> (<em>dict</em>) – Keyword arguments passed to ray.init(). Useful for specifying num_cpus. You could also use this to connect
+to an existing Ray cluster.</p></li>
+<li><p><strong>max_coord_iter</strong> (<em>int</em><em>, </em><em>optional</em><em> (</em><em>Default = model.maxIter</em><em>, </em><em>so all</em><em>)</em>) – Last iteration to obtain coordinates from. Useful for excluding the end of some data.</p></li>
+<li><p><strong>stratified</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>Default = True</em><em>)</em>) – Enables stratified clustering, where clustering is performed independently within each WE bin.</p></li>
+<li><p><strong>streaming</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>Default = True</em><em>)</em>) – Enables streaming over input data, rather than batch processing. Substantially improves memory efficiency,
+at a potential small performance hit.</p></li>
+<li><p><strong>use_ray</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>Default = True</em><em>)</em>) – Enable parallelization, using Ray. This provides substantial speedup in discretization and fluxmatrix
+calculations.</p></li>
+<li><p><strong>fluxmatrix_iters</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>Default =</em><em> [</em><em>1</em><em>, </em><em>-1</em><em>]</em><em>)</em>) – List of [first, last] iteration to use when calculating fluxmatrix. Defaults to using all iterations.</p></li>
+<li><p><strong>fluxmatrix_iters_to_use</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>Default = None</em><em>)</em>) – Specific range of iterations to use, as opposed to bounds like fluxmatrix_iters. Note that either this OR
+fluxmatrix_iters</p></li>
+<li><p><strong>cross_validation_groups</strong> (<em>int</em><em>, </em><em>optional</em><em> (</em><em>Default = 2</em><em>)</em>) – Number of independent models to build when doing cross-validation. Each group contains (blocks / groups)
+blocks.</p></li>
+<li><p><strong>cross_validation_blocks</strong> (<em>int</em><em>, </em><em>optional</em><em> (</em><em>Default = 4</em><em>)</em>) – Number of blocks to split your data into, before building the independent models.</p></li>
+<li><p><strong>show_live_display</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.initialize">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSpecifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refPDBfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reduce_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coord'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_suppress_boundary_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights_in_clustering</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the model-builder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileSpecifier</strong> (<em>list</em>) – List of paths to H5 files to analyze.</p></li>
+<li><p><strong>refPDBfile</strong> (<em>string</em>) – Path to PDB file that defines topology.</p></li>
+<li><p><strong>modelName</strong> (<em>string</em>) – Name to use in output filenames.</p></li>
+<li><p><strong>basis_pcoord_bounds</strong> (<em>list</em>) – List of [[pcoord0 lower bound, pcoord1 upper bound], [pcoord1 lower bound, pcoord1 upper bound], …]
+in pcoord-space for the basis state</p></li>
+<li><p><strong>target_pcoord_bounds</strong> (<em>list</em>) – List of [[pcoord0 lower bound, pcoord1 upper bound], [pcoord1 lower bound, pcoord1 upper bound], …]
+in pcoord-space for the target state</p></li>
+<li><p><strong>dim_reduce_method</strong> (<em>str</em><em>, </em><em>default=&quot;none&quot;</em>) – Dimensionality reduction method. “pca”, “vamp”, or “none”.</p></li>
+<li><p><strong>tau</strong> (<em>float</em>) – Resampling time (i.e. time of 1 WE iteration). Used to map fluxes to physical times.</p></li>
+<li><p><strong>pcoord_ndim</strong> (<em>int</em><em>, </em><em>default=1</em>) – Defaults to 1. Dimensionality of progress coordinates.</p></li>
+<li><p><strong>auxpath</strong> (<em>str</em><em>, </em><em>default=&quot;coord&quot;</em>) – Augmented coordinates used for MSM construction are stored in west.h5 under auxdata/auxpath</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>This should probably just be merged into the constructor.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_coordSet">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_coordSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_coordSet" title="Permalink to this definition"></a></dt>
+<dd><p>Loads all coordinates and progress coordinates into memory for later usage.</p>
+<p>If streaming, then this only loads pcoords</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>I want to avoid loading full coordinates into memory as much as possible.
+That means trying to replace usage of all_coords here.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>last_iter</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.dimReduce">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">dimReduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_rough_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rough_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.dimReduce" title="Permalink to this definition"></a></dt>
+<dd><p>Dimensionality reduction using the scheme specified in initialization.</p>
+<p>This just defines the dimensionality reduction scheme and builds the model – it does NOT actually transform
+the data!</p>
+<dl class="simple">
+<dt>Transforming the data is performed via reduceCoordinates(), which uses self.coordinates as set</dt><dd><p>by this.</p>
+</dd>
+<dt>Updates:</dt><dd><ul class="simple">
+<li><p><cite>self.coordinates</cite></p></li>
+<li><p><cite>self.ndim</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.cluster_coordinates">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">cluster_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_cluster_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_validation_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_cluster_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.cluster_coordinates" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_fluxMatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_fluxMatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the matrix of fluxes at a given lag time, for a range of iterations.</p>
+<p>Checks if a file has been written named
+“&lt;<cite>self.modelName</cite>&gt;_s&lt;<cite>first_iter</cite>&gt;_e&lt;<cite>last_iter</cite>&gt;_lag&lt;<cite>n_lag</cite>&gt;_clust&lt;<cite>self.n_clusters</cite>&gt;.h5”.
+If this file exists, load it and recalculate if it was calculated at an earlier iteration.
+Otherwise, write it.</p>
+<dl class="simple">
+<dt>Updates:</dt><dd><ul class="simple">
+<li><p><cite>self.n_lag</cite></p></li>
+<li><p><cite>self.errorWeight</cite></p></li>
+<li><p><cite>self.errorCount</cite></p></li>
+<li><p><cite>self.fluxMatrixRaw</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_lag</strong> (<em>int</em>) – Number of lags to use.</p></li>
+<li><p><strong>first_iter</strong> (<em>int</em>) – First iteration to use.</p></li>
+<li><p><strong>last_iter</strong> (<em>int</em>) – Last iteration to use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.organize_fluxMatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">organize_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.organize_fluxMatrix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="analysis">
+<h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_Tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_Tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_Tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the transition matrix from the flux matrix.
+Corrects the “target” states to be true sink states.</p>
+<dl class="simple">
+<dt>More specifically:</dt><dd><ul class="simple">
+<li><p>row-normalizes the flux matrix,</p></li>
+<li><p>sets any states with 0 flux ot (i.e. sinks) to have 1.0</p></li>
+<li><p>sets target bins to uniformly recycle into basis bins</p></li>
+</ul>
+</dd>
+<dt>Updates:</dt><dd><ul class="simple">
+<li><p><cite>self.Tmatrix</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_steady_state">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_steady_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flux_fractional_convergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_steady_state" title="Permalink to this definition"></a></dt>
+<dd><p>”
+Get the steady-state distribution for the transition matrix.
+Uses scipy eigensolver to obtain an initial guess, then refines that using inverse iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flux_fractional_convergence</strong> (<em>(</em><em>optional</em><em>, </em><em>default=1e-4</em><em>) </em><em>float</em>) – Convergence of the</p></li>
+<li><p><strong>max_iters</strong> (<em>(</em><em>optional</em><em>, </em><em>default=100</em><em>) </em><em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Transition matrices generated from WE data may have entries spanning many orders of magnitude, and may have
+extremely high condition numbers.
+Furthermore, the smallest entries may be those near the target state, which are also the most important
+for computing target fluxes, meaning values near machine precision can’t just be truncated.
+All this means that floating-point error may substantially affect the results of eigensolvers, and may produce
+bad/negative/inaccurate values for small probability bins.</p>
+<p>In order to obtain better estimates, sparse matrices are used to reduce the number of floating point operations
+being performed.
+A stationary distribution is first estimated using scipy’s eigensolver for sparse matrices.
+This is then used as an initial guess for the inverse iteration method, to further refine it.
+Convergence of the inverse iteration is determined using change in the flux estimate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_steady_state_target_flux">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_steady_state_target_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pSS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_steady_state_target_flux" title="Permalink to this definition"></a></dt>
+<dd><p>Get the total flux into the target state(s).</p>
+<dl class="simple">
+<dt>Updates:</dt><dd><ul class="simple">
+<li><p><cite>self.lagtime</cite></p></li>
+<li><p><cite>self.JtargetSS</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pSS</strong> (<em>(</em><em>optional</em><em>) </em><em>array-like</em>) – Steady-state distribution. If nothing provided, then use self.pSS</p></li>
+<li><p><strong>_set</strong> (<em>(</em><em>optional</em><em>) </em><em>boolean</em>) – If True, then update self.JtargetSS and self.lagtime. If False, then just return the value of JtargetSS.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_committor">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_committor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_committor" title="Permalink to this definition"></a></dt>
+<dd><p>Iteratively obtain an estimate of the committor.</p>
+<ol class="arabic simple">
+<li><p>Take the flux matrix, and normalize it into a transition matrix.</p></li>
+<li><dl class="simple">
+<dt>Apply two-sided absorbing boundary conditions by setting self-transition probabilities for the basis and</dt><dd><p>target states to 1.0, and all transitions out to 0.0.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Starting with an initial committor “guess” of all 1s, iteratively multiply the guess by the transition matrix</dt><dd><p>until convergence is below conv.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<dl class="simple">
+<dt>Updates:</dt><dd><ul class="simple">
+<li><p>self.q</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conv</strong> (<em>numerical</em>) – Convergence criteria for committor calculation. Calculation stops when the total difference between q_p and q
+is less than this.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_flux">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_flux" title="Permalink to this definition"></a></dt>
+<dd><p>Get the measured flux (i.e. from the flux matrix) into the target.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_model_clusters">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_model_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_model_clusters" title="Permalink to this definition"></a></dt>
+<dd><p>Used by get_iter_aristoffian(). Untested and un-debugged, use at your own risk.</p>
+<p>Updates:
+- self.model_clusters</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_cluster_centers">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_cluster_centers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_cluster_centers" title="Permalink to this definition"></a></dt>
+<dd><p>Standalone method to obtain average pcoords of all segments in each cluster.</p>
+<p>This functionality is contained in organize_fluxMatrix.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Remove duplicate code in organize_fluxMatrix.</p>
+</div>
+</dd></dl>
+
+</section>
+<section id="plotting">
+<h3>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.plot_flux">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_from_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_to_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux" title="Permalink to this definition"></a></dt>
+<dd><p>Make, and save, a plot of the fluxes along the RMSD.  get_flux() must be run before this.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>custom_name</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – The name for the saved plot. Defaults to flux_s&lt;first iter&gt;_e&lt;last iter&gt;.png</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.plot_flux_committor">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_from_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_to_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux_committor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor">
+<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor_pcoordcolor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="full-api">
+<h3>Full API<a class="headerlink" href="#full-api" title="Permalink to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+<section id="module-msm_we.optimization">
+<span id="optimization-msm-we-optimization"></span><h2>Optimization (msm_we.optimization)<a class="headerlink" href="#module-msm_we.optimization" title="Permalink to this heading"></a></h2>
+<p>Discrepancy calculations and WE binning/allocation optimization</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.optimization.solve_discrepancy">
+<span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">solve_discrepancy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmatrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#solve_discrepancy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.solve_discrepancy" title="Permalink to this definition"></a></dt>
+<dd><p>Given a transition matrix, solves for the discrepancy function.</p>
+<p>The Poisson equation for the discrepancy function is
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K</span><span class="p">)</span><span class="n">h</span> <span class="o">=</span> <span class="mi">1</span><span class="n">_B</span> <span class="o">-</span> \<span class="n">pi</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> \<span class="p">:</span>\<span class="p">:</span> <span class="n">h</span> \<span class="n">cdot</span> \<span class="n">pi</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>however, since <span class="math notranslate nohighlight">\(I-K\)</span> is singular, we instead solve
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K</span> <span class="o">+</span> \<span class="n">pi</span> \<span class="n">pi</span><span class="o">^</span><span class="n">T</span> <span class="o">/</span> <span class="o">||</span> \<span class="n">pi</span> <span class="o">||^</span><span class="mi">2_2</span><span class="p">)</span><span class="n">h</span> <span class="o">=</span> <span class="mi">1</span><span class="n">_B</span> <span class="o">-</span> \<span class="n">pi</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> \<span class="p">:</span>\<span class="p">:</span> <span class="n">h</span> \<span class="n">cdot</span> \<span class="n">pi</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(h\)</span> is a volumn vector, <cite>1_B</cite> is an indicator function which is 1 in B and 0 everywhere
+else, <span class="math notranslate nohighlight">\(\pi\)</span> is the steady-state solution of <span class="math notranslate nohighlight">\(K\)</span>, and <cite>pi(B)</cite> is a column vector with
+the steady-state value of <span class="math notranslate nohighlight">\(\pi(B)\)</span> in every element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tmatrix</strong> (<em>Transition matrix</em>) – </p></li>
+<li><p><strong>array-like</strong> (<em>Indices</em><em> of </em><em>target states B</em>) – </p></li>
+<li><p><strong>pi</strong> (<em>Steady-state distribution for the input transition matrix</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>B</strong> (<em>Indices</em><em> of </em><em>target states B</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(discrepancy, variance)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.optimization.get_uniform_mfpt_bins">
+<span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">get_uniform_mfpt_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrepancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steady_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_desired_we_bins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#get_uniform_mfpt_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.get_uniform_mfpt_bins" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the MFPT-binning strategy described in [1], where bins are groups of microstates that are uniformly
+spaced in the integral of pi * v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variance</strong> (<em>Variance function</em>) – </p></li>
+<li><p><strong>array-like</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>discrepancy</strong> (<em>Discrepancy function</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>steady_state</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>int</strong> (<em>n_desired_we_bins</em>) – less any recycling or basis bins</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>[1] Aristoff, D., Copperman, J., Simpson, G., Webber, R. J. &amp; Zuckerman, D. M.
+Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.optimization.get_clustered_mfpt_bins">
+<span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">get_clustered_mfpt_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrepancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steady_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_desired_we_bins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#get_clustered_mfpt_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.get_clustered_mfpt_bins" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the MFPT-binning strategy described in [1], where bins are groups of microstates that are uniformly
+spaced in the integral of pi * v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variance</strong> (<em>Variance function</em>) – </p></li>
+<li><p><strong>array-like</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>discrepancy</strong> (<em>Discrepancy function</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>steady_state</strong> (<em>Steady-state distribution</em>) – </p></li>
+<li><p><strong>array-like</strong> – </p></li>
+<li><p><strong>int</strong> (<em>n_desired_we_bins</em>) – less any recycling or basis bins</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>[1] Aristoff, D., Copperman, J., Simpson, G., Webber, R. J. &amp; Zuckerman, D. M.
+Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.optimization.OptimizedBinMapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizedBinMapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#OptimizedBinMapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.OptimizedBinMapper" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="msm_we.optimization.OptimizedBinMapper.create_new">
+<span class="sig-name descname"><span class="pre">create_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nbins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_original_pcoord_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_binmapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">microstate_mapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified_clusterer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_on_pcoord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/optimization.html#OptimizedBinMapper.create_new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.optimization.OptimizedBinMapper.create_new" title="Permalink to this definition"></a></dt>
+<dd><p>Creates an OptimizedBinMapper, suitable for use with the optimization workflow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nbins</strong> (<em>int</em><em>, </em><em>Number</em><em> of </em><em>WE bins</em>) – </p></li>
+<li><p><strong>n_original_pcoord_dims</strong> (<em>int</em><em>, </em><em>Number</em><em> of </em><em>dimensions in the original user-supplied progress coordinate</em>) – </p></li>
+<li><p><strong>microstate_mapper</strong> (<em>dict</em><em>, </em><em>Mapping</em><em> of </em><em>microstates to WE bins</em>) – </p></li>
+<li><p><strong>stratified_clusterer</strong> (<em>StratifiedClusters</em>) – </p></li>
+<li><p><strong>cluster_on_pcoord</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fpt-calculations">
+<h2>FPT Calculations<a class="headerlink" href="#fpt-calculations" title="Permalink to this heading"></a></h2>
+<section id="module-msm_we.fpt">
+<span id="msm-we-fpt"></span><h3>msm_we.fpt<a class="headerlink" href="#module-msm_we.fpt" title="Permalink to this heading"></a></h3>
+<p>First-passage time (FPT) calculations from trajectories or matrices</p>
+<p>Adapted from the original NMpathAnalysis package,
+<a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.fpt.</span></span><span class="sig-name descname"><span class="pre">MatrixFPT</span></span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT" title="Permalink to this definition"></a></dt>
+<dd><p>Define a base class for calculating FPTs using transition matrix</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.mean_fpts">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mean_fpts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmatrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.mean_fpts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.mean_fpts" title="Permalink to this definition"></a></dt>
+<dd><p>Calculting mean-first passave time for at transition matrix</p>
+<p>Derived class will implement this function differently.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.directional_mfpt">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">directional_mfpt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ini_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.directional_mfpt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.directional_mfpt" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the mean-first passage time in a single direction using a recursive procedure</p>
+<p>This method is useful when there is no B-&gt;A ensemble but only A-&gt;B transitions,
+for instance when B is absorbing.</p>
+<p>transition_matrix:  Numpy 2D array</p>
+<dl class="simple">
+<dt>stateA, stateB:     List of integers</dt><dd><p>Both states are a list of indexes.</p>
+</dd>
+<dt>ini_probs:          List of float, default is None</dt><dd><p>initial probabilities in stateA</p>
+</dd>
+<dt>lag_time:           integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mean-first passage time from A-&gt;B</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.mfpts_to_target_microstate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mfpts_to_target_microstate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.mfpts_to_target_microstate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.mfpts_to_target_microstate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes all the mean-first passage to a target microstate (k)</p>
+<p>Returns a list where the i-element is mfpt(i-&gt;k). This function is
+useful to compute the mfpt matrix.</p>
+<p>transition_matrix:  Numpy 2D array</p>
+<dl class="simple">
+<dt>target:             Integer number that specifies the index of the state. The indexes</dt><dd><p>should be consistent with the transition matrix and python
+(i.e. starting from 0)</p>
+</dd>
+<dt>lag_time:           Integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>a list where the i-element is mfpt(i-&gt;k). This function is</em></p></li>
+<li><p><em>useful to compute the mfpt matrix.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.mfpts_matrix">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mfpts_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.mfpts_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.mfpts_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate MFPT matrix, i.e., the matrix where the ij-element is MFPT(i-&gt;j)</p>
+<p>transition_matrix:  Numpy 2D array</p>
+<dl class="simple">
+<dt>lag_time:           Integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mean-first passage time matrix with ij-element of MFPT(i-&gt;j)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.min_commute_time">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_commute_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_of_mfpts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.min_commute_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.min_commute_time" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate minimum commuting time (round trip time) between all pairs</p>
+<p>of microstates from the matrix of mfpts. It also returns the indexes
+of the pair of microstates involved.</p>
+<dl class="simple">
+<dt>matrix_of_mfpts:    Numpy 2D array</dt><dd><p>matrix of MFPTs with ij-element of MFPT(i-&gt;j)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>Minimum commuting time (round trip time) between all pairs</em></p></li>
+<li><p><em>of microstates and the indexes of the pair of microstates involved.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.max_commute_time">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_commute_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_of_mfpts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.max_commute_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.max_commute_time" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate maximum commuting time (round trip time) between all pairs</p>
+<p>of microstates from the matrix of mfpts. It also returns the indexes
+of the pair of microstates involved.</p>
+<dl class="simple">
+<dt>matrix_of_mfpts:    Numpy 2D array</dt><dd><p>matrix of MFPTs with ij-element of MFPT(i-&gt;j)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>Maximum commuting time (round trip time) between all pairs</em></p></li>
+<li><p><em>of microstates and the indexes of the pair of microstates involved.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.fpt_distribution">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fpt_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_lags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_recycling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.fpt_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.fpt_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Calculated distribution of first passage times from transition matrix</p>
+<p>t_matrix:           Numpy 2D array</p>
+<p>initial_state,
+final_states:       List of integer numbers</p>
+<blockquote>
+<div><p>Specifies the indexes of initial and final states.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>ini_probs:          List of float, default is None</dt><dd><p>initial probabilities for initial states</p>
+</dd>
+</dl>
+<p>min_power,
+max_power:          Integer</p>
+<blockquote>
+<div><p>The minimum and maximum power when the FPT distribution is
+shown in logscale such as (10^min_power, 10^max_power)*lag_time*dt.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>max_n_lags:         Integer</dt><dd><p>maximum number of lags when the FPT distribution is shown in linear
+scale such as (0, max_n_logs)*lag_time*dt. When in logscale, this is number
+of points to shown in the range of (10^min_power, 10^max_power)*lag_time*dt.</p>
+</dd>
+<dt>lag_time:           Integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+<dt>dt:                 Float</dt><dd><p>Time step</p>
+</dd>
+<dt>clean_recycling:    Bool</dt><dd><p>Cleaning the recycling of steady state simulation if True</p>
+</dd>
+<dt>logscale:           Bool</dt><dd><p>Option to use logscale for FPT time in the distribution</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Distributions of first passage times</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.adaptive_fpt_distribution">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adaptive_fpt_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tmatrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relevant_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit_renormalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.adaptive_fpt_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.adaptive_fpt_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Adaptively computes a first-passage time distribution.</p>
+<p>Starting at t=tau, compute the probability flowing into the target at t.
+Then, increment t by multiplying it by the coarse increment.
+When relevant_thresh probability has entered the target state, step back to the previous coarse state, and
+swap over to incrementing with the fine increment.
+This allows you to efficiently sweep log-space.</p>
+<p>Procedurally, this starts probability in specified <cite>initial_states</cite> according to <cite>initial_state_probs</cite>, and then
+propagates that probability through the transition matrix.
+The FPT distribution is measured by tracking new probability entering the target state at each time.</p>
+<p>Note that absorbing boundary conditions are stripped from the transition matrix – if this is not done, then
+the result is like a probability CDF, not a probability distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Tmatrix</strong> (<em>array-like</em>) – Transition matrix</p></li>
+<li><p><strong>initial_states</strong> (<em>array-like</em><em> of </em><em>ints</em>) – List of initial states to start probability in</p></li>
+<li><p><strong>initial_state_probs</strong> (<em>array-like</em>) – Probability distribution across the initial states.</p></li>
+<li><p><strong>target_states</strong> (<em>array-like</em>) – Target states for MFPT.</p></li>
+<li><p><strong>tau</strong> – </p></li>
+<li><p><strong>increment</strong> (<em>float</em>) – Multiplicative increment for coarse steps</p></li>
+<li><p><strong>fine_increment</strong> (<em>float</em>) – Multiplicative increment for fine steps, once the minimum probability in the target has been reached.</p></li>
+<li><p><strong>relevant_thresh</strong> (<em>float</em>) – Amount of probability that must be in the target before switching to fine increments.</p></li>
+<li><p><strong>max_steps</strong> (<em>int</em>) – Maximum number of steps to run</p></li>
+<li><p><strong>max_time</strong> (<em>float</em>) – Maximum time to run to</p></li>
+<li><p><strong>explicit_renormalization</strong> (<em>bool</em>) – Whether to explicitly renormalize the transition matrix. This should not be necessary – if it is, there’s
+probably some numerical instability you should be careful of.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Produce verbose text output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>FPT distribution,</em></p></li>
+<li><p><em>probability distribution at each time,</em></p></li>
+<li><p><em>last step index,</em></p></li>
+<li><p><em>times at which FPT distribution was evaluated</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.fpt.MarkovFPT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.fpt.</span></span><span class="sig-name descname"><span class="pre">MarkovFPT</span></span><a class="reference internal" href="_modules/msm_we/fpt.html#MarkovFPT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MarkovFPT" title="Permalink to this definition"></a></dt>
+<dd><p>Derived a class for calculating FPTs using Markovian transition matrix</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MarkovFPT.mean_fpts">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mean_fpts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">markov_tmatrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MarkovFPT.mean_fpts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MarkovFPT.mean_fpts" title="Permalink to this definition"></a></dt>
+<dd><p>Computes mean first passage times using Markovian transition matrix</p>
+<p>in both directions A-&gt;B and B-&gt;A from a markov model. The MFPTs computed
+in this way are directly comparable with the values obtained by a long back
+and forth simulation between the target states.</p>
+<dl class="simple">
+<dt>markov_matrix:      Numpy 2D array</dt><dd><p>Markovian transition matrix</p>
+</dd>
+<dt>stateA, stateB:     List of integers</dt><dd><p>Both states are a list of indexes.</p>
+</dd>
+<dt>lag_time:           integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mean-first passage times from A-&gt;B and B-&gt;A</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.MarkovFPT.markov_commute_time">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">markov_commute_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MarkovFPT.markov_commute_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MarkovFPT.markov_commute_time" title="Permalink to this definition"></a></dt>
+<dd><p>Computing commute time for Markovian Model</p>
+<dl class="simple">
+<dt>transition_matrix:  Numpy 2D array</dt><dd><p>Markovian transition matrix</p>
+</dd>
+<dt>stateA, stateB:     List of integers</dt><dd><p>Both states are a list of indexes.</p>
+</dd>
+<dt>lag_time:           integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Commute time from mean-first passage times</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.fpt.NonMarkovFPT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.fpt.</span></span><span class="sig-name descname"><span class="pre">NonMarkovFPT</span></span><a class="reference internal" href="_modules/msm_we/fpt.html#NonMarkovFPT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.NonMarkovFPT" title="Permalink to this definition"></a></dt>
+<dd><p>Derived a class for calculating FPTs using Non Markov transition matrix</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.fpt.NonMarkovFPT.mean_fpts">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mean_fpts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nm_transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#NonMarkovFPT.mean_fpts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.NonMarkovFPT.mean_fpts" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the mean first passage times from a non-markovian model</p>
+<p>in both directions of A-&gt;B and B-&gt;A. The shape of the transition matrix
+should be (2*n_states, 2*n_states).
+Parameters:
+———–
+nm_transition_matrix:   Numpy 2D array</p>
+<blockquote>
+<div><p>Non-Markovian transition matrix</p>
+</div></blockquote>
+<dl class="simple">
+<dt>stateA, stateB:         List of integers</dt><dd><p>Both states are a list of indexes.</p>
+</dd>
+<dt>lag_time:               integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
+time steps</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mean-first passage times from A-&gt;B and B-&gt;A</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-msm_we.ensembles">
+<span id="msm-we-ensembles"></span><h3>msm_we.ensembles<a class="headerlink" href="#module-msm_we.ensembles" title="Permalink to this heading"></a></h3>
+<p>Implements Ensemble class for managing trajectories</p>
+<p>Adapted from the original NMpathAnalysis package,
+<a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.ensembles.Ensemble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.ensembles.</span></span><span class="sig-name descname"><span class="pre">Ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble" title="Permalink to this definition"></a></dt>
+<dd><p>Define a base class to store a list of space-continuous trajectories</p>
+<blockquote>
+<div><p>e.g.: [ trajectory1, trajectory2,…], each trajectory is just a matrix</p>
+</div></blockquote>
+<p>where each row is a snapshot, and each column represents the evolution
+of the corresponding variable.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.Ensemble.add_trajectory">
+<span class="sig-name descname"><span class="pre">add_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble.add_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble.add_trajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Add a single trajectory to the ensemble</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.Ensemble.empirical_mfpts">
+<span class="sig-name descname"><span class="pre">empirical_mfpts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble.empirical_mfpts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble.empirical_mfpts" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate mean first passage time using direct counting method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.Ensemble.empirical_corr_function">
+<span class="sig-name descname"><span class="pre">empirical_corr_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble.empirical_corr_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble.empirical_corr_function" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate correlation function for trajectories</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.ensembles.PathEnsemble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.ensembles.</span></span><span class="sig-name descname"><span class="pre">PathEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#PathEnsemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.PathEnsemble" title="Permalink to this definition"></a></dt>
+<dd><p>Derive a class to store trajectories for path analysis</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.PathEnsemble.from_ensemble">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ensemble</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#PathEnsemble.from_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.PathEnsemble.from_ensemble" title="Permalink to this definition"></a></dt>
+<dd><p>Build a PathEnsemble from an ensemble object or a set of trajectories</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscreteEnsemble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.ensembles.</span></span><span class="sig-name descname"><span class="pre">DiscreteEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'int32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscreteEnsemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscreteEnsemble" title="Permalink to this definition"></a></dt>
+<dd><p>Define a base class to store a list of space-discrete trajectories</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscreteEnsemble.from_ensemble">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ens</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'int32'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscreteEnsemble.from_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscreteEnsemble.from_ensemble" title="Permalink to this definition"></a></dt>
+<dd><p>Build a DiscreteEnsemble from an ensemble object or a set of trajectories</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscreteEnsemble.from_transition_matrix">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_transition_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscreteEnsemble.from_transition_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscreteEnsemble.from_transition_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a DiscreteEnsemble from the transition matrix</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscretePathEnsemble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.ensembles.</span></span><span class="sig-name descname"><span class="pre">DiscretePathEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'int32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscretePathEnsemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscretePathEnsemble" title="Permalink to this definition"></a></dt>
+<dd><p>Derive a class to store a list of discrete trajectories for path analysis</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscretePathEnsemble.from_transition_matrix">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_transition_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ini_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscretePathEnsemble.from_transition_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscretePathEnsemble.from_transition_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a path ensemble from a transition matrix</p>
+<p>stateA:     list, intitial state</p>
+<p>stateB:     list, final state</p>
+<dl>
+<dt>n_paths:    integer, with default value of 1000</dt><dd><p>number of paths to generate</p>
+</dd>
+<dt>ini_pops:   list or label, probability distribution over the</dt><dd><p>initial state used to generate the path</p>
+<p>a) None
+Use a uniform distribution over the states in stateA
+c) list
+A list with the explicit values of the populations in stateA
+that should be used to generate the ensemble</p>
+</dd>
+<dt>max_iters:  integer, with default value of 1000000000</dt><dd><p>maximum of iterations for generating path trajectories</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscretePathEnsemble.from_ensemble">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ensemble</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscretePathEnsemble.from_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscretePathEnsemble.from_ensemble" title="Permalink to this definition"></a></dt>
+<dd><p>Build a DiscreteEnsemble from an ensemble object or a set of trajectories</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscretePathEnsemble.nm_mfpt">
+<span class="sig-name descname"><span class="pre">nm_mfpt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ini_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscretePathEnsemble.nm_mfpt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscretePathEnsemble.nm_mfpt" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the mean-first passage time from the transition matrix</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.ensembles.DiscretePathEnsemble.weighted_fundamental_sequences">
+<span class="sig-name descname"><span class="pre">weighted_fundamental_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#DiscretePathEnsemble.weighted_fundamental_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.DiscretePathEnsemble.weighted_fundamental_sequences" title="Permalink to this definition"></a></dt>
+<dd><p>Generate sorted fundamental sequences with weights</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-msm_we.nmm">
+<span id="msm-we-nmm"></span><h3>msm_we.nmm<a class="headerlink" href="#module-msm_we.nmm" title="Permalink to this heading"></a></h3>
+<p>“Non-Markovian” trajectory analysis</p>
+<p>Adapted from the original NMpathAnalysis package,
+<a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.nmm.</span></span><span class="sig-name descname"><span class="pre">NonMarkovModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sliding_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reversible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markovian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coarse_macrostates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel" title="Permalink to this definition"></a></dt>
+<dd><p>Define a class for analyzing MD trajectories using Markovian or non-Markovian Model</p>
+<p>from a list of 1D trajectories of integers representing macrostates</p>
+<p>For example:</p>
+<p>trajectories = [ [1 , 2, 0, …], [2, 2, 1, …], [3, 1, 2, …], …]</p>
+<p>If only one sequence is given in trajectories, the format is the same:</p>
+<p>trajectories = [ [1 , 2, 0, …] ]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>integer</strong> (<em>lag_time</em>) – Lag time of the model.</p></li>
+<li><p><strong>default</strong> – Lag time of the model.</p></li>
+<li><p><strong>(</strong><strong>boolean</strong><strong>)</strong> (<em>sliding_window</em>) – Use a sliding window of length lag_time to compute the count matrix</p></li>
+<li><p><strong>stateA</strong> – Define the initial and final macrostates in form of python lists
+for example: stateA=[0,2,5], stateB = [1]</p></li>
+<li><p><strong>lists</strong><strong>)</strong> (<em>stateB</em><em> (</em><em>python</em>) – Define the initial and final macrostates in form of python lists
+for example: stateA=[0,2,5], stateB = [1]</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.n_states">
+<span class="sig-name descname"><span class="pre">n_states</span></span><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.n_states" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.nm_cmatrix">
+<span class="sig-name descname"><span class="pre">nm_cmatrix</span></span><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.nm_cmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Stores the number of transitions between states, the i,j element cij
+stores the number of transitions observed from i to j.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>array, with shape (2 n_states, 2 n_states)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.populations">
+<span class="sig-name descname"><span class="pre">populations</span></span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel.populations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.populations" title="Permalink to this definition"></a></dt>
+<dd><p>Equilibrium population, the steady state solution of of the
+transition matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>array, shape (n_states,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fits the non-Markovian model from a list of sequences</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.from_nm_tmatrix">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_nm_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel.from_nm_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.from_nm_tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a discrete ensemble from the transition matrix</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.empirical_mfpts">
+<span class="sig-name descname"><span class="pre">empirical_mfpts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel.empirical_mfpts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.empirical_mfpts" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate mean first passage time using direct counting method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.nmm.NonMarkovModel.corr_function">
+<span class="sig-name descname"><span class="pre">corr_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#NonMarkovModel.corr_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.NonMarkovModel.corr_function" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the correlation function for a set of times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>integers</strong><strong>)</strong> (<em>times</em><em> (</em><em>list of</em>) – List of dt values used to compute the correlation function.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List of floats with the correlation values for the dt given in times</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.nmm.MarkovPlusColorModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.nmm.</span></span><span class="sig-name descname"><span class="pre">MarkovPlusColorModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sliding_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hist_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#MarkovPlusColorModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.MarkovPlusColorModel" title="Permalink to this definition"></a></dt>
+<dd><p>Define a class for analyzing MD trajectories using Markovian Plus Color Model</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.nmm.MarkovPlusColorModel.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/nmm.html#MarkovPlusColorModel.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.nmm.MarkovPlusColorModel.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fits the markov plus color model from a list of sequences</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-msm_we.utils">
+<span id="msm-we-utils"></span><h3>msm_we.utils<a class="headerlink" href="#module-msm_we.utils" title="Permalink to this heading"></a></h3>
+<p>Miscellaneous convenience functions</p>
+<p>Adapted from the original NMpathAnalysis package,
+<a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.utils.Interval">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">Interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#Interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.Interval" title="Permalink to this definition"></a></dt>
+<dd><p>Intervals are in general defined as half-open interval [start,end).</p>
+<p>in any case, in each dimension the interval is specified using a list [a,b]
+where a &lt; b</p>
+<ul>
+<li><p>For 1D (single) interval a single list in the form [a,b] has to be given</p></li>
+<li><dl class="simple">
+<dt>The union of multiple (1D) intervals can be specified as:</dt><dd><p>[[a,b],[c,d],…]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>A list of lists [[a,b],[c,d],…] are used for a n-dimensional</dt><dd><p>intervals, one for each dimension, i.e, len(interval) = n_variables</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>A list-of-lists-of-lists for the mathematical union of n-dimensional</dt><dd><p>intervals’</p>
+<p>[ [[a,b],[c,d],…],  [[e,f],[g,h],…], … ]</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.reverse_sort_lists">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">reverse_sort_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#reverse_sort_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.reverse_sort_lists" title="Permalink to this definition"></a></dt>
+<dd><p>Reverse sorting two list based on the first one</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.weighted_choice">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">weighted_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#weighted_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.weighted_choice" title="Permalink to this definition"></a></dt>
+<dd><p>Select an element from a list with probability from weights</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.get_shape">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">get_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#get_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.get_shape" title="Permalink to this definition"></a></dt>
+<dd><p>Get the shape of a trajectory array in tuple (n_snapshots, n_variables)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.num_of_nonzero_elements">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">num_of_nonzero_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_vector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#num_of_nonzero_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.num_of_nonzero_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of non-zero elements in a vector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.normalize_markov_matrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">normalize_markov_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reversible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#normalize_markov_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.normalize_markov_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Transform a matrix of positive elements to a markov-like matrix</p>
+<p>by dividing each row by the sum of the elements of the row.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.normalize">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_vector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize a vector</p>
+<p>by dividing each element by the total sum of all its elements</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.random_markov_matrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">random_markov_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#random_markov_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.random_markov_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a random transition markov matrix</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.check_tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">check_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_null_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#check_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.check_tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the given matrix is actually a row-stochastic transition matrix</p>
+<blockquote>
+<div><p>i.e, all the elements are non-negative and the rows add to one.</p>
+</div></blockquote>
+<p>If the keyword argument accept_null_rows is True, is going
+to accept rows where all the elements are zero. Those “problematic”
+states are going to be removed later if necessary by clean_tmatrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.clean_tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">clean_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_absorbing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#clean_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.clean_tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Removes the states/indexes with no transitions and that are absorbing</p>
+<p>if the the keyword argument rm_absorbing is true
+Returns the “clean” transition matrix and a list with the
+removed states/indexes (clean_tmatrix, removed_states)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.pops_from_tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">pops_from_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#pops_from_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.pops_from_tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the eigen values and eigen vectors of the transposed transition matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transition_matrix</strong> (<em>ndarray with shape =</em><em> (</em><em>n_states</em><em>, </em><em>n_states</em><em>)</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>the solution, p, of K.T p = p where K.T is the transposed transition matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.pops_from_nm_tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">pops_from_nm_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#pops_from_nm_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.pops_from_nm_tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the populations of the real/physical states</p>
+<p>from a non-Markovian transtion matrix with shape (2*n_states, 2*n_states)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.map_to_integers">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">map_to_integers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#map_to_integers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.map_to_integers" title="Permalink to this definition"></a></dt>
+<dd><p>Map a sequence of elements to a sequence of integers
+for intance, maps [1, ‘a’, 1, ‘b’, 2.2] to [0, 1, 0, 2, 3]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.pseudo_nm_tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">pseudo_nm_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">markovian_tmatrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#pseudo_nm_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.pseudo_nm_tmatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Obtain a pseudo non-Markovian transition matrix from a Markovian transiton matrix</p>
+<p>The pseudo Markovian matrix has a shape of (2 n_states, 2 n_states)</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Installation/Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, John Russo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
