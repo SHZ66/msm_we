@@ -672,19 +672,19 @@ Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
 <dd><p>Computes the mean-first passage time in a single direction using a recursive procedure</p>
 <p>This method is useful when there is no B-&gt;A ensemble but only A-&gt;B transitions,
 for instance when B is absorbing.</p>
-<p>transition_matrix:  Numpy 2D array</p>
-<dl class="simple">
-<dt>stateA, stateB:     List of integers</dt><dd><p>Both states are a list of indexes.</p>
-</dd>
-<dt>ini_probs:          List of float, default is None</dt><dd><p>initial probabilities in stateA</p>
-</dd>
-<dt>lag_time:           integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>mean-first passage time from A-&gt;B</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transition_matrix</strong> (<em>Numpy 2D array</em>) – </p></li>
+<li><p><strong>stateA</strong> (<em>List</em><em> of </em><em>integers</em>) – Both states are a list of indexes.</p></li>
+<li><p><strong>stateB</strong> (<em>List</em><em> of </em><em>integers</em>) – Both states are a list of indexes.</p></li>
+<li><p><strong>ini_probs</strong> (<em>List</em><em> of </em><em>float</em><em>, </em><em>default is None</em>) – initial probabilities in stateA</p></li>
+<li><p><strong>lag_time</strong> (<em>integer</em>) – Lag time used, the trajectory is “observed” every lag_time
+time steps</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>mean-first passage time from A-&gt;B</p>
 </dd>
 </dl>
 </dd></dl>
@@ -695,18 +695,18 @@ time steps</p>
 <dd><p>Computes all the mean-first passage to a target microstate (k)</p>
 <p>Returns a list where the i-element is mfpt(i-&gt;k). This function is
 useful to compute the mfpt matrix.</p>
-<p>transition_matrix:  Numpy 2D array</p>
-<dl class="simple">
-<dt>target:             Integer number that specifies the index of the state. The indexes</dt><dd><p>should be consistent with the transition matrix and python
-(i.e. starting from 0)</p>
-</dd>
-<dt>lag_time:           Integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transition_matrix</strong> (<em>Numpy 2D array</em>) – </p></li>
+<li><p><strong>target</strong> (<em>Integer number that specifies the index</em><em> of </em><em>the state. The indexes</em>) – should be consistent with the transition matrix and python
+(i.e. starting from 0)</p></li>
+<li><p><strong>lag_time</strong> (<em>Integer</em>) – Lag time used, the trajectory is “observed” every lag_time
+time steps</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><em>a list where the i-element is mfpt(i-&gt;k). This function is</em></p></li>
 <li><p><em>useful to compute the mfpt matrix.</em></p></li>
 </ul>
@@ -719,15 +719,16 @@ time steps</p>
 <dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.mfpts_matrix">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mfpts_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.mfpts_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.mfpts_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate MFPT matrix, i.e., the matrix where the ij-element is MFPT(i-&gt;j)</p>
-<p>transition_matrix:  Numpy 2D array</p>
-<dl class="simple">
-<dt>lag_time:           Integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>mean-first passage time matrix with ij-element of MFPT(i-&gt;j)</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transition_matrix</strong> (<em>Numpy 2D array</em>) – </p></li>
+<li><p><strong>lag_time</strong> (<em>Integer</em>) – Lag time used, the trajectory is “observed” every lag_time
+time steps</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>mean-first passage time matrix with ij-element of MFPT(i-&gt;j)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -738,13 +739,12 @@ time steps</p>
 <dd><p>Calculate minimum commuting time (round trip time) between all pairs</p>
 <p>of microstates from the matrix of mfpts. It also returns the indexes
 of the pair of microstates involved.</p>
-<dl class="simple">
-<dt>matrix_of_mfpts:    Numpy 2D array</dt><dd><p>matrix of MFPTs with ij-element of MFPT(i-&gt;j)</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix_of_mfpts</strong> (<em>Numpy 2D array</em>) – matrix of MFPTs with ij-element of MFPT(i-&gt;j)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><em>Minimum commuting time (round trip time) between all pairs</em></p></li>
 <li><p><em>of microstates and the indexes of the pair of microstates involved.</em></p></li>
 </ul>
@@ -759,13 +759,12 @@ of the pair of microstates involved.</p>
 <dd><p>Calculate maximum commuting time (round trip time) between all pairs</p>
 <p>of microstates from the matrix of mfpts. It also returns the indexes
 of the pair of microstates involved.</p>
-<dl class="simple">
-<dt>matrix_of_mfpts:    Numpy 2D array</dt><dd><p>matrix of MFPTs with ij-element of MFPT(i-&gt;j)</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix_of_mfpts</strong> (<em>Numpy 2D array</em>) – matrix of MFPTs with ij-element of MFPT(i-&gt;j)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><em>Maximum commuting time (round trip time) between all pairs</em></p></li>
 <li><p><em>of microstates and the indexes of the pair of microstates involved.</em></p></li>
 </ul>
@@ -778,40 +777,29 @@ of the pair of microstates involved.</p>
 <dt class="sig sig-object py" id="msm_we.fpt.MatrixFPT.fpt_distribution">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fpt_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_lags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_recycling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MatrixFPT.fpt_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MatrixFPT.fpt_distribution" title="Permalink to this definition"></a></dt>
 <dd><p>Calculated distribution of first passage times from transition matrix</p>
-<p>t_matrix:           Numpy 2D array</p>
-<p>initial_state,
-final_states:       List of integer numbers</p>
-<blockquote>
-<div><p>Specifies the indexes of initial and final states.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>ini_probs:          List of float, default is None</dt><dd><p>initial probabilities for initial states</p>
-</dd>
-</dl>
-<p>min_power,
-max_power:          Integer</p>
-<blockquote>
-<div><p>The minimum and maximum power when the FPT distribution is
-shown in logscale such as (10^min_power, 10^max_power)*lag_time*dt.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>max_n_lags:         Integer</dt><dd><p>maximum number of lags when the FPT distribution is shown in linear
-scale such as (0, max_n_logs)*lag_time*dt. When in logscale, this is number
-of points to shown in the range of (10^min_power, 10^max_power)*lag_time*dt.</p>
-</dd>
-<dt>lag_time:           Integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-<dt>dt:                 Float</dt><dd><p>Time step</p>
-</dd>
-<dt>clean_recycling:    Bool</dt><dd><p>Cleaning the recycling of steady state simulation if True</p>
-</dd>
-<dt>logscale:           Bool</dt><dd><p>Option to use logscale for FPT time in the distribution</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Distributions of first passage times</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_matrix</strong> (<em>Numpy 2D array</em>) – </p></li>
+<li><p><strong>initial_state</strong> (<em>List</em><em> of </em><em>integer numbers</em>) – Specifies the indexes of initial and final states.</p></li>
+<li><p><strong>final_state</strong> (<em>List</em><em> of </em><em>integer numbers</em>) – Specifies the indexes of initial and final states.</p></li>
+<li><p><strong>initial_distrib</strong> (<em>List</em><em> of </em><em>float</em><em>, </em><em>default is None</em>) – initial probabilities for initial states</p></li>
+<li><p><strong>min_power</strong> (<em>Integer</em>) – The minimum and maximum power when the FPT distribution is
+shown in logscale such as (10^min_power, 10^max_power)*lag_time*dt.</p></li>
+<li><p><strong>max_power</strong> (<em>Integer</em>) – The minimum and maximum power when the FPT distribution is
+shown in logscale such as (10^min_power, 10^max_power)*lag_time*dt.</p></li>
+<li><p><strong>max_n_lags</strong> (<em>Integer</em>) – maximum number of lags when the FPT distribution is shown in linear
+scale such as (0, max_n_logs)*lag_time*dt. When in logscale, this is number
+of points to shown in the range of (10^min_power, 10^max_power)*lag_time*dt.</p></li>
+<li><p><strong>lag_time</strong> (<em>Integer</em>) – Lag time used, the trajectory is “observed” every lag_time
+time steps</p></li>
+<li><p><strong>dt</strong> (<em>Float</em>) – Time step</p></li>
+<li><p><strong>clean_recycling</strong> (<em>Bool</em>) – Cleaning the recycling of steady state simulation if True</p></li>
+<li><p><strong>logscale</strong> (<em>Bool</em>) – Option to use logscale for FPT time in the distribution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Distributions of first passage times</p>
 </dd>
 </dl>
 </dd></dl>
@@ -873,18 +861,18 @@ probably some numerical instability you should be careful of.</p></li>
 <p>in both directions A-&gt;B and B-&gt;A from a markov model. The MFPTs computed
 in this way are directly comparable with the values obtained by a long back
 and forth simulation between the target states.</p>
-<dl class="simple">
-<dt>markov_matrix:      Numpy 2D array</dt><dd><p>Markovian transition matrix</p>
-</dd>
-<dt>stateA, stateB:     List of integers</dt><dd><p>Both states are a list of indexes.</p>
-</dd>
-<dt>lag_time:           integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>mean-first passage times from A-&gt;B and B-&gt;A</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>markov_matrix</strong> (<em>Numpy 2D array</em>) – Markovian transition matrix</p></li>
+<li><p><strong>stateA</strong> (<em>List</em><em> of </em><em>integers</em>) – Both states are a list of indexes.</p></li>
+<li><p><strong>stateB</strong> (<em>List</em><em> of </em><em>integers</em>) – Both states are a list of indexes.</p></li>
+<li><p><strong>lag_time</strong> (<em>integer</em>) – Lag time used, the trajectory is “observed” every lag_time
+time steps</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>mean-first passage times from A-&gt;B and B-&gt;A</p>
 </dd>
 </dl>
 </dd></dl>
@@ -893,18 +881,18 @@ time steps</p>
 <dt class="sig sig-object py" id="msm_we.fpt.MarkovFPT.markov_commute_time">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">markov_commute_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/fpt.html#MarkovFPT.markov_commute_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.fpt.MarkovFPT.markov_commute_time" title="Permalink to this definition"></a></dt>
 <dd><p>Computing commute time for Markovian Model</p>
-<dl class="simple">
-<dt>transition_matrix:  Numpy 2D array</dt><dd><p>Markovian transition matrix</p>
-</dd>
-<dt>stateA, stateB:     List of integers</dt><dd><p>Both states are a list of indexes.</p>
-</dd>
-<dt>lag_time:           integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Commute time from mean-first passage times</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transition_matrix</strong> (<em>Numpy 2D array</em>) – Markovian transition matrix</p></li>
+<li><p><strong>stateA</strong> (<em>List</em><em> of </em><em>integers</em>) – Both states are a list of indexes.</p></li>
+<li><p><strong>stateB</strong> (<em>List</em><em> of </em><em>integers</em>) – Both states are a list of indexes.</p></li>
+<li><p><strong>lag_time</strong> (<em>integer</em>) – Lag time used, the trajectory is “observed” every lag_time
+time steps</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Commute time from mean-first passage times</p>
 </dd>
 </dl>
 </dd></dl>
@@ -921,19 +909,14 @@ time steps</p>
 <dd><p>Computes the mean first passage times from a non-markovian model</p>
 <p>in both directions of A-&gt;B and B-&gt;A. The shape of the transition matrix
 should be (2*n_states, 2*n_states).
-Parameters:
-———–
-nm_transition_matrix:   Numpy 2D array</p>
-<blockquote>
-<div><p>Non-Markovian transition matrix</p>
-</div></blockquote>
-<dl class="simple">
-<dt>stateA, stateB:         List of integers</dt><dd><p>Both states are a list of indexes.</p>
-</dd>
-<dt>lag_time:               integer</dt><dd><p>Lag time used, the trajectory is “observed” every lag_time
-time steps</p>
-</dd>
-</dl>
+:param nm_transition_matrix: Non-Markovian transition matrix
+:type nm_transition_matrix: Numpy 2D array
+:param stateA: Both states are a list of indexes.
+:type stateA: List of integers
+:param stateB: Both states are a list of indexes.
+:type stateB: List of integers
+:param lag_time: Lag time used, the trajectory is “observed” every lag_time time steps
+:type lag_time: integer</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>mean-first passage times from A-&gt;B and B-&gt;A</p>
@@ -953,11 +936,11 @@ time steps</p>
 <dt class="sig sig-object py" id="msm_we.ensembles.Ensemble">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.ensembles.</span></span><span class="sig-name descname"><span class="pre">Ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble" title="Permalink to this definition"></a></dt>
 <dd><p>Define a base class to store a list of space-continuous trajectories</p>
-<blockquote>
-<div><p>e.g.: [ trajectory1, trajectory2,…], each trajectory is just a matrix</p>
-</div></blockquote>
-<p>where each row is a snapshot, and each column represents the evolution
+<dl class="simple">
+<dt>e.g.: [ trajectory1, trajectory2,…], each trajectory is just a matrix</dt><dd><p>where each row is a snapshot, and each column represents the evolution
 of the corresponding variable.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="msm_we.ensembles.Ensemble.add_trajectory">
 <span class="sig-name descname"><span class="pre">add_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/ensembles.html#Ensemble.add_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.ensembles.Ensemble.add_trajectory" title="Permalink to this definition"></a></dt>
@@ -1022,7 +1005,8 @@ of the corresponding variable.</p>
 <dt>n_paths:    integer, with default value of 1000</dt><dd><p>number of paths to generate</p>
 </dd>
 <dt>ini_pops:   list or label, probability distribution over the</dt><dd><p>initial state used to generate the path</p>
-<p>a) None
+<p>possible values:
+a) None
 Use a uniform distribution over the states in stateA
 c) list
 A list with the explicit values of the populations in stateA
@@ -1242,12 +1226,12 @@ where a &lt; b</p>
 <dt class="sig sig-object py" id="msm_we.utils.check_tmatrix">
 <span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">check_tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_null_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#check_tmatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.check_tmatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the given matrix is actually a row-stochastic transition matrix</p>
-<blockquote>
-<div><p>i.e, all the elements are non-negative and the rows add to one.</p>
-</div></blockquote>
-<p>If the keyword argument accept_null_rows is True, is going
+<dl class="simple">
+<dt>i.e, all the elements are non-negative and the rows add to one.</dt><dd><p>If the keyword argument accept_null_rows is True, is going
 to accept rows where all the elements are zero. Those “problematic”
 states are going to be removed later if necessary by clean_tmatrix.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

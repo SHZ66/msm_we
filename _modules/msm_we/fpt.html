@@ -314,8 +314,8 @@
 <span class="sd">        This method is useful when there is no B-&gt;A ensemble but only A-&gt;B transitions,</span>
 <span class="sd">        for instance when B is absorbing.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        transition_matrix:  Numpy 2D array</span>
 
 <span class="sd">        stateA, stateB:     List of integers</span>
@@ -378,8 +378,8 @@
 <span class="sd">        Returns a list where the i-element is mfpt(i-&gt;k). This function is</span>
 <span class="sd">        useful to compute the mfpt matrix.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        transition_matrix:  Numpy 2D array</span>
 
 <span class="sd">        target:             Integer number that specifies the index of the state. The indexes</span>
@@ -417,8 +417,8 @@
     <span class="k">def</span> <span class="nf">mfpts_matrix</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">transition_matrix</span><span class="p">,</span> <span class="n">lag_time</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate MFPT matrix, i.e., the matrix where the ij-element is MFPT(i-&gt;j)</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        transition_matrix:  Numpy 2D array</span>
 
 <span class="sd">        lag_time:           Integer</span>
@@ -448,8 +448,8 @@
 <span class="sd">        of microstates from the matrix of mfpts. It also returns the indexes</span>
 <span class="sd">        of the pair of microstates involved.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        matrix_of_mfpts:    Numpy 2D array</span>
 <span class="sd">                            matrix of MFPTs with ij-element of MFPT(i-&gt;j)</span>
 
@@ -488,8 +488,8 @@
 <span class="sd">        of microstates from the matrix of mfpts. It also returns the indexes</span>
 <span class="sd">        of the pair of microstates involved.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        matrix_of_mfpts:    Numpy 2D array</span>
 <span class="sd">                            matrix of MFPTs with ij-element of MFPT(i-&gt;j)</span>
 
@@ -538,19 +538,17 @@
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculated distribution of first passage times from transition matrix</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        t_matrix:           Numpy 2D array</span>
 
-<span class="sd">        initial_state,</span>
-<span class="sd">        final_states:       List of integer numbers</span>
+<span class="sd">        initial_state, final_state:       List of integer numbers</span>
 <span class="sd">                            Specifies the indexes of initial and final states.</span>
 
-<span class="sd">        ini_probs:          List of float, default is None</span>
+<span class="sd">        initial_distrib:          List of float, default is None</span>
 <span class="sd">                            initial probabilities for initial states</span>
 
-<span class="sd">        min_power,</span>
-<span class="sd">        max_power:          Integer</span>
+<span class="sd">        min_power,  max_power:          Integer</span>
 <span class="sd">                            The minimum and maximum power when the FPT distribution is</span>
 <span class="sd">                            shown in logscale such as (10^min_power, 10^max_power)*lag_time*dt.</span>
 
@@ -893,8 +891,8 @@
 <span class="sd">        in this way are directly comparable with the values obtained by a long back</span>
 <span class="sd">        and forth simulation between the target states.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        markov_matrix:      Numpy 2D array</span>
 <span class="sd">                            Markovian transition matrix</span>
 
@@ -920,8 +918,8 @@
     <span class="k">def</span> <span class="nf">markov_commute_time</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">transition_matrix</span><span class="p">,</span> <span class="n">stateA</span><span class="p">,</span> <span class="n">stateB</span><span class="p">,</span> <span class="n">lag_time</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Computing commute time for Markovian Model</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        transition_matrix:  Numpy 2D array</span>
 <span class="sd">                            Markovian transition matrix</span>
 
@@ -949,8 +947,8 @@
 
 <span class="sd">        in both directions of A-&gt;B and B-&gt;A. The shape of the transition matrix</span>
 <span class="sd">        should be (2*n_states, 2*n_states).</span>
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        nm_transition_matrix:   Numpy 2D array</span>
 <span class="sd">                                Non-Markovian transition matrix</span>
 
@@ -958,8 +956,7 @@
 <span class="sd">                                Both states are a list of indexes.</span>
 
 <span class="sd">        lag_time:               integer</span>
-<span class="sd">                                Lag time used, the trajectory is &quot;observed&quot; every lag_time</span>
-<span class="sd">                                time steps</span>
+<span class="sd">                                Lag time used, the trajectory is &quot;observed&quot; every lag_time time steps</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

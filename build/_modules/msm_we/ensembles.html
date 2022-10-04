@@ -97,8 +97,8 @@
     <span class="sd">&quot;&quot;&quot; Define a base class to store a list of space-continuous trajectories</span>
 
 <span class="sd">     e.g.: [ trajectory1, trajectory2,...], each trajectory is just a matrix</span>
-<span class="sd">    where each row is a snapshot, and each column represents the evolution</span>
-<span class="sd">    of the corresponding variable.</span>
+<span class="sd">        where each row is a snapshot, and each column represents the evolution</span>
+<span class="sd">        of the corresponding variable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">discrete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lag_time</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -419,7 +419,6 @@
 <span class="sd">                    initial state used to generate the path</span>
 
 <span class="sd">                    possible values:</span>
-<span class="sd">                    ----------------</span>
 <span class="sd">                    a) None</span>
 <span class="sd">                    Use a uniform distribution over the states in stateA</span>
 <span class="sd">                    c) list</span>
