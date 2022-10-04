@@ -384,16 +384,6 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>The simulation data I’m using has already been augmented with pairwise alpha-carbon RMSDs, so we just need to strip out an extra dimension that’s present in there.</p>
-<p>(That extra dimension is just an artifact of how this data was prepared)</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>R = rms.RMSD(structure,  # universe to align
-             structure,  # reference universe or atomgroup
-             select=&#39;name CA&#39;,  # group to superimpose and calculate RMSD
-             groupselections=[&#39;name CA&#39;],  # groups for RMSD
-             ref_frame=0)  # frame index of the reference
-R.run()
-</pre></div>
-</div>
 <p>This is just to clean up the logging output for display in the documentation webpage.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -434,6 +424,7 @@ R.run()
 </pre></div>
 </div>
 </div>
+<p>We’ll use full XYZ coordinates for our MSM features. This is a simple (and poor) choice – pairwise alpha-carbons would be better, but I’m using this for simplicity.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
