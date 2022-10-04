@@ -103,10 +103,39 @@
 </style>
 <section id="welcome-to-msm-we-s-documentation">
 <h1>Welcome to msm_we’s documentation!<a class="headerlink" href="#welcome-to-msm-we-s-documentation" title="Permalink to this heading"></a></h1>
+<section id="msm-we">
+<h2>msm_we<a class="headerlink" href="#msm-we" title="Permalink to this heading"></a></h2>
+<a class="reference external image-reference" href="https://github.com/jdrusso/msm_we/actions/workflows/run_tests.yml"><img alt="https://github.com/jdrusso/msm_we/actions/workflows/run_tests.yml/badge.svg" src="https://github.com/jdrusso/msm_we/actions/workflows/run_tests.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/jdrusso/msm_we/actions/workflows/build_docs.yml"><img alt="https://github.com/jdrusso/msm_we/actions/workflows/build_docs.yml/badge.svg" src="https://github.com/jdrusso/msm_we/actions/workflows/build_docs.yml/badge.svg" /></a>
+<ul class="simple">
+<li><p>Authors: John Russo, Jeremy Copperman</p></li>
+<li><p>Free software: MIT license</p></li>
+<li><p>Documentation: <a class="reference external" href="https://docs.jdrusso.dev/msm_we/">https://docs.jdrusso.dev/msm_we/</a> .</p></li>
+</ul>
+<section id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this heading"></a></h3>
 <p>This is a package for doing history-augmented MSM (haMSM) analysis on weighted ensemble trajectories.</p>
 <p>Weighted ensemble data produced from simulations with recycling boundary conditions are naturally in a directional
 ensemble.
-This means that a history label can be assigned to every trajectory.</p>
+This means that a history label can be assigned to every trajectory, and an haMSM can be constructed.</p>
+</section>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Compute a history-augmented Markov state model from WESTPA weighted ensemble data</p></li>
+<li><p>Estimate steady-state distributions</p></li>
+<li><p>Estimate flux profiles</p></li>
+<li><p>Estimate committors</p></li>
+</ul>
+</section>
+<section id="known-issues">
+<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this heading"></a></h3>
+<p>Sometimes, on Python3.7 (and maybe below) the subprocess calls will fail. This may manifest as a silent failure,
+followed by hanging (which is very fun to debug!) To fix this, upgrade to Python 3.8+.</p>
+</section>
+<section id="credits">
+<h3>Credits<a class="headerlink" href="#credits" title="Permalink to this heading"></a></h3>
+<p>This package was created with <a class="reference external" href="https://github.com/audreyr/cookiecutter">Cookiecutter</a> and the <a class="reference external" href="https://github.com/audreyr/cookiecutter-pypackage">audreyr/cookiecutter-pypackage</a> project template.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -119,6 +148,8 @@ This means that a history label can be assigned to every trajectory.</p>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
 </ul>
 </div>
+</section>
+</section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
