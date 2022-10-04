@@ -17,10 +17,11 @@
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="haMSM Construction Examples" href="examples.hamsm.html" />
+    <link rel="next" title="Trp-cage haMSM Construction and Analysis" href="_examples/hamsm_construction.html" />
     <link rel="prev" title="Documentation" href="api.html" /> 
 </head>
 
@@ -48,8 +49,18 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Installation/Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.hamsm.html">haMSM Construction Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.optimization.html">Optimization Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hamsm-construction">haMSM Construction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_examples/hamsm_construction.html">Trp-cage haMSM Construction and Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hamsm-analysis">haMSM Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_examples/analysis.html">Trp-cage haMSM Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optimization">Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_examples/optimization.html">Trp-cage WE Optimization</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="code_todos.html">TODOs</a></li>
@@ -81,14 +92,56 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="examples">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<section id="hamsm-construction">
+<h2>haMSM Construction<a class="headerlink" href="#hamsm-construction" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples.hamsm.html">haMSM Construction Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.optimization.html">Optimization Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_examples/hamsm_construction.html">Trp-cage haMSM Construction and Analysis</a></li>
 </ul>
 </div>
+</section>
+<section id="hamsm-analysis">
+<h2>haMSM Analysis<a class="headerlink" href="#hamsm-analysis" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="_examples/analysis.html">Trp-cage haMSM Analysis</a></li>
+</ul>
+</div>
+</section>
+<section id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="_examples/optimization.html">Trp-cage WE Optimization</a></li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -96,7 +149,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="api.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples.hamsm.html" class="btn btn-neutral float-right" title="haMSM Construction Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="_examples/hamsm_construction.html" class="btn btn-neutral float-right" title="Trp-cage haMSM Construction and Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

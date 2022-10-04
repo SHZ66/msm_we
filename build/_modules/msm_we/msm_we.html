@@ -16,6 +16,7 @@
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -2822,8 +2823,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">load_iter_data</span><span class="p">(</span><span class="n">iteration</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">get_transition_data_lag0</span><span class="p">()</span>
 
-                <span class="n">coords_from</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordPairList</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,:,</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">coords_to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordPairList</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,:,</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">coords_from</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordPairList</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">coords_to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordPairList</span><span class="p">[:,:,:,</span><span class="mi">1</span><span class="p">]</span>
 
                 <span class="c1"># If  no good coords in this iteration, skip it</span>
                 <span class="c1"># if iter_coords.shape[0] == 0:</span>

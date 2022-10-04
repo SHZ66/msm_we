@@ -17,7 +17,9 @@
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -74,9 +76,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux"><code class="docutils literal notranslate"><span class="pre">plot_flux()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux_committor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor_pcoordcolor()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#full-api">Full API</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -161,7 +160,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="documentation">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -517,11 +540,6 @@ is less than this.</p>
 <span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor_pcoordcolor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-</section>
-<section id="full-api">
-<h3>Full API<a class="headerlink" href="#full-api" title="Permalink to this heading"></a></h3>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 </section>
 <section id="module-msm_we.optimization">
