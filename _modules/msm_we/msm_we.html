@@ -1351,6 +1351,23 @@
     <span class="k">def</span> <span class="nf">do_block_validation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">cross_validation_groups</span><span class="p">,</span> <span class="n">cross_validation_blocks</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        One way to estimate the uncertainty of your model is to split your data into blocks, compute models over</span>
+<span class="sd">        groups of the blocks, and assess consistency between the groups.</span>
+
+<span class="sd">        The procedure here chops your data up into uniform blocks, by iteration. For example, with 100 iterations and 4</span>
+<span class="sd">        blocks, the blocks consist of iterations `[0-25), [25-50), [50-75), [75-100)`.</span>
+<span class="sd">        If the above blocks were assigned to 2 groups, the groups would consist of iterations `( [0-25), [50-75) )` and</span>
+<span class="sd">        `(  [25-50), [75-100) )`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cross_validation_groups: int</span>
+<span class="sd">            Number of groups to assign blocks over</span>
+
+<span class="sd">        cross_validation_blocks: int</span>
+<span class="sd">            Number of blocks to split data into</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="p">(</span>
             <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;post_cluster_model&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_cluster_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -5058,6 +5075,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fluxMatrixRaw</span> <span class="o">=</span> <span class="n">fluxMatrix</span>
 
     <span class="k">def</span> <span class="nf">organize_fluxMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This cleaning step removes all clusters that aren&#39;t in the largest connected set, then rediscretizes all the</span>
+<span class="sd">        trajectories according to the new reduced set of clusters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;clustering_method&quot;</span><span class="p">):</span>
             <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>

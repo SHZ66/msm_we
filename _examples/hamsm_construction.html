@@ -51,9 +51,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Installation/Usage</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Trp-cage haMSM Construction and Analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Model-building">Model building</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#With-build_analyze_model">With <code class="docutils literal notranslate"><span class="pre">build_analyze_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Step-by-step">Step-by-step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Prep">Prep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Model-building-with-build_analyze_model()">Model-building with build_analyze_model()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Model-building-step-by-step">Model-building step by step</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Transition-matrix-estimation">Transition matrix estimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Model-validation">Model validation</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#Save-model">Save model</a></li>
@@ -395,8 +397,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<section id="Model-building">
-<h2>Model building<a class="headerlink" href="#Model-building" title="Permalink to this heading"></a></h2>
+<section id="Prep">
+<h2>Prep<a class="headerlink" href="#Prep" title="Permalink to this heading"></a></h2>
 <p>First, let’s set some parameters for haMSM building.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -438,9 +440,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<section id="With-build_analyze_model">
-<h3>With <code class="docutils literal notranslate"><span class="pre">build_analyze_model</span></code><a class="headerlink" href="#With-build_analyze_model" title="Permalink to this heading"></a></h3>
-<p>You can construct an haMSM (and validation haMSMs) with one call to <code class="docutils literal notranslate"><span class="pre">build_analyze_model()</span></code>.</p>
+</section>
+<section id="Model-building-with-build_analyze_model()">
+<h2>Model-building with <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a><a class="headerlink" href="#Model-building-with-build_analyze_model()" title="Permalink to this heading"></a></h2>
+<p>You can construct an haMSM (and validation haMSMs) with one call to <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -957,11 +960,12 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre></div>
 </div>
 </section>
-<section id="Step-by-step">
-<h3>Step-by-step<a class="headerlink" href="#Step-by-step" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">build_analyze_model()</span></code> is just a convenient wrapper around the following steps.</p>
+<section id="Model-building-step-by-step">
+<h2>Model-building step by step<a class="headerlink" href="#Model-building-step-by-step" title="Permalink to this heading"></a></h2>
+<p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a> is just a convenient wrapper around the following steps.</p>
 <p>You can run them manually if you want to observe each step of the process.</p>
 <p>It’s helpful to start off by running step-by-step while you’re starting analysis for a system, to fine-tune parameters without re-running the entire workflow.</p>
+<p>First, we launch Ray, which is the backend for the parallel work manager.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -1087,6 +1091,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
          components.                               <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">store_validation_model=True</span></code> is necessary for block validation. It enables caching the model immediately after discretization in <code class="docutils literal notranslate"><span class="pre">model.post_cluster_model</span></code>, so that the blocks can be efficiently created later.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
@@ -1207,6 +1212,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="output_area docutils container">
 <script type="application/vnd.jupyter.widget-view+json">{"model_id": "e39068b4da354f06a18a92da047ba2eb", "version_major": 2, "version_minor": 0}</script></div>
 </div>
+<p>It’s likely our flux matrix isn’t strongly connected. This cleaning step removes all clusters that aren’t in the largest connected set, then rediscretizes all the trajectories according to the new, reduced set of clusters.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -1278,6 +1284,8 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="output_area docutils container">
 <script type="application/vnd.jupyter.widget-view+json">{"model_id": "ee0d348f743e44ae8efab14e4702d7c8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
+<section id="Transition-matrix-estimation">
+<h3>Transition matrix estimation<a class="headerlink" href="#Transition-matrix-estimation" title="Permalink to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
@@ -1318,6 +1326,10 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 </pre></div>
 </div>
 </div>
+</section>
+<section id="Model-validation">
+<h3>Model validation<a class="headerlink" href="#Model-validation" title="Permalink to this heading"></a></h3>
+<p>This block validation step</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
@@ -1581,7 +1593,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 </section>
 <section id="Save-model">
 <h2>Save model<a class="headerlink" href="#Save-model" title="Permalink to this heading"></a></h2>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
@@ -1590,6 +1602,25 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">of</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:22,923 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690269696; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:32,925 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690261504; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:42,928 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690249216; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:52,930 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690224640; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:02,933 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690220544; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:12,942 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690036224; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:22,944 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690028032; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:32,947 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689995264; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:42,949 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689991168; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:52,952 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689958400; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:40:02,955 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689860096; capacity: 113821028352. Object creation will fail if spilling is required.
+<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 18:08:40,402 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5684056064; capacity: 113821028352. Object creation will fail if spilling is required.
+</pre></div></div>
 </div>
 </section>
 </section>
