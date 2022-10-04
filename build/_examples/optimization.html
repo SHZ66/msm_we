@@ -54,7 +54,10 @@
 <li class="toctree-l2"><a class="reference internal" href="analysis.html">Trp-cage haMSM Analysis</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Trp-cage WE Optimization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Load-haMSM">Load haMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Compute-discrepancy,-variance">Compute discrepancy, variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Compute-discrepancy,-variance">Compute discrepancy, variance</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Visualize-discrepancy-and-\pi-\cdot-v">Visualize discrepancy and <span class="math notranslate nohighlight">\(\pi \cdot v\)</span></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#Compute-WE-bin-assignments-for-each-MSM-microstate">Compute WE bin assignments for each MSM microstate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Create-OptimizedBinMapper">Create <code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper</span></code></a></li>
 </ul>
@@ -378,6 +381,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msm_we</span> <span class="kn">import</span> <span class="n">optimization</span> <span class="k">as</span> <span class="n">mo</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -422,20 +426,91 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">[10/03/22 17:36:38] </span><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Computing pi matrix                                                 <a href="file:///home/jd/msm_we/msm_we/optimization.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">optimization.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/optimization.py#49" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">49</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">[10/04/22 10:35:18] </span><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Computing pi matrix                                                 <a href="file:///home/jd/msm_we/msm_we/optimization.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">optimization.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/optimization.py#57" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">57</span></a>
 </pre></div>
 </div>
-</section>
-<section id="Compute-WE-bin-assignments-for-each-MSM-microstate">
-<h2>Compute WE bin assignments for each MSM microstate<a class="headerlink" href="#Compute-WE-bin-assignments-for-each-MSM-microstate" title="Permalink to this heading"></a></h2>
+<section id="Visualize-discrepancy-and-\pi-\cdot-v">
+<h3>Visualize discrepancy and <span class="math notranslate nohighlight">\(\pi \cdot v\)</span><a class="headerlink" href="#Visualize-discrepancy-and-\pi-\cdot-v" title="Permalink to this heading"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is a list with an element for each MSM microbin, which is the integer index of the</span>
-<span class="c1">#   WE bin it&#39;s assigned to.</span>
-<span class="c1"># In other words, microstate_assignments[microbin_index] == WE bin index of that microbin</span>
-<span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">get_uniform_mfpt_bins</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_committor</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">discrepancy</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">q</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">[10/04/22 10:35:19] </span><span style="color: #800000; text-decoration-color: #800000">WARNING </span> Note that, if steady-state weighted ensemble data is being analyzed,    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#7094" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">7094</span></a>
+<span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span>         this is a <span style="color: #008000; text-decoration-color: #008000">'pseudocommittor'</span> and not a true committor as a result of     <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span>         being constructed from a one-way ensemble.                              <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1ab14378d32349649b9a92a8b4af6550", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.PathCollection at 0x7f71f3e5f430&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/_examples_optimization_8_3.png" src="../_images/_examples_optimization_8_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pi_v</span> <span class="o">=</span> <span class="n">steady_state_distribution</span> <span class="o">*</span> <span class="n">variance</span>
+<span class="n">pi_v_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">discrepancy</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="n">cumsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">pi_v</span><span class="p">[</span><span class="n">pi_v_sort</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cumsum</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x7f71f3b28d90&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/_examples_optimization_9_1.png" src="../_images/_examples_optimization_9_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Compute-WE-bin-assignments-for-each-MSM-microstate">
+<h2>Compute WE bin assignments for each MSM microstate<a class="headerlink" href="#Compute-WE-bin-assignments-for-each-MSM-microstate" title="Permalink to this heading"></a></h2>
+<p>This is a list with an element for each MSM microbin, which is the integer index of the WE bin it’s assigned to.</p>
+<p>In other words, <code class="docutils literal notranslate"><span class="pre">microstate_assignments[microbin_index]</span> <span class="pre">==</span> <span class="pre">WE</span> <span class="pre">bin</span> <span class="pre">index</span></code> of that microbin</p>
+<p>If there are big jumps in our discrepancy function, then the uniform-width bins won’t appropriately divide the space.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">get_uniform_mfpt_bins</span><span class="p">(</span>
     <span class="n">variance</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">steady_state_distribution</span><span class="p">,</span> <span class="n">n_active_we_bins</span>
 <span class="p">)</span>
 <span class="n">microstate_assignments</span>
@@ -443,19 +518,53 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       6, 0, 0, 0, 6, 0, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+array([5, 6, 0, 6, 0, 0, 5, 0, 7, 0, 0, 0, 0, 5, 0, 0, 6, 6, 7, 6, 6, 7,
+       0, 6, 7, 6, 0, 6, 7, 6, 0, 7, 0, 7, 0, 7, 7, 7, 7, 7, 7, 7, 0, 7,
        7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-       7, 7, 7, 7, 0, 7])
+       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 7])
+</pre></div></div>
+</div>
+<p>We can instead use the k-means clustered MFPT bins.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">get_clustered_mfpt_bins</span><span class="p">(</span>
+    <span class="n">variance</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">steady_state_distribution</span><span class="p">,</span> <span class="n">n_active_we_bins</span>
+<span class="p">)</span>
+<span class="n">microstate_assignments</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([4., 2., 1., 2., 1., 1., 4., 5., 3., 1., 1., 1., 1., 4., 1., 1., 2.,
+       7., 6., 7., 2., 6., 1., 2., 3., 7., 5., 2., 6., 2., 1., 3., 5., 3.,
+       5., 6., 3., 6., 3., 0., 0., 6., 1., 3., 6., 0., 6., 6., 3., 3., 3.,
+       6., 3., 3., 6., 0., 6., 6., 0., 6., 0., 3., 6., 3., 6., 0., 0., 6.,
+       0., 6., 3., 0., 3., 0., 0., 0., 0., 0., 0., 3., 6., 6., 6., 0., 6.,
+       0., 0., 0., 6., 6., 0., 6., 0., 6., 6., 6., 6., 6., 0., 6., 0., 6.,
+       0., 0., 0., 0., 0., 0., 0., 0., 6., 0., 6., 6., 0., 0., 6., 0., 0.,
+       0., 0., 0., 0., 0., 6., 0., 0., 6., 6., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 5., 0.])
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add entries for the basis/target states, since MSM-WE sets those as the last two clusters</span>
@@ -467,22 +576,28 @@ array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       6, 0, 0, 0, 6, 0, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-       7, 7, 7, 7, 0, 7, 8, 9])
+array([4., 2., 1., 2., 1., 1., 4., 5., 3., 1., 1., 1., 1., 4., 1., 1., 2.,
+       7., 6., 7., 2., 6., 1., 2., 3., 7., 5., 2., 6., 2., 1., 3., 5., 3.,
+       5., 6., 3., 6., 3., 0., 0., 6., 1., 3., 6., 0., 6., 6., 3., 3., 3.,
+       6., 3., 3., 6., 0., 6., 6., 0., 6., 0., 3., 6., 3., 6., 0., 0., 6.,
+       0., 6., 3., 0., 3., 0., 0., 0., 0., 0., 0., 3., 6., 6., 6., 0., 6.,
+       0., 0., 0., 6., 6., 0., 6., 0., 6., 6., 6., 6., 6., 0., 6., 0., 6.,
+       0., 0., 0., 0., 0., 0., 0., 0., 6., 0., 6., 6., 0., 0., 6., 0., 0.,
+       0., 0., 0., 0., 0., 6., 0., 0., 6., 6., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 5., 0., 8., 9.])
 </pre></div></div>
 </div>
 </section>
 <section id="Create-OptimizedBinMapper">
 <h2>Create <code class="docutils literal notranslate"><span class="pre">OptimizedBinMapper</span></code><a class="headerlink" href="#Create-OptimizedBinMapper" title="Permalink to this heading"></a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">base_mapper</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">bin_mapper</span>
@@ -491,7 +606,7 @@ array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the new bin mapper for WESTPA</span>
@@ -517,7 +632,7 @@ array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Multiple arguments provided to binmapper initializer, creating new <a href="file:///home/jd/msm_we/msm_we/optimization.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">optimization.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/optimization.py#167" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">167</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">[10/04/22 10:35:19] </span><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Multiple arguments provided to binmapper initializer, creating new <a href="file:///home/jd/msm_we/msm_we/optimization.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">optimization.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/optimization.py#177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">177</span></a>
 <span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span>         object                                                             <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">                   </span>
 </pre></div>
 </div>
@@ -525,21 +640,21 @@ array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Clusterer has <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">72</span> total clusters <span style="font-weight: bold">(</span>include <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> for basis and <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> for     <a href="file:///home/jd/msm_we/msm_we/optimization.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">optimization.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/optimization.py#227" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">227</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Clusterer has <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">167</span> total clusters <span style="font-weight: bold">(</span>include <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> for basis and <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> for    <a href="file:///home/jd/msm_we/msm_we/optimization.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">optimization.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/optimization.py#237" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">237</span></a>
 <span style="color: #7fbfbf; text-decoration-color: #7fbfbf">                    </span>         target<span style="font-weight: bold">)</span>                                                            <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">                   </span>
 </pre></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;OptimizedBinMapper at 0x7fdea5f2a6a0 with 10 bins&gt;
+&lt;OptimizedBinMapper at 0x7f71f3a89790 with 10 bins&gt;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">we_bin_mapper</span><span class="o">.</span><span class="n">microstate_mapper</span>
@@ -547,15 +662,21 @@ array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       6, 0, 0, 0, 6, 0, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-       7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-       7, 7, 7, 7, 0, 7, 8, 9])
+array([4., 2., 1., 2., 1., 1., 4., 5., 3., 1., 1., 1., 1., 4., 1., 1., 2.,
+       7., 6., 7., 2., 6., 1., 2., 3., 7., 5., 2., 6., 2., 1., 3., 5., 3.,
+       5., 6., 3., 6., 3., 0., 0., 6., 1., 3., 6., 0., 6., 6., 3., 3., 3.,
+       6., 3., 3., 6., 0., 6., 6., 0., 6., 0., 3., 6., 3., 6., 0., 0., 6.,
+       0., 6., 3., 0., 3., 0., 0., 0., 0., 0., 0., 3., 6., 6., 6., 0., 6.,
+       0., 0., 0., 6., 6., 0., 6., 0., 6., 6., 6., 6., 6., 0., 6., 0., 6.,
+       0., 0., 0., 0., 0., 0., 0., 0., 6., 0., 6., 6., 0., 0., 6., 0., 0.,
+       0., 0., 0., 0., 0., 6., 0., 0., 6., 6., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 5., 0., 8., 9.])
 </pre></div></div>
 </div>
 </section>

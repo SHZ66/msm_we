@@ -51,7 +51,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Installation/Usage</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Trp-cage haMSM Construction and Analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Prep">Prep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Prep">Prep</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Define-MSM-featurization">Define MSM featurization</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#Model-building-with-build_analyze_model()">Model-building with build_analyze_model()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Model-building-step-by-step">Model-building step by step</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Transition-matrix-estimation">Transition matrix estimation</a></li>
@@ -387,16 +390,6 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>This is just to clean up the logging output for display in the documentation webpage.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">msm_we</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_log_render</span><span class="o">.</span><span class="n">show_time</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">msm_we</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">65</span>
-</pre></div>
-</div>
-</div>
 <section id="Prep">
 <h2>Prep<a class="headerlink" href="#Prep" title="Permalink to this heading"></a></h2>
 <p>First, let’s set some parameters for haMSM building.</p>
@@ -407,13 +400,13 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h5file_paths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;data/west.h5&#39;</span><span class="p">]</span>
 
 <span class="c1"># Number of MSM microstates to initially put in each stratum/WE bin</span>
-<span class="n">clusters_per_stratum</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">clusters_per_stratum</span> <span class="o">=</span> <span class="mi">25</span>
 
 <span class="n">dimreduce_method</span> <span class="o">=</span> <span class="s1">&#39;vamp&#39;</span>
 
 <span class="c1"># Boundaries of the basis/target, in progress coordinate space</span>
 <span class="n">pcoord_bounds</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;basis&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span>
+    <span class="s1">&#39;basis&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">]],</span>
     <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mi">100</span><span class="p">]]</span>
 <span class="p">}</span>
 
@@ -427,7 +420,11 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>We’ll use full XYZ coordinates for our MSM features. This is a simple (and poor) choice – pairwise alpha-carbons would be better, but I’m using this for simplicity.</p>
+<section id="Define-MSM-featurization">
+<h3>Define MSM featurization<a class="headerlink" href="#Define-MSM-featurization" title="Permalink to this heading"></a></h3>
+<p>The function <code class="docutils literal notranslate"><span class="pre">processCoordinates</span></code> defines a transformation that’s applied to the coordinates in <code class="docutils literal notranslate"><span class="pre">auxdata/coord</span></code> before dimensionality reduction/clustering.</p>
+<p>The inputs are the coordinates (read from <code class="docutils literal notranslate"><span class="pre">auxdata/coord</span></code>) for each segment in the loaded iteration(s), and it should return an array of features for each.</p>
+<p>We could just use full XYZ coordinates for our MSM features. This would be a very simple (and very poor) choice – it doesn’t capture some of the translational invariance that something like pairwise distances might.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -440,12 +437,48 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>So, let’s use pairwise distances instead, at the cost of a more expensive calculation.</p>
+<p>Note that because of how work is serialized for parallelization, we have to define the <code class="docutils literal notranslate"><span class="pre">Universe</span></code> objects <em>within</em> <code class="docutils literal notranslate"><span class="pre">processCoordinates</span></code>. Otherwise, there would be multiple workers acting on the same object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">from</span> <span class="nn">MDAnalysis.analysis</span> <span class="kn">import</span> <span class="n">distances</span>
+
+<span class="k">def</span> <span class="nf">processCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+
+    <span class="n">u_ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref_file</span><span class="p">)</span>
+    <span class="n">u_check</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref_file</span><span class="p">)</span>
+
+    <span class="n">dist_out</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">u_check</span><span class="o">.</span><span class="n">load_new</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">u_check</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+
+        <span class="n">dists</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span>
+            <span class="n">u_check</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s1">&#39;backbone&#39;</span><span class="p">),</span>
+            <span class="n">u_ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s1">&#39;backbone&#39;</span><span class="p">)</span>
+        <span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">dist_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
+
+    <span class="n">dist_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dist_out</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dist_out</span>
+
+<span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
+</pre></div>
+</div>
+</div>
+</section>
 </section>
 <section id="Model-building-with-build_analyze_model()">
 <h2>Model-building with <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a><a class="headerlink" href="#Model-building-with-build_analyze_model()" title="Permalink to this heading"></a></h2>
-<p>You can construct an haMSM (and validation haMSMs) with one call to <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a>.</p>
+<p>You can construct an haMSM (and validation haMSMs) with one call to <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="p">()</span>
@@ -468,13 +501,13 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b6bd8d6f5ee34d55a5584f85735f9632", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bf707a6690b14c9e8dab5f6ec646f4aa", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">2022-10-03 17:30:44,884 INFO worker.py:1509 -- Started a local
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">2022-10-04 10:34:58,597 INFO worker.py:1509 -- Started a local
 Ray instance. View the dashboard at <span style="color: #008000; text-decoration-color: #008000; font-weight: bold">127.0.0.1:8265 </span>
 </pre></div>
 </div>
@@ -482,20 +515,28 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "737b23ad90fa4ff1a173ed91f86d8baf", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7016f9070b434d568d6561b3028d8df3", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Performing weighted vamp                  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2769" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2769</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000000; text-decoration-color: #000000">Warning: importing 'simtk.openmm' is deprecated.  Import 'openmm'</span>
+<span style="color: #000000; text-decoration-color: #000000">instead.</span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Weighted vamp will reduce <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">816</span> to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">496</span>      <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2782" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2782</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Performing weighted vamp                  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2786" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2786</span></a>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Weighted vamp will reduce <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">80</span> to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">35</span>        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2799" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2799</span></a>
          components.                               <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -503,7 +544,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Be aware: Number of cluster centers is an <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3057" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3057</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Be aware: Number of cluster centers is an <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3074" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3074</span></a>
          important parameter, and can drastically  <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          affect model quality. We recommend        <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          examining block-validation results with a <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
@@ -515,14 +556,14 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning stratified clustering.          <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3064" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3064</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning stratified clustering.          <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3081" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3081</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Obtaining bin definitions from iteration  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3482" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3482</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Obtaining bin definitions from iteration  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3499" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3499</span></a>
          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> in file data/west.h5                    <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -530,7 +571,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Loading pickled bin mapper from H5 for    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3486" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3486</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Loading pickled bin mapper from H5 for    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3503" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3503</span></a>
          stratified clustering<span style="color: #808000; text-decoration-color: #808000">...</span>                  <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -538,7 +579,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Doing stratified clustering with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> total <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#254" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">254</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Doing stratified clustering with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> total <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#254" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">254</span></a>
          clusters                                   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">             </span>
 </pre></div>
 </div>
@@ -546,14 +587,160 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f63b748e8ab54b5690758c7b7561f6eb", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9ece2b6eee51411fb2cdfd3aacd78aab", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Clustering couldn't use last iteration,   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3595" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3595</span></a>
-         not all bins filled.                      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using Ray cluster with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">16.0</span> CPUs!          <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#873" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">873</span></a>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "794e5f1a5da74770bb1ea4861279a33a", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6a63a8e46f0e4e30b49cc550932ba912", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248589)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248592)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248598)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248597)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248591)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248590)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248596)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248594)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248588)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248600)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248586)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248593)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248587)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248595)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248599)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #7fbfbf; text-decoration-color: #7fbfbf">(do_stratified_ray_discretization pid=248601)</span> Warning: importing
+'simtk.openmm' is deprecated.  Import 'openmm' instead.
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -567,60 +754,34 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "de9957fa3c2049aaa878d07d1dd4675d", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ba0d67da86d647cabd5131298714ed6e", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "617304486b83477d849323465a062d0d", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "50b42eb42dc14c30b5cb37edb9a716ed", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using Ray cluster with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">16.0</span> CPUs!          <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#873" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">873</span></a>
-</pre></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c8bfec18438e43faaa573403b9b9660c", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0bd338a0c2124eab8b8b4ad51e32e7b6", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4018" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4018</span></a>
+         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">133</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4001" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4001</span></a>
-         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">350</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
-</pre></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4017" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4017</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4034" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4034</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -634,39 +795,39 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4113" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4113</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4130" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4130</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2e3db57d251842afa920b6a58249ecce", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "674b18c758bd41018ad8483b7e1164a9", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e56bbbae0b1e4d3392d12ab6d04c5eb6", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "fbb2f6de04c54025879d04c869a3c77d", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000000; text-decoration-color: #000000">/home/jd/msm_we/msm_we/msm_we.py:4248: VisibleDeprecationWarning:</span>
-<span style="color: #000000; text-decoration-color: #000000">Creating an ndarray from ragged nested sequences (which is a </span>
-<span style="color: #000000; text-decoration-color: #000000">list-or-tuple of lists-or-tuples-or ndarrays with different </span>
-<span style="color: #000000; text-decoration-color: #000000">lengths or shapes) is deprecated. If you meant to do this, you </span>
-<span style="color: #000000; text-decoration-color: #000000">must specify 'dtype=object' when creating the ndarray.</span>
-<span style="color: #000000; text-decoration-color: #000000">  self.targetRMSD_all = </span>
-<span style="color: #000000; text-decoration-color: #000000">np.array(cluster_pcoord_all)[pcoord_sort_indices]</span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">/home/jd/msm_we/msm_we/msm_we.py:4265: VisibleDeprecationWarning:
+Creating an ndarray from ragged nested sequences (which is a
+list-or-tuple of lists-or-tuples-or ndarrays with different
+lengths or shapes) is deprecated. If you meant to do this, you
+must specify 'dtype=object' when creating the ndarray.
+  self.targetRMSD_all =
+np.array(cluster_pcoord_all)[pcoord_sort_indices]
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -680,27 +841,27 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1078ae8d1d594ce8899dd96868189660", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0bf7ce35b1064c68a7183fb3721b8c82", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a507663fc3cd4f91af571545f02de327", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a3039b08396f4469b14ab63392f1998a", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5571" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5571</span></a>
-         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.2810e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5592" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5592</span></a>
+         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.1088e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          iterations of inverse iteration.          <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -708,14 +869,14 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5582" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5582</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5603" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5603</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1322" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1322</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1339" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1339</span></a>
          group <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>/<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span>.                                <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -730,34 +891,34 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b8b91618e8da470b87a6b97c4c7fea30", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6f7d3bd6db0c473180a8022f67947490", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "71da4fbd0b704a35b6f61d24335a74cf", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "541b6b21bcb047a0b6466cb49c1e7d30", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4001" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4001</span></a>
-         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">370</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4018" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4018</span></a>
+         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">155</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4017" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4017</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4034" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4034</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -771,26 +932,26 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4113" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4113</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4130" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4130</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "28af1ef7f1e641fb824174c90c73a3d5", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6d0fb9c0e33c41118c2f0347372c8cdd", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "396b4462113c4999b3995c683802e11b", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "30df655530f4460495708f1b5ca46b95", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -804,27 +965,27 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6163a97542444cb9b1c5fdfb598d0373", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "dabaaaefd7a74b5f914a6a7089fd395f", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d0e9c84f2de94728b532671b4a1db708", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "fbf588fd613e4ad4a9562a404fccbc05", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5571" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5571</span></a>
-         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.0158e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5592" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5592</span></a>
+         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.1349e+05</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          iterations of inverse iteration.          <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -832,14 +993,14 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5582" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5582</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5603" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5603</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1322" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1322</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1339" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1339</span></a>
          group <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span>/<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span>.                                <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -854,28 +1015,34 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "abb93fa72df6465988d161ed16cf2d73", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4a7f2a96234b4707858b24beb3ed9f89", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0d2a5911cbed4b7d91aee5f472805f83", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4001" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4001</span></a>
-         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">372</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4018" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4018</span></a>
+         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">151</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4017" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4017</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4034" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4034</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -889,26 +1056,26 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4113" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4113</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4130" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4130</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "620d3e6aa40f49c0b5a0c1a61930f261", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e22f545035cc4805826152290fcf6e16", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cd3bbf9613a94e9886c43ffd4f2807e7", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5a4881c38f0244b68f54708b042c256f", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -922,27 +1089,27 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4f9bd72e3a2e4ebb8ab55bce4f2f1ac9", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f8e73c204b7f498ea88c35f8165b3488", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8b68e8a3dbfb427fba625d40f701de3e", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c9b47036e18b413c8b99f840f455f054", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5571" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5571</span></a>
-         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.0039e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5592" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5592</span></a>
+         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.2720e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          iterations of inverse iteration.          <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -950,7 +1117,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5582" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5582</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5603" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5603</span></a>
 </pre></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -967,7 +1134,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <p>It’s helpful to start off by running step-by-step while you’re starting analysis for a system, to fine-tune parameters without re-running the entire workflow.</p>
 <p>First, we launch Ray, which is the backend for the parallel work manager.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">ignore_reinit_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -978,12 +1145,12 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000000; text-decoration-color: #000000">2022-10-03 17:31:04,428 INFO worker.py:1351 -- Calling ray.init()</span>
-<span style="color: #000000; text-decoration-color: #000000">again after it has already been called.</span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">2022-10-04 10:35:24,406 INFO worker.py:1351 -- Calling ray.init()
+again after it has already been called.
 </pre></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1030,7 +1197,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 </div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="p">()</span>
@@ -1066,7 +1233,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0667e71defaf4d539353d115427db6f7", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "460d5191df7b4c50aafa6240946d20a8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
@@ -1080,20 +1247,20 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Performing weighted vamp                  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2769" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2769</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Performing weighted vamp                  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2786" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2786</span></a>
 </pre></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Weighted vamp will reduce <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">816</span> to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">496</span>      <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2782" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2782</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Weighted vamp will reduce <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">80</span> to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">35</span>        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#2799" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">2799</span></a>
          components.                               <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">store_validation_model=True</span></code> is necessary for block validation. It enables caching the model immediately after discretization in <code class="docutils literal notranslate"><span class="pre">model.post_cluster_model</span></code>, so that the blocks can be efficiently created later.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">cluster_coordinates</span><span class="p">(</span>
@@ -1109,7 +1276,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Be aware: Number of cluster centers is an <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3057" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3057</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Be aware: Number of cluster centers is an <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3074" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3074</span></a>
          important parameter, and can drastically  <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          affect model quality. We recommend        <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          examining block-validation results with a <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
@@ -1121,14 +1288,14 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning stratified clustering.          <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3064" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3064</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning stratified clustering.          <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3081" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3081</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Obtaining bin definitions from iteration  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3482" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3482</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Obtaining bin definitions from iteration  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3499" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3499</span></a>
          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> in file data/west.h5                    <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1136,7 +1303,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Loading pickled bin mapper from H5 for    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3486" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3486</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Loading pickled bin mapper from H5 for    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3503" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3503</span></a>
          stratified clustering<span style="color: #808000; text-decoration-color: #808000">...</span>                  <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1144,7 +1311,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">ERROR   </span> Stratified clustering currently MUST run  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3522" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3522</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">ERROR   </span> Stratified clustering currently MUST run  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3539" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3539</span></a>
          in streaming mode <span style="font-weight: bold">(</span>and with ray enabled   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          for discretization<span style="font-weight: bold">)</span>. Enabling both and    <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          continuing<span style="color: #808000; text-decoration-color: #808000">...</span>                             <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
@@ -1154,7 +1321,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Doing stratified clustering with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> total <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#254" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">254</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Doing stratified clustering with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> total <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#254" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">254</span></a>
          clusters                                   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">             </span>
 </pre></div>
 </div>
@@ -1162,15 +1329,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c8466a3a337d4651bd13185105bf3e2a", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Clustering couldn't use last iteration,   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#3595" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">3595</span></a>
-         not all bins filled.                      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
-</pre></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2f666125d17e44fd964f712c5393300c", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -1183,23 +1342,23 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d4f0d16842a54768a770d2824b7c2610", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "467aef33b38f42cb9be2348f4e9fdba1", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a992cff311a040d5a8ea2b6e8850d9b8", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5a6368d936ec4cee97e5e8c5f01cf306", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_fluxMatrix</span><span class="p">(</span><span class="n">n_lag</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1210,11 +1369,11 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e39068b4da354f06a18a92da047ba2eb", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5a1d531bb6be4366a94a59ae869007f6", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>It’s likely our flux matrix isn’t strongly connected. This cleaning step removes all clusters that aren’t in the largest connected set, then rediscretizes all the trajectories according to the new, reduced set of clusters.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">organize_fluxMatrix</span><span class="p">()</span>
@@ -1225,15 +1384,15 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4001" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4001</span></a>
-         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">350</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4018" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4018</span></a>
+         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">133</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4017" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4017</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4034" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4034</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -1247,47 +1406,38 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4113" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4113</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4130" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4130</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "db62d6eb6615422f88f4dd2c7e16e768", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b618414afe3544fea52a5572928a5ad8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d0e70b752b414511bddfdbd526019b3e", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "474b523c21c148ec82d98304eb8ca171", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/jd/msm_we/msm_we/msm_we.py:4248: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
-  self.targetRMSD_all = np.array(cluster_pcoord_all)[pcoord_sort_indices]
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ee0d348f743e44ae8efab14e4702d7c8", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "56c0e64b129c4a0bb550a623d56f7820", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <section id="Transition-matrix-estimation">
 <h3>Transition matrix estimation<a class="headerlink" href="#Transition-matrix-estimation" title="Permalink to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_Tmatrix</span><span class="p">()</span>
@@ -1295,7 +1445,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_steady_state</span><span class="p">()</span>
@@ -1306,8 +1456,8 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5571" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5571</span></a>
-         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.2810e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5592" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5592</span></a>
+         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.1088e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          iterations of inverse iteration.          <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1315,11 +1465,11 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5582" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5582</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5603" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5603</span></a>
 </pre></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_steady_state_target_flux</span><span class="p">()</span>
@@ -1331,7 +1481,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <h3>Model validation<a class="headerlink" href="#Model-validation" title="Permalink to this heading"></a></h3>
 <p>This block validation step</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">do_block_validation</span><span class="p">(</span>
@@ -1345,7 +1495,7 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1322" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1322</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1339" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1339</span></a>
          group <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>/<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span>.                                <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1360,34 +1510,34 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5537a7cf5cdd4095a53b770983685526", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "aa9f8ad8e219448298f4ef305f8e237d", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c567c1278f284fa0a72cfbe8c8b575d7", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "984a48cf17c94402b7eeca3c8ccbd195", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4001" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4001</span></a>
-         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">370</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4018" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4018</span></a>
+         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">155</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4017" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4017</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4034" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4034</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -1401,26 +1551,26 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4113" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4113</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4130" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4130</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9b9d4fb713314a608ebc4fe6255e4dc7", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3b1e3d607d3a4d3e8b97ab10f76faa8f", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "22bf9112e5544c67bbf25ed5df5f527c", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "814e46efd80d41a08913d9928b52d2a9", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -1434,27 +1584,27 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "166a4bc2f28643ea82e465e6a5238c89", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b238e92a323a41b8923f41e2407ea9b6", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "89e48752bf88422aa253d84bc932cf14", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7b765f1838bf42ce9bf1a338a180eca0", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5571" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5571</span></a>
-         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.0158e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5592" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5592</span></a>
+         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.1349e+05</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          iterations of inverse iteration.          <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1462,14 +1612,14 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5582" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5582</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5603" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5603</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1322" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1322</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Beginning analysis of cross-validation    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#1339" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">1339</span></a>
          group <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span>/<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span>.                                <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1484,34 +1634,34 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9931166333db41c58003d9f52632901c", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7958613fb9af4b8c8bf13e04feba808e", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a7d9ae969d3a417b8538ca66b96c7de6", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d1cd6f3d0cb042dfa2b578ccb5fcf951", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">420</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4001" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4001</span></a>
-         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">372</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Started with <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">300</span> clusters, and removed    <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4018" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4018</span></a>
+         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">151</span>                                       <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4017" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4017</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000">WARNING </span> All clusters were cleaned from bins <span style="font-weight: bold">{</span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span><span style="font-weight: bold">}</span>  <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4034" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4034</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -1525,26 +1675,26 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4113" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4113</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Using cached model for discretization     <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4130" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4130</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "771d4e6aac4748d38f17f9d1301dac86", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "dbe45c5847e5472381ccfd2c2c00364b", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ca70e9c5cf6d482ea03f4dbc1347eaf4", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9c4c1f1050ee4aff9e49b87fd4826d4a", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4177" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4177</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Discretization complete                   <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4194" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4194</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
@@ -1558,27 +1708,27 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2b8cabca99bc4a0faf1a34df18db0720", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a65c02364f9f4699913415428dedda4c", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "58a8ff7754e74285ab0093eeaf8e8499", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "71c25174334e47abaac3f6b654e698f6", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4926" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4926</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Fluxmatrices all obtained                 <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#4943" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">4943</span></a>
 </pre></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5571" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5571</span></a>
-         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.0039e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span>                                           <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5592" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5592</span></a>
+         Flux converged to <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.2720e+06</span> after <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span>      <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
          iterations of inverse iteration.          <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">              </span>
 </pre></div>
 </div>
@@ -1586,15 +1736,15 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5582" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5582</span></a>
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080">INFO    </span> Done with steady-state estimation.        <a href="file:///home/jd/msm_we/msm_we/msm_we.py" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">msm_we.py</span></a><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">:</span><a href="file:///home/jd/msm_we/msm_we/msm_we.py#5603" target="_blank"><span style="color: #7f7f7f; text-decoration-color: #7f7f7f">5603</span></a>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="Save-model">
 <h2>Save model<a class="headerlink" href="#Save-model" title="Permalink to this heading"></a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
@@ -1602,25 +1752,6 @@ Ray instance. View the dashboard at <span style="color: #008000; text-decoration
     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">of</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:22,923 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690269696; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:32,925 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690261504; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:42,928 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690249216; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:38:52,930 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690224640; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:02,933 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690220544; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:12,942 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690036224; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:22,944 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5690028032; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:32,947 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689995264; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:42,949 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689991168; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:39:52,952 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689958400; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 17:40:02,955 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5689860096; capacity: 113821028352. Object creation will fail if spilling is required.
-<span class="ansi-yellow-fg">(raylet)</span> [2022-10-03 18:08:40,402 E 1102041 1102066] (raylet) file_system_monitor.cc:105: /tmp/ray/session_2022-10-03_17-30-43_050737_1101636 is over 95% full, available space: 5684056064; capacity: 113821028352. Object creation will fail if spilling is required.
-</pre></div></div>
 </div>
 </section>
 </section>
