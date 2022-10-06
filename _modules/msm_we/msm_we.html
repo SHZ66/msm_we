@@ -1731,7 +1731,7 @@
 
             <span class="k">elif</span> <span class="n">topology</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;prmtop&quot;</span><span class="p">:</span>
                 <span class="n">struct</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">load_prmtop</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
-                <span class="c1"># self.reference_structure = struct</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reference_structure</span> <span class="o">=</span> <span class="n">struct</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">nAtoms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">n_atoms</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">coord_ndim</span> <span class="o">=</span> <span class="mi">3</span>
                 <span class="k">return</span>
@@ -1742,7 +1742,7 @@
                 <span class="p">)</span>
 
             <span class="n">struct</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
-            <span class="c1"># self.reference_structure = struct</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reference_structure</span> <span class="o">=</span> <span class="n">struct</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reference_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">_xyz</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nAtoms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">n_atoms</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">coord_ndim</span> <span class="o">=</span> <span class="mi">3</span>
@@ -1754,7 +1754,7 @@
             <span class="p">)</span>
 
             <span class="n">struct</span> <span class="o">=</span> <span class="n">topology</span>
-            <span class="c1"># self.reference_structure = struct</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reference_structure</span> <span class="o">=</span> <span class="n">struct</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reference_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">_xyz</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nAtoms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">n_atoms</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">coord_ndim</span> <span class="o">=</span> <span class="mi">3</span>
