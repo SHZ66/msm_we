@@ -1121,6 +1121,7 @@
         <span class="n">cross_validation_groups</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="n">cross_validation_blocks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
         <span class="n">show_live_display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_validation_failure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">step_kwargs</span><span class="o">=</span><span class="p">{}</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1179,6 +1180,9 @@
 <span class="sd">            Number of blocks to split your data into, before building the independent models.</span>
 
 <span class="sd">        show_live_display</span>
+
+<span class="sd">        allow_validation_failure: bool, optional (Default = False)</span>
+<span class="sd">            If True, then raise a warning but don&#39;t fail if construction of a cross-validation model fails.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1335,21 +1339,29 @@
             <span class="c1"># for now just do something useless w/ the post_cluster_model so linter doesn&#39;t complain</span>
             <span class="n">step_idx</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="n">cross_validation_groups</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">do_step</span><span class="p">(</span>
-                    <span class="n">table</span><span class="p">,</span>
-                    <span class="n">step_idx</span><span class="p">,</span>
-                    <span class="n">step</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">do_block_validation</span><span class="p">,</span>
-                    <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span>
-                        <span class="s2">&quot;cross_validation_groups&quot;</span><span class="p">:</span> <span class="n">cross_validation_groups</span><span class="p">,</span>
-                        <span class="s2">&quot;cross_validation_blocks&quot;</span><span class="p">:</span> <span class="n">cross_validation_blocks</span><span class="p">,</span>
-                        <span class="s2">&quot;use_ray&quot;</span><span class="p">:</span> <span class="n">use_ray</span><span class="p">,</span>
-                        <span class="o">**</span><span class="n">step_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;block_validation&#39;</span><span class="p">,</span> <span class="p">{})</span>
-                    <span class="p">},</span>
-                <span class="p">)</span>
-                <span class="n">flux_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">_validation_model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_models</span><span class="p">):</span>
-                    <span class="n">flux_text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> flux: </span><span class="si">{</span><span class="n">_validation_model</span><span class="o">.</span><span class="n">JtargetSS</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">set_note</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">step_idx</span><span class="p">,</span> <span class="n">flux_text</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">do_step</span><span class="p">(</span>
+                        <span class="n">table</span><span class="p">,</span>
+                        <span class="n">step_idx</span><span class="p">,</span>
+                        <span class="n">step</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">do_block_validation</span><span class="p">,</span>
+                        <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span>
+                            <span class="s2">&quot;cross_validation_groups&quot;</span><span class="p">:</span> <span class="n">cross_validation_groups</span><span class="p">,</span>
+                            <span class="s2">&quot;cross_validation_blocks&quot;</span><span class="p">:</span> <span class="n">cross_validation_blocks</span><span class="p">,</span>
+                            <span class="s2">&quot;use_ray&quot;</span><span class="p">:</span> <span class="n">use_ray</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">step_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;block_validation&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                        <span class="p">},</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_validation_failure</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">e</span>
+                    <span class="c1"># TODO: Print for the one that does pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_note</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">step_idx</span><span class="p">,</span> <span class="s2">&quot;At least one validation model failed&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">flux_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">_validation_model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_models</span><span class="p">):</span>
+                        <span class="n">flux_text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> flux: </span><span class="si">{</span><span class="n">_validation_model</span><span class="o">.</span><span class="n">JtargetSS</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_note</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">step_idx</span><span class="p">,</span> <span class="n">flux_text</span><span class="p">)</span>
 
             <span class="c1"># If live updating was disabled, write to the table once now. (Doesn&#39;t do anything if it was enabled)</span>
             <span class="n">live</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
