@@ -92,6 +92,25 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#westpa-plugins-msm-we-westpa-plugins">WESTPA Plugins (msm_we.westpa_plugins)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver"><code class="docutils literal notranslate"><span class="pre">MDAugmentationDriver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates"><code class="docutils literal notranslate"><span class="pre">MDAugmentationDriver.augment_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver"><code class="docutils literal notranslate"><span class="pre">HAMSMDriver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm"><code class="docutils literal notranslate"><span class="pre">HAMSMDriver.construct_hamsm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver"><code class="docutils literal notranslate"><span class="pre">RestartDriver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins"><code class="docutils literal notranslate"><span class="pre">RestartDriver.get_original_bins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter"><code class="docutils literal notranslate"><span class="pre">RestartDriver.cur_iter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration"><code class="docutils literal notranslate"><span class="pre">RestartDriver.is_last_iteration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run"><code class="docutils literal notranslate"><span class="pre">RestartDriver.prepare_extension_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we"><code class="docutils literal notranslate"><span class="pre">RestartDriver.prepare_new_we()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#fpt-calculations">FPT Calculations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-msm_we.fpt">msm_we.fpt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.fpt.MatrixFPT"><code class="docutils literal notranslate"><span class="pre">MatrixFPT</span></code></a></li>
@@ -199,16 +218,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.optimization" title="msm_we.optimization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.optimization</span></code></a></p></td>
 <td><p>Discrepancy calculations and WE binning/allocation optimization</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.westpa_plugins</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
 <td><p>First-passage time (FPT) calculations from trajectories or matrices</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
 <td><p>Implements Ensemble class for managing trajectories</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
 <td><p>&quot;Non-Markovian&quot; trajectory analysis</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
 <td><p>Miscellaneous convenience functions</p></td>
 </tr>
 </tbody>
@@ -644,6 +666,182 @@ Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
 <li><p><strong>stratified_clusterer</strong> (<em>StratifiedClusters</em>) – </p></li>
 <li><p><strong>cluster_on_pcoord</strong> (<em>bool</em>) – </p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="westpa-plugins-msm-we-westpa-plugins">
+<h2>WESTPA Plugins (msm_we.westpa_plugins)<a class="headerlink" href="#westpa-plugins-msm-we-westpa-plugins" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.westpa_plugins.augmentation_driver.</span></span><span class="sig-name descname"><span class="pre">MDAugmentationDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/augmentation_driver.html#MDAugmentationDriver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver" title="Permalink to this definition"></a></dt>
+<dd><p>WESTPA plugin to augment west.h5 with auxiliary coordinates.</p>
+<p>After each iteration, appends coordinates to iter_XXX/auxdata/coord, for later usage with haMSM construction.</p>
+<p>Can be used by including the following entries in your west.cfg:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">west</span><span class="p">:</span>
+    <span class="n">plugins</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">plugin</span><span class="p">:</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">westpa_plugins</span><span class="o">.</span><span class="n">augmentation_driver</span><span class="o">.</span><span class="n">MDAugmentationDriver</span>
+          <span class="n">topology_file</span><span class="p">:</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">topology</span><span class="o">.</span><span class="n">pdb</span>
+          <span class="n">child_traj_filename</span><span class="p">:</span> <span class="n">name</span> <span class="n">of</span> <span class="n">segment</span> <span class="n">trajectory</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">traj_segs</span><span class="o">/&lt;</span><span class="nb">iter</span><span class="o">&gt;/&lt;</span><span class="n">seg</span><span class="o">&gt;/</span>
+          <span class="n">parent_traj_filename</span><span class="p">:</span> <span class="n">name</span> <span class="n">of</span> <span class="n">parent</span> <span class="n">trajectory</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">traj_segs</span><span class="o">/&lt;</span><span class="nb">iter</span><span class="o">&gt;/&lt;</span><span class="n">seg</span><span class="o">&gt;/</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates">
+<span class="sig-name descname"><span class="pre">augment_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/augmentation_driver.html#MDAugmentationDriver.augment_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates" title="Permalink to this definition"></a></dt>
+<dd><p>After propagation completes in a WE iteration, this populates auxdata/coord with the coordinates.</p>
+<p>Looks for parent/child trajectory files in the segment data_ref path defined in west.cfg,
+named according to parent_traj_filename and child_traj_filename in the plugin config.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.hamsm_driver.HAMSMDriver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.westpa_plugins.hamsm_driver.</span></span><span class="sig-name descname"><span class="pre">HAMSMDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/hamsm_driver.html#HAMSMDriver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver" title="Permalink to this definition"></a></dt>
+<dd><p>WESTPA plugin to construct an haMSM.</p>
+<p>Can be used by including the following entries in your west.cfg:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>west:
+    plugins:
+    # - plugin: An augmentation plugin is also required, such as
+    #           msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver
+    - plugin: msm_we.westpa_plugins.hamsm_driver.HAMSMDriver
+          model_name: Name for the model
+          n_clusters: Number of clusters to place in each WE bin (see stratified clustering for more details)
+          tau: WESTPA resampling time in physical units
+          basis_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
+          target_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
+          dim_reduce_method: A string specifying a dimensionality reduction method for
+            :meth:`msm_we.msm_we.modelWE.dimReduce`
+          featurization: An importable python method implementing a featurization
+            for :meth:`msm_we.msm_we.modelWE.processCoordinates`
+          n_cpus: Number of CPUs to use with Ray
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm">
+<span class="sig-name descname"><span class="pre">construct_hamsm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/hamsm_driver.html#HAMSMDriver.construct_hamsm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm" title="Permalink to this definition"></a></dt>
+<dd><p>Build an haMSM, for use with later plugins. The final constructed haMSM is stored on the data manager.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.westpa_plugins.restart_driver.</span></span><span class="sig-name descname"><span class="pre">RestartDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver" title="Permalink to this definition"></a></dt>
+<dd><p>WESTPA plugin to automatically handle estimating steady-state from a WE run, re-initializing a new WE run in that
+steady-state, and then running that initialized WE run.</p>
+<p>Data from the previous run will be stored in the restart&lt;restart_number&gt;/ subdirectory of $WEST_SIM_ROOT.</p>
+<p>This plugin depends on having the start-states implementation in the main WESTPA code, which allows initializing
+a WE run using states that are NOT later used for recycling.</p>
+<p>These are used so that when the new WE run is initialized, initial structure selection is chosen by w_init, using
+weights assigned to the start-states based on MSM bin weight and WE segment weight.</p>
+<p>Since it closes out the current WE run and starts a new one, this plugin should run LAST, after all other plugins.</p>
+<p>Can be used by including the following entries in your west.cfg:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>west:
+    plugins:
+    # - plugin: An augmentation plugin is also required, such as
+    #           msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver
+    - plugin: msm_we.westpa_plugins.restart_driver.RestartDriver
+          n_restarts: Number of total restarts to do
+          extension_iters: Amount of iterations to extend runs by if no runs have reached the target by the
+            first restart.
+          n_runs: Number of runs to do between restarts
+          n_restarts_to_use: Number of restarts to use. Can be a fraction, to use the last fraction amount, or
+            a negative integer, to use the last N.
+          initialization_file: restart_initialization.json
+          model_name: Name for the model
+          n_clusters: Number of clusters to place in each WE bin (see stratified clustering for more details)
+          basis_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
+          target_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
+          dim_reduce_method: A string specifying a dimensionality reduction method for
+            :meth:`msm_we.msm_we.modelWE.dimReduce`
+          featurization: A python module implementing a featurization
+            for msm_we.msm_we.modelWE.processCoordinates
+          n_cpus: Number of CPUs to use with Ray
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins">
+<span class="sig-name descname"><span class="pre">get_original_bins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver.get_original_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins" title="Permalink to this definition"></a></dt>
+<dd><p>Obtains the WE bins and their probabilities at the end of the previous iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>bins</strong> (<em>np.ndarray</em>) – Array of WE bins</p></li>
+<li><p><strong>binprobs</strong> (<em>np.ndarray</em>) – WE bin weights</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cur_iter</span></span><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Get the current WE iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>int</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>The current iteration. Subtract one, because in finalize_run the iter has been incremented</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_last_iteration</span></span><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration" title="Permalink to this definition"></a></dt>
+<dd><p>Get whether this is, or is past, the last iteration in this WE run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Whether the current iteration is the final iteration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run">
+<span class="sig-name descname"><span class="pre">prepare_extension_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver.prepare_extension_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run" title="Permalink to this definition"></a></dt>
+<dd><p>Copy the necessary files for an extension run  (versus initializing a fresh run)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_number</strong> (<em>int</em>) – The index of this run (should be 1-indexed!)</p></li>
+<li><p><strong>restart_state</strong> (<em>dict</em>) – Dictionary holding the current state of the restarting procedure</p></li>
+<li><p><strong>first_extension</strong> (<em>bool</em>) – True if this is the first run of an extension set. If True, then back up west.cfg, and write the extended
+west.cfg file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we">
+<span class="sig-name descname"><span class="pre">prepare_new_we</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver.prepare_new_we"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we" title="Permalink to this definition"></a></dt>
+<dd><p>This function prepares a new WESTPA simulation using haMSM analysis to accelerate convergence.</p>
+<p>The marathon functionality does re-implement some of the functionality of w_multi_west.
+However, w_multi_west merges independent WE simulations, which may or may not be desirable.
+I think for the purposes of this, it’s good to keep the runs completely independent until haMSM model building.
+Either that, or I’m just justifying not having known about w_multi_west when I wrote this. TBD.</p>
+<p># TODO: Replace all manual path-building with pathlib</p>
+<dl>
+<dt>The algorithm is as follows:</dt><dd><ol class="arabic simple">
+<li><p>Check to see if we’ve just completed the final iteration</p></li>
+</ol>
+<p>2. Handle launching multiple runs, if desired
+2. Build haMSM
+3. Obtain structures for each haMSM bin
+4. Make each structure a start-state, with probability set by (MSM-bin SS prob / # structures in bin)
+5. Potentially some renormalization?
+6. Start new WE simulation</p>
 </dd>
 </dl>
 </dd></dl>

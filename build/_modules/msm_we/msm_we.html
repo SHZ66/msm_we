@@ -408,16 +408,30 @@
         <span class="c1"># Discretize coords according to which WE bin they&#39;re in</span>
         <span class="n">discrete</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="n">total_clusters</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_models</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_models</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="s2">&quot;cluster_centers_&quot;</span><span class="p">)</span>
+                <span class="k">else</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">legitimate_bins</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
 
+            <span class="c1"># Note that for target/basis states, the discrete cluster index isn&#39;t really used anywhere other than in</span>
+            <span class="c1">#   self.cluster_structures.</span>
+            <span class="c1"># Fluxmatrix calculations explicitly short-circuit this.</span>
+            <span class="c1">#   (Maybe it doesn&#39;t need to, if this is correctly indexed?)</span>
+            <span class="c1"># However, this ensures self.dtrajs is correctly indexed.</span>
             <span class="k">if</span> <span class="n">is_target</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">_discrete</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">_discrete</span> <span class="o">=</span> <span class="p">[</span><span class="n">total_clusters</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 
                 <span class="n">_bin</span> <span class="o">=</span> <span class="n">we_bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">target_bins</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_bin</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">is_basis</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">_discrete</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">]</span>
+                <span class="n">_discrete</span> <span class="o">=</span> <span class="p">[</span><span class="n">total_clusters</span><span class="p">]</span>
 
                 <span class="n">_bin</span> <span class="o">=</span> <span class="n">we_bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">basis_bins</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_bin</span><span class="p">)</span>
