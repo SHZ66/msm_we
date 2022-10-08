@@ -51,33 +51,32 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Installation/Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#hamsm-model-building-and-analysis-msm-we-msm-we-modelwe">haMSM model building and analysis (msm_we.msm_we.modelWE)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#msm_we.msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hamsm-model-building-and-analysis-msm-we-modelwe">haMSM model building and analysis (msm_we.modelWE)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#msm_we.modelWE"><code class="docutils literal notranslate"><span class="pre">modelWE</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#construction">Construction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.build_analyze_model"><code class="docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.initialize"><code class="docutils literal notranslate"><span class="pre">initialize()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_coordSet"><code class="docutils literal notranslate"><span class="pre">get_coordSet()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.dimReduce"><code class="docutils literal notranslate"><span class="pre">dimReduce()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.cluster_coordinates"><code class="docutils literal notranslate"><span class="pre">cluster_coordinates()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">get_fluxMatrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.organize_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">organize_fluxMatrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.do_block_validation"><code class="docutils literal notranslate"><span class="pre">do_block_validation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.build_analyze_model"><code class="docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.initialize"><code class="docutils literal notranslate"><span class="pre">initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_coordSet"><code class="docutils literal notranslate"><span class="pre">get_coordSet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.dimReduce"><code class="docutils literal notranslate"><span class="pre">dimReduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.cluster_coordinates"><code class="docutils literal notranslate"><span class="pre">cluster_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">get_fluxMatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.organize_fluxMatrix"><code class="docutils literal notranslate"><span class="pre">organize_fluxMatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.do_block_validation"><code class="docutils literal notranslate"><span class="pre">do_block_validation()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#analysis">Analysis</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_Tmatrix"><code class="docutils literal notranslate"><span class="pre">get_Tmatrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state"><code class="docutils literal notranslate"><span class="pre">get_steady_state()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_steady_state_target_flux"><code class="docutils literal notranslate"><span class="pre">get_steady_state_target_flux()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_committor"><code class="docutils literal notranslate"><span class="pre">get_committor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_flux"><code class="docutils literal notranslate"><span class="pre">get_flux()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_model_clusters"><code class="docutils literal notranslate"><span class="pre">get_model_clusters()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.get_cluster_centers"><code class="docutils literal notranslate"><span class="pre">get_cluster_centers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_Tmatrix"><code class="docutils literal notranslate"><span class="pre">get_Tmatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_steady_state"><code class="docutils literal notranslate"><span class="pre">get_steady_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_steady_state_target_flux"><code class="docutils literal notranslate"><span class="pre">get_steady_state_target_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_committor"><code class="docutils literal notranslate"><span class="pre">get_committor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_flux"><code class="docutils literal notranslate"><span class="pre">get_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.get_cluster_centers"><code class="docutils literal notranslate"><span class="pre">get_cluster_centers()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux"><code class="docutils literal notranslate"><span class="pre">plot_flux()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux_committor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor_pcoordcolor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.plot_flux"><code class="docutils literal notranslate"><span class="pre">plot_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.plot_flux_committor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.modelWE.plot_flux_committor_pcoordcolor"><code class="docutils literal notranslate"><span class="pre">plot_flux_committor_pcoordcolor()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -92,25 +91,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#westpa-plugins-msm-we-westpa-plugins">WESTPA Plugins (msm_we.westpa_plugins)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver"><code class="docutils literal notranslate"><span class="pre">MDAugmentationDriver</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates"><code class="docutils literal notranslate"><span class="pre">MDAugmentationDriver.augment_coordinates()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver"><code class="docutils literal notranslate"><span class="pre">HAMSMDriver</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm"><code class="docutils literal notranslate"><span class="pre">HAMSMDriver.construct_hamsm()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver"><code class="docutils literal notranslate"><span class="pre">RestartDriver</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins"><code class="docutils literal notranslate"><span class="pre">RestartDriver.get_original_bins()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter"><code class="docutils literal notranslate"><span class="pre">RestartDriver.cur_iter</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration"><code class="docutils literal notranslate"><span class="pre">RestartDriver.is_last_iteration</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run"><code class="docutils literal notranslate"><span class="pre">RestartDriver.prepare_extension_run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we"><code class="docutils literal notranslate"><span class="pre">RestartDriver.prepare_new_we()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#westpa-plugins-msm-we-westpa-plugins">WESTPA Plugins (msm_we.westpa_plugins)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fpt-calculations">FPT Calculations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-msm_we.fpt">msm_we.fpt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.fpt.MatrixFPT"><code class="docutils literal notranslate"><span class="pre">MatrixFPT</span></code></a></li>
@@ -131,6 +112,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-msm_we.utils">msm_we.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.find_connected_sets"><code class="docutils literal notranslate"><span class="pre">find_connected_sets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.is_connected"><code class="docutils literal notranslate"><span class="pre">is_connected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.inverse_iteration"><code class="docutils literal notranslate"><span class="pre">inverse_iteration()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.Interval"><code class="docutils literal notranslate"><span class="pre">Interval</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.reverse_sort_lists"><code class="docutils literal notranslate"><span class="pre">reverse_sort_lists()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#msm_we.utils.weighted_choice"><code class="docutils literal notranslate"><span class="pre">weighted_choice()</span></code></a></li>
@@ -212,34 +196,31 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.msm_we</span></code></p></td>
-<td><p>haMSM estimation and analysis</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we</span></code></p></td>
+<td><p>Top-level package for msm_we.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.optimization" title="msm_we.optimization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.optimization</span></code></a></p></td>
 <td><p>Discrepancy calculations and WE binning/allocation optimization</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.westpa_plugins</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.fpt" title="msm_we.fpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.fpt</span></code></a></p></td>
 <td><p>First-passage time (FPT) calculations from trajectories or matrices</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.ensembles" title="msm_we.ensembles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.ensembles</span></code></a></p></td>
 <td><p>Implements Ensemble class for managing trajectories</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.nmm" title="msm_we.nmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.nmm</span></code></a></p></td>
 <td><p>&quot;Non-Markovian&quot; trajectory analysis</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-msm_we.utils" title="msm_we.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msm_we.utils</span></code></a></p></td>
 <td><p>Miscellaneous convenience functions</p></td>
 </tr>
 </tbody>
 </table>
-<section id="hamsm-model-building-and-analysis-msm-we-msm-we-modelwe">
-<h2>haMSM model building and analysis (msm_we.msm_we.modelWE)<a class="headerlink" href="#hamsm-model-building-and-analysis-msm-we-msm-we-modelwe" title="Permalink to this heading"></a></h2>
+<section id="hamsm-model-building-and-analysis-msm-we-modelwe">
+<h2>haMSM model building and analysis (msm_we.modelWE)<a class="headerlink" href="#hamsm-model-building-and-analysis-msm-we-modelwe" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.</span></span><span class="sig-name descname"><span class="pre">modelWE</span></span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.msm_we.modelWE" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.</span></span><span class="sig-name descname"><span class="pre">modelWE</span></span><a class="reference internal" href="_modules/msm_we/msm_we.html#modelWE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.modelWE" title="Permalink to this definition"></a></dt>
 <dd><p>History-augmented Markov state model estimation from WE data</p>
 <p>Implementation of haMSM model building, particularly for steady-state estimation
 from recycling WE sampling with basis (source) and target (sink) states.</p>
@@ -254,8 +235,8 @@ microstategs using non-Markovian theory</em>, <strong>arXiv</strong> (2020).</p>
 <section id="construction">
 <h3>Construction<a class="headerlink" href="#construction" title="Permalink to this heading"></a></h3>
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.build_analyze_model">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">build_analyze_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimreduce_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">-1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_live_display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_validation_failure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.build_analyze_model" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.build_analyze_model">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">build_analyze_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimreduce_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">-1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxmatrix_iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_live_display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_validation_failure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.build_analyze_model" title="Permalink to this definition"></a></dt>
 <dd><p>One-shot function to build the model and analyze all at once. This provides a convenient interface for running
 the blockwise estimation.</p>
 <p>This may not be desirable for very long workflows, or workflows still being debugged, where it might make sense
@@ -296,8 +277,8 @@ blocks.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.initialize">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSpecifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refPDBfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reduce_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coord'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_suppress_boundary_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights_in_clustering</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.initialize" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.initialize">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSpecifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refPDBfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pcoord_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reduce_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coord'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_suppress_boundary_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights_in_clustering</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.initialize" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the model-builder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -322,8 +303,8 @@ in pcoord-space for the target state</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_coordSet">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_coordSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_coordSet" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_coordSet">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_coordSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_coordSet" title="Permalink to this definition"></a></dt>
 <dd><p>Loads all coordinates and progress coordinates into memory for later usage.</p>
 <p>If streaming, then this only loads pcoords</p>
 <dl class="field-list simple">
@@ -334,8 +315,8 @@ in pcoord-space for the target state</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.dimReduce">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">dimReduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_rough_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rough_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.dimReduce" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.dimReduce">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">dimReduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_rough_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rough_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.dimReduce" title="Permalink to this definition"></a></dt>
 <dd><p>Dimensionality reduction using the scheme specified in initialization.</p>
 <p>This just defines the dimensionality reduction scheme and builds the model – it does NOT actually transform
 the data!</p>
@@ -356,13 +337,13 @@ the data!</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.cluster_coordinates">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">cluster_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_cluster_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_validation_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_cluster_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.cluster_coordinates" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.cluster_coordinates">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">cluster_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streaming</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_cluster_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_validation_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_cluster_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.cluster_coordinates" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_fluxMatrix">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_fluxMatrix" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_fluxMatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_fluxMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the matrix of fluxes at a given lag time, for a range of iterations.</p>
 <p>Checks if a file has been written named
 “&lt;<cite>self.modelName</cite>&gt;_s&lt;<cite>first_iter</cite>&gt;_e&lt;<cite>last_iter</cite>&gt;_lag&lt;<cite>n_lag</cite>&gt;_clust&lt;<cite>self.n_clusters</cite>&gt;.h5”.
@@ -392,15 +373,15 @@ Otherwise, write it.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.organize_fluxMatrix">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">organize_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.organize_fluxMatrix" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.organize_fluxMatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">organize_fluxMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.organize_fluxMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>This cleaning step removes all clusters that aren’t in the largest connected set, then rediscretizes all the
 trajectories according to the new reduced set of clusters.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.do_block_validation">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">do_block_validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.do_block_validation" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.do_block_validation">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">do_block_validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cross_validation_blocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.do_block_validation" title="Permalink to this definition"></a></dt>
 <dd><p>One way to estimate the uncertainty of your model is to split your data into blocks, compute models over
 groups of the blocks, and assess consistency between the groups.</p>
 <p>The procedure here chops your data up into uniform blocks, by iteration. For example, with 100 iterations and 4
@@ -421,8 +402,8 @@ If the above blocks were assigned to 2 groups, the groups would consist of itera
 <section id="analysis">
 <h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading"></a></h3>
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_Tmatrix">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_Tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_Tmatrix" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_Tmatrix">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_Tmatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_Tmatrix" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the transition matrix from the flux matrix.
 Corrects the “target” states to be true sink states.</p>
 <dl class="simple">
@@ -445,8 +426,8 @@ Corrects the “target” states to be true sink states.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_steady_state">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_steady_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flux_fractional_convergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_steady_state" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_steady_state">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_steady_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flux_fractional_convergence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_steady_state" title="Permalink to this definition"></a></dt>
 <dd><p>”
 Get the steady-state distribution for the transition matrix.
 Uses scipy eigensolver to obtain an initial guess, then refines that using inverse iteration.</p>
@@ -473,8 +454,8 @@ Convergence of the inverse iteration is determined using change in the flux esti
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_steady_state_target_flux">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_steady_state_target_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pSS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_steady_state_target_flux" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_steady_state_target_flux">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_steady_state_target_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pSS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_steady_state_target_flux" title="Permalink to this definition"></a></dt>
 <dd><p>Get the total flux into the target state(s).</p>
 <dl class="simple">
 <dt>Updates:</dt><dd><ul class="simple">
@@ -497,8 +478,8 @@ Convergence of the inverse iteration is determined using change in the flux esti
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_committor">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_committor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_committor" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_committor">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_committor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_committor" title="Permalink to this definition"></a></dt>
 <dd><p>Iteratively obtain an estimate of the committor.</p>
 <ol class="arabic simple">
 <li><p>Take the flux matrix, and normalize it into a transition matrix.</p></li>
@@ -528,22 +509,14 @@ is less than this.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_flux">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_flux" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_flux">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_flux" title="Permalink to this definition"></a></dt>
 <dd><p>Get the measured flux (i.e. from the flux matrix) into the target.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_model_clusters">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_model_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_model_clusters" title="Permalink to this definition"></a></dt>
-<dd><p>Used by get_iter_aristoffian(). Untested and un-debugged, use at your own risk.</p>
-<p>Updates:
-- self.model_clusters</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.get_cluster_centers">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_cluster_centers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.get_cluster_centers" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.get_cluster_centers">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">get_cluster_centers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.get_cluster_centers" title="Permalink to this definition"></a></dt>
 <dd><p>Standalone method to obtain average pcoords of all segments in each cluster.</p>
 <p>This functionality is contained in organize_fluxMatrix.</p>
 </dd></dl>
@@ -552,8 +525,8 @@ is less than this.</p>
 <section id="plotting">
 <h3>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading"></a></h3>
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.plot_flux">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_from_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_to_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.plot_flux">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_from_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_to_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.plot_flux" title="Permalink to this definition"></a></dt>
 <dd><p>Make, and save, a plot of the fluxes along the RMSD.  get_flux() must be run before this.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -563,13 +536,13 @@ is less than this.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.plot_flux_committor">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_from_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_to_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux_committor" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.plot_flux_committor">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_from_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_to_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.plot_flux_committor" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor">
-<span class="sig-prename descclassname"><span class="pre">msm_we.msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor_pcoordcolor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.msm_we.modelWE.plot_flux_committor_pcoordcolor" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="msm_we.modelWE.plot_flux_committor_pcoordcolor">
+<span class="sig-prename descclassname"><span class="pre">msm_we.modelWE.</span></span><span class="sig-name descname"><span class="pre">plot_flux_committor_pcoordcolor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcoord_to_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_plot_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msm_we.modelWE.plot_flux_committor_pcoordcolor" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -675,179 +648,6 @@ Weighted ensemble: Recent mathematical developments. Arxiv (2022).</p>
 </section>
 <section id="westpa-plugins-msm-we-westpa-plugins">
 <h2>WESTPA Plugins (msm_we.westpa_plugins)<a class="headerlink" href="#westpa-plugins-msm-we-westpa-plugins" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.westpa_plugins.augmentation_driver.</span></span><span class="sig-name descname"><span class="pre">MDAugmentationDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/augmentation_driver.html#MDAugmentationDriver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver" title="Permalink to this definition"></a></dt>
-<dd><p>WESTPA plugin to augment west.h5 with auxiliary coordinates.</p>
-<p>After each iteration, appends coordinates to iter_XXX/auxdata/coord, for later usage with haMSM construction.</p>
-<p>Can be used by including the following entries in your west.cfg:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">west</span><span class="p">:</span>
-    <span class="n">plugins</span><span class="p">:</span>
-    <span class="o">-</span> <span class="n">plugin</span><span class="p">:</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">westpa_plugins</span><span class="o">.</span><span class="n">augmentation_driver</span><span class="o">.</span><span class="n">MDAugmentationDriver</span>
-          <span class="n">topology_file</span><span class="p">:</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">topology</span><span class="o">.</span><span class="n">pdb</span>
-          <span class="n">child_traj_filename</span><span class="p">:</span> <span class="n">name</span> <span class="n">of</span> <span class="n">segment</span> <span class="n">trajectory</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">traj_segs</span><span class="o">/&lt;</span><span class="nb">iter</span><span class="o">&gt;/&lt;</span><span class="n">seg</span><span class="o">&gt;/</span>
-          <span class="n">parent_traj_filename</span><span class="p">:</span> <span class="n">name</span> <span class="n">of</span> <span class="n">parent</span> <span class="n">trajectory</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">traj_segs</span><span class="o">/&lt;</span><span class="nb">iter</span><span class="o">&gt;/&lt;</span><span class="n">seg</span><span class="o">&gt;/</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates">
-<span class="sig-name descname"><span class="pre">augment_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/augmentation_driver.html#MDAugmentationDriver.augment_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates" title="Permalink to this definition"></a></dt>
-<dd><p>After propagation completes in a WE iteration, this populates auxdata/coord with the coordinates.</p>
-<p>Looks for parent/child trajectory files in the segment data_ref path defined in west.cfg,
-named according to parent_traj_filename and child_traj_filename in the plugin config.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.hamsm_driver.HAMSMDriver">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.westpa_plugins.hamsm_driver.</span></span><span class="sig-name descname"><span class="pre">HAMSMDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/hamsm_driver.html#HAMSMDriver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver" title="Permalink to this definition"></a></dt>
-<dd><p>WESTPA plugin to construct an haMSM.</p>
-<p>Can be used by including the following entries in your west.cfg:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>west:
-    plugins:
-    # - plugin: An augmentation plugin is also required, such as
-    #           msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver
-    - plugin: msm_we.westpa_plugins.hamsm_driver.HAMSMDriver
-          model_name: Name for the model
-          n_clusters: Number of clusters to place in each WE bin (see stratified clustering for more details)
-          tau: WESTPA resampling time in physical units
-          basis_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
-          target_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
-          dim_reduce_method: A string specifying a dimensionality reduction method for
-            :meth:`msm_we.msm_we.modelWE.dimReduce`
-          featurization: An importable python method implementing a featurization
-            for :meth:`msm_we.msm_we.modelWE.processCoordinates`
-          n_cpus: Number of CPUs to use with Ray
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm">
-<span class="sig-name descname"><span class="pre">construct_hamsm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/hamsm_driver.html#HAMSMDriver.construct_hamsm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm" title="Permalink to this definition"></a></dt>
-<dd><p>Build an haMSM, for use with later plugins. The final constructed haMSM is stored on the data manager.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.westpa_plugins.restart_driver.</span></span><span class="sig-name descname"><span class="pre">RestartDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver" title="Permalink to this definition"></a></dt>
-<dd><p>WESTPA plugin to automatically handle estimating steady-state from a WE run, re-initializing a new WE run in that
-steady-state, and then running that initialized WE run.</p>
-<p>Data from the previous run will be stored in the restart&lt;restart_number&gt;/ subdirectory of $WEST_SIM_ROOT.</p>
-<p>This plugin depends on having the start-states implementation in the main WESTPA code, which allows initializing
-a WE run using states that are NOT later used for recycling.</p>
-<p>These are used so that when the new WE run is initialized, initial structure selection is chosen by w_init, using
-weights assigned to the start-states based on MSM bin weight and WE segment weight.</p>
-<p>Since it closes out the current WE run and starts a new one, this plugin should run LAST, after all other plugins.</p>
-<p>Can be used by including the following entries in your west.cfg:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>west:
-    plugins:
-    # - plugin: An augmentation plugin is also required, such as
-    #           msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver
-    - plugin: msm_we.westpa_plugins.restart_driver.RestartDriver
-          n_restarts: Number of total restarts to do
-          extension_iters: Amount of iterations to extend runs by if no runs have reached the target by the
-            first restart.
-          n_runs: Number of runs to do between restarts
-          n_restarts_to_use: Number of restarts to use. Can be a fraction, to use the last fraction amount, or
-            a negative integer, to use the last N.
-          initialization_file: restart_initialization.json
-          model_name: Name for the model
-          n_clusters: Number of clusters to place in each WE bin (see stratified clustering for more details)
-          basis_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
-          target_pcoord_bounds: [[pcoord dim 0 lower bound, upper bound], [pcoord dim 1 lower, upper], ...]
-          dim_reduce_method: A string specifying a dimensionality reduction method for
-            :meth:`msm_we.msm_we.modelWE.dimReduce`
-          featurization: A python module implementing a featurization
-            for msm_we.msm_we.modelWE.processCoordinates
-          n_cpus: Number of CPUs to use with Ray
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins">
-<span class="sig-name descname"><span class="pre">get_original_bins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver.get_original_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins" title="Permalink to this definition"></a></dt>
-<dd><p>Obtains the WE bins and their probabilities at the end of the previous iteration.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>bins</strong> (<em>np.ndarray</em>) – Array of WE bins</p></li>
-<li><p><strong>binprobs</strong> (<em>np.ndarray</em>) – WE bin weights</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cur_iter</span></span><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter" title="Permalink to this definition"></a></dt>
-<dd><p>Get the current WE iteration.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>int</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>The current iteration. Subtract one, because in finalize_run the iter has been incremented</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_last_iteration</span></span><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration" title="Permalink to this definition"></a></dt>
-<dd><p>Get whether this is, or is past, the last iteration in this WE run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>bool</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Whether the current iteration is the final iteration</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run">
-<span class="sig-name descname"><span class="pre">prepare_extension_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver.prepare_extension_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run" title="Permalink to this definition"></a></dt>
-<dd><p>Copy the necessary files for an extension run  (versus initializing a fresh run)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>run_number</strong> (<em>int</em>) – The index of this run (should be 1-indexed!)</p></li>
-<li><p><strong>restart_state</strong> (<em>dict</em>) – Dictionary holding the current state of the restarting procedure</p></li>
-<li><p><strong>first_extension</strong> (<em>bool</em>) – True if this is the first run of an extension set. If True, then back up west.cfg, and write the extended
-west.cfg file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we">
-<span class="sig-name descname"><span class="pre">prepare_new_we</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/westpa_plugins/restart_driver.html#RestartDriver.prepare_new_we"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we" title="Permalink to this definition"></a></dt>
-<dd><p>This function prepares a new WESTPA simulation using haMSM analysis to accelerate convergence.</p>
-<p>The marathon functionality does re-implement some of the functionality of w_multi_west.
-However, w_multi_west merges independent WE simulations, which may or may not be desirable.
-I think for the purposes of this, it’s good to keep the runs completely independent until haMSM model building.
-Either that, or I’m just justifying not having known about w_multi_west when I wrote this. TBD.</p>
-<p># TODO: Replace all manual path-building with pathlib</p>
-<dl>
-<dt>The algorithm is as follows:</dt><dd><ol class="arabic simple">
-<li><p>Check to see if we’ve just completed the final iteration</p></li>
-</ol>
-<p>2. Handle launching multiple runs, if desired
-2. Build haMSM
-3. Obtain structures for each haMSM bin
-4. Make each structure a start-state, with probability set by (MSM-bin SS prob / # structures in bin)
-5. Potentially some renormalization?
-6. Start new WE simulation</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="fpt-calculations">
 <h2>FPT Calculations<a class="headerlink" href="#fpt-calculations" title="Permalink to this heading"></a></h2>
@@ -1350,8 +1150,70 @@ transition matrix</p>
 <section id="module-msm_we.utils">
 <span id="msm-we-utils"></span><h3>msm_we.utils<a class="headerlink" href="#module-msm_we.utils" title="Permalink to this heading"></a></h3>
 <p>Miscellaneous convenience functions</p>
-<p>Adapted from the original NMpathAnalysis package,
+<p>Some functionality was adapted from the original NMpathAnalysis package,
 <a class="reference external" href="https://github.com/ZuckermanLab/NMpathAnalysis">https://github.com/ZuckermanLab/NMpathAnalysis</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.find_connected_sets">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">find_connected_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#find_connected_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.find_connected_sets" title="Permalink to this definition"></a></dt>
+<dd><p>This implementation is taken from msmtools.estimation.sparse.connectivity, at commit 9312660.
+See the original at <a class="reference external" href="https://github.com/markovmodel/msmtools/blob/devel/msmtools/estimation/sparse/connectivity.py#L30">https://github.com/markovmodel/msmtools/blob/devel/msmtools/estimation/sparse/connectivity.py#L30</a></p>
+<p>Compute connected components for a directed graph with weights
+represented by the given count matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>scipy.sparse matrix</em><em> or </em><em>numpy ndarray</em>) – square matrix specifying edge weights.</p></li>
+<li><p><strong>directed</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to compute connected components for a directed  or
+undirected graph. Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cc</strong> – Each entry is an array containing all vertices (states) in
+the corresponding connected component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of arrays of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.is_connected">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">is_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#is_connected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.is_connected" title="Permalink to this definition"></a></dt>
+<dd><p>Check for connectivity between two states.
+If directed is True, then checks for directional connectivity from source_states to target_states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<em>np.array</em><em>, </em><em>NxN</em>) – Transition matrix</p></li>
+<li><p><strong>source_states</strong> (<em>array-like</em><em>, </em><em>N</em>) – Source states</p></li>
+<li><p><strong>target_states</strong> (<em>array-like</em><em>, </em><em>N</em>) – Target states</p></li>
+<li><p><strong>directed</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Compute directional connectivity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msm_we.utils.inverse_iteration">
+<span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">inverse_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#inverse_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.inverse_iteration" title="Permalink to this definition"></a></dt>
+<dd><p>Do one iteration of inverse iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>guess</strong> (<em>array-like</em><em>  (</em><em>N elements</em><em>)</em>) – Vector of weights to be used as the initial guess.</p></li>
+<li><p><strong>matrix</strong> (<em>array-like</em><em> (</em><em>NxN elements</em><em>)</em>) – Transition matrix to use for inverse iteration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>The new vector of weights after one iteration of inverse iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="msm_we.utils.Interval">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msm_we.utils.</span></span><span class="sig-name descname"><span class="pre">Interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/msm_we/utils.html#Interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msm_we.utils.Interval" title="Permalink to this definition"></a></dt>

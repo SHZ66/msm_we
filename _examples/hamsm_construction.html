@@ -382,7 +382,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msm_we</span> <span class="kn">import</span> <span class="n">msm_we</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msm_we</span> <span class="kn">import</span> <span class="n">modelWE</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">ray</span>
 </pre></div>
@@ -431,7 +431,7 @@ div.rendered_html tbody tr:hover {
 
     <span class="k">return</span> <span class="n">coords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
+<span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
 </pre></div>
 </div>
 </div>
@@ -466,20 +466,20 @@ div.rendered_html tbody tr:hover {
 
     <span class="k">return</span> <span class="n">dist_out</span>
 
-<span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
+<span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
 </pre></div>
 </div>
 </div>
 </section>
 </section>
 <section id="Model-building-with-build_analyze_model()">
-<h2>Model-building with <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a><a class="headerlink" href="#Model-building-with-build_analyze_model()" title="Permalink to this heading"></a></h2>
-<p>You can construct an haMSM (and validation haMSMs) with one call to <a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model" title="msm_we.msm_we.modelWE.build_analyze_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a></p>
+<h2>Model-building with <a class="reference internal" href="../api.html#msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a><a class="headerlink" href="#Model-building-with-build_analyze_model()" title="Permalink to this heading"></a></h2>
+<p>You can construct an haMSM (and validation haMSMs) with one call to <a class="reference internal" href="../api.html#msm_we.modelWE.build_analyze_model" title="msm_we.modelWE.build_analyze_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_analyze_model()</span></code></a></p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">modelWE</span><span class="p">()</span>
 
 <span class="n">model</span><span class="o">.</span><span class="n">build_analyze_model</span><span class="p">(</span>
     <span class="n">file_paths</span><span class="o">=</span><span class="n">h5file_paths</span><span class="p">,</span>
@@ -1127,7 +1127,7 @@ np.array(cluster_pcoord_all)[pcoord_sort_indices]
 </section>
 <section id="Model-building-step-by-step">
 <h2>Model-building step by step<a class="headerlink" href="#Model-building-step-by-step" title="Permalink to this heading"></a></h2>
-<p><a class="reference internal" href="../api.html#msm_we.msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a> is just a convenient wrapper around the following steps.</p>
+<p><a class="reference internal" href="../api.html#msm_we.modelWE.build_analyze_model"><span class="std std-ref">build_analyze_model()</span></a> is just a convenient wrapper around the following steps.</p>
 <p>You can run them manually if you want to observe each step of the process.</p>
 <p>It’s helpful to start off by running step-by-step while you’re starting analysis for a system, to fine-tune parameters without re-running the entire workflow.</p>
 <p>First, we launch Ray, which is the backend for the parallel work manager.</p>
@@ -1198,7 +1198,7 @@ again after it has already been called.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">modelWE</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
