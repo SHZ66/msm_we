@@ -149,9 +149,10 @@
         <span class="c1"># TODO: In general, it&#39;s not clear if this needs to be strictly 1...</span>
         <span class="c1">#  However, oversubscribing causes very difficult to diagnose problems</span>
         <span class="c1">#  (like hanging during clustering / k-means fitting), and 1 seems to be safe.</span>
-        <span class="k">assert</span> <span class="p">(</span>
-            <span class="n">_openmp_effective_n_threads</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="p">),</span> <span class="s2">&quot;Set $OMP_NUM_THREADS=1 for proper msm-we functionality&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_openmp_effective_n_threads</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Set $OMP_NUM_THREADS=1 for proper msm-we functionality! &quot;</span>
+                         <span class="s2">&quot;Other values may cause strange problems such as silent hanging during &quot;</span>
+                         <span class="s2">&quot;discretization or ray-parallel steps.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">modelName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="sd">&quot;&quot;&quot;str: Name used for storing files&quot;&quot;&quot;</span>
@@ -212,7 +213,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pre_discretization_model</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
+<div class="viewcode-block" id="modelWE.initialize"><a class="viewcode-back" href="../../api.html#msm_we.modelWE.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="c1"># self, fileSpecifier: str, refPDBfile: str, initPDBfile: str, modelName: str</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">fileSpecifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -346,7 +347,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">use_weights_in_clustering</span> <span class="o">=</span> <span class="n">use_weights_in_clustering</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msm_we model successfully initialized&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;msm_we model successfully initialized&quot;</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">WEbasisp1_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -657,7 +658,7 @@
 
         <span class="k">return</span> <span class="n">table</span>
 
-    <span class="k">def</span> <span class="nf">build_analyze_model</span><span class="p">(</span>
+<div class="viewcode-block" id="modelWE.build_analyze_model"><a class="viewcode-back" href="../../api.html#msm_we.modelWE.build_analyze_model">[docs]</a>    <span class="k">def</span> <span class="nf">build_analyze_model</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file_paths</span><span class="p">,</span>
         <span class="n">ref_struct</span><span class="p">,</span>
@@ -929,9 +930,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">set_note</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">step_idx</span><span class="p">,</span> <span class="n">flux_text</span><span class="p">)</span>
 
             <span class="c1"># If live updating was disabled, write to the table once now. (Doesn&#39;t do anything if it was enabled)</span>
-            <span class="n">live</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="n">live</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">do_block_validation</span><span class="p">(</span>
+<div class="viewcode-block" id="modelWE.do_block_validation"><a class="viewcode-back" href="../../api.html#msm_we.modelWE.do_block_validation">[docs]</a>    <span class="k">def</span> <span class="nf">do_block_validation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">cross_validation_groups</span><span class="p">,</span> <span class="n">cross_validation_blocks</span><span class="p">,</span> <span class="n">use_ray</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1041,7 +1042,7 @@
 
         <span class="c1"># Store the validation models, in case you want to analyze them.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validation_iterations</span> <span class="o">=</span> <span class="n">validation_iterations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validation_models</span> <span class="o">=</span> <span class="n">validation_models</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_models</span> <span class="o">=</span> <span class="n">validation_models</span></div>
 
     <span class="k">def</span> <span class="nf">set_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topology</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -85,6 +85,7 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -92,6 +93,7 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
@@ -104,13 +106,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.ensembles.Ensemble.add_trajectory">add_trajectory() (msm_we.ensembles.Ensemble method)</a>
 </li>
+      <li><a href="api.html#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver.augment_coordinates">augment_coordinates() (msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.build_analyze_model">build_analyze_model() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.build_analyze_model">build_analyze_model() (msm_we.modelWE method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -122,13 +126,23 @@
 </li>
       <li><a href="api.html#msm_we.utils.clean_tmatrix">clean_tmatrix() (in module msm_we.utils)</a>
 </li>
+      <li><a href="api.html#msm_we.modelWE.cluster_coordinates">cluster_coordinates() (msm_we.modelWE method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.compute_new_pcoord_map">compute_new_pcoord_map() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.compute_optimized_allocation">compute_optimized_allocation() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.cluster_coordinates">cluster_coordinates() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.compute_optimized_bins">compute_optimized_bins() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver.construct_hamsm">construct_hamsm() (msm_we.westpa_plugins.hamsm_driver.HAMSMDriver method)</a>
 </li>
       <li><a href="api.html#msm_we.nmm.NonMarkovModel.corr_function">corr_function() (msm_we.nmm.NonMarkovModel method)</a>
 </li>
       <li><a href="api.html#msm_we.optimization.OptimizedBinMapper.create_new">create_new() (msm_we.optimization.OptimizedBinMapper method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.cur_iter">cur_iter (msm_we.westpa_plugins.restart_driver.RestartDriver property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -136,7 +150,11 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.dimReduce">dimReduce() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.default_allocation_optimizer">default_allocation_optimizer() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver static method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.default_bin_optimizer">default_bin_optimizer() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver static method)</a>
+</li>
+      <li><a href="api.html#msm_we.modelWE.dimReduce">dimReduce() (msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.fpt.MatrixFPT.directional_mfpt">directional_mfpt() (msm_we.fpt.MatrixFPT class method)</a>
 </li>
@@ -146,7 +164,9 @@
 </li>
       <li><a href="api.html#msm_we.ensembles.DiscretePathEnsemble">DiscretePathEnsemble (class in msm_we.ensembles)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.do_block_validation">do_block_validation() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.do_block_validation">do_block_validation() (msm_we.modelWE method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.do_optimization">do_optimization() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -206,29 +226,39 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.get_cluster_centers">get_cluster_centers() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_cluster_centers">get_cluster_centers() (msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.optimization.get_clustered_mfpt_bins">get_clustered_mfpt_bins() (in module msm_we.optimization)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.get_committor">get_committor() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_committor">get_committor() (msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.get_coordSet">get_coordSet() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_coordSet">get_coordSet() (msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.get_flux">get_flux() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_flux">get_flux() (msm_we.modelWE method)</a>
+</li>
+      <li><a href="api.html#msm_we.modelWE.get_fluxMatrix">get_fluxMatrix() (msm_we.modelWE method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.get_fluxMatrix">get_fluxMatrix() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins">get_original_bins() (msm_we.westpa_plugins.restart_driver.RestartDriver method)</a>
 </li>
       <li><a href="api.html#msm_we.utils.get_shape">get_shape() (in module msm_we.utils)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.get_steady_state">get_steady_state() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_steady_state">get_steady_state() (msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.get_steady_state_target_flux">get_steady_state_target_flux() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_steady_state_target_flux">get_steady_state_target_flux() (msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.get_Tmatrix">get_Tmatrix() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.get_Tmatrix">get_Tmatrix() (msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.optimization.get_uniform_mfpt_bins">get_uniform_mfpt_bins() (in module msm_we.optimization)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#msm_we.westpa_plugins.hamsm_driver.HAMSMDriver">HAMSMDriver (class in msm_we.westpa_plugins.hamsm_driver)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -236,7 +266,7 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.initialize">initialize() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.initialize">initialize() (msm_we.modelWE method)</a>
 </li>
       <li><a href="api.html#msm_we.utils.Interval">Interval (class in msm_we.utils)</a>
 </li>
@@ -245,6 +275,8 @@
       <li><a href="api.html#msm_we.utils.inverse_iteration">inverse_iteration() (in module msm_we.utils)</a>
 </li>
       <li><a href="api.html#msm_we.utils.is_connected">is_connected() (in module msm_we.utils)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.is_last_iteration">is_last_iteration (msm_we.westpa_plugins.restart_driver.RestartDriver property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -263,6 +295,8 @@
       <li><a href="api.html#msm_we.fpt.MatrixFPT">MatrixFPT (class in msm_we.fpt)</a>
 </li>
       <li><a href="api.html#msm_we.fpt.MatrixFPT.max_commute_time">max_commute_time() (msm_we.fpt.MatrixFPT class method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.augmentation_driver.MDAugmentationDriver">MDAugmentationDriver (class in msm_we.westpa_plugins.augmentation_driver)</a>
 </li>
       <li><a href="api.html#msm_we.fpt.MarkovFPT.mean_fpts">mean_fpts() (msm_we.fpt.MarkovFPT class method)</a>
 
@@ -293,6 +327,14 @@
         <li><a href="api.html#module-msm_we.optimization">msm_we.optimization</a>
 </li>
         <li><a href="api.html#module-msm_we.utils">msm_we.utils</a>
+</li>
+        <li><a href="api.html#module-msm_we.westpa_plugins.augmentation_driver">msm_we.westpa_plugins.augmentation_driver</a>
+</li>
+        <li><a href="api.html#module-msm_we.westpa_plugins.hamsm_driver">msm_we.westpa_plugins.hamsm_driver</a>
+</li>
+        <li><a href="api.html#module-msm_we.westpa_plugins.optimization_driver">msm_we.westpa_plugins.optimization_driver</a>
+</li>
+        <li><a href="api.html#module-msm_we.westpa_plugins.restart_driver">msm_we.westpa_plugins.restart_driver</a>
 </li>
       </ul></li>
   </ul></td>
@@ -332,6 +374,34 @@
         <li><a href="api.html#module-msm_we.utils">module</a>
 </li>
       </ul></li>
+      <li>
+    msm_we.westpa_plugins.augmentation_driver
+
+      <ul>
+        <li><a href="api.html#module-msm_we.westpa_plugins.augmentation_driver">module</a>
+</li>
+      </ul></li>
+      <li>
+    msm_we.westpa_plugins.hamsm_driver
+
+      <ul>
+        <li><a href="api.html#module-msm_we.westpa_plugins.hamsm_driver">module</a>
+</li>
+      </ul></li>
+      <li>
+    msm_we.westpa_plugins.optimization_driver
+
+      <ul>
+        <li><a href="api.html#module-msm_we.westpa_plugins.optimization_driver">module</a>
+</li>
+      </ul></li>
+      <li>
+    msm_we.westpa_plugins.restart_driver
+
+      <ul>
+        <li><a href="api.html#module-msm_we.westpa_plugins.restart_driver">module</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -362,11 +432,13 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.optimization.OptimizedBinMapper">OptimizedBinMapper (class in msm_we.optimization)</a>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver">OptimizationDriver (class in msm_we.westpa_plugins.optimization_driver)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.modelWE.organize_fluxMatrix">organize_fluxMatrix() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.optimization.OptimizedBinMapper">OptimizedBinMapper (class in msm_we.optimization)</a>
+</li>
+      <li><a href="api.html#msm_we.modelWE.organize_fluxMatrix">organize_fluxMatrix() (msm_we.modelWE method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -376,19 +448,23 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.ensembles.PathEnsemble">PathEnsemble (class in msm_we.ensembles)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.plot_flux">plot_flux() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.plot_flux">plot_flux() (msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.plot_flux_committor">plot_flux_committor() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.plot_flux_committor">plot_flux_committor() (msm_we.modelWE method)</a>
 </li>
-      <li><a href="api.html#msm_we.modelWE.plot_flux_committor_pcoordcolor">plot_flux_committor_pcoordcolor() (in module msm_we.modelWE)</a>
+      <li><a href="api.html#msm_we.modelWE.plot_flux_committor_pcoordcolor">plot_flux_committor_pcoordcolor() (msm_we.modelWE method)</a>
+</li>
+      <li><a href="api.html#msm_we.utils.pops_from_nm_tmatrix">pops_from_nm_tmatrix() (in module msm_we.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#msm_we.utils.pops_from_nm_tmatrix">pops_from_nm_tmatrix() (in module msm_we.utils)</a>
-</li>
       <li><a href="api.html#msm_we.utils.pops_from_tmatrix">pops_from_tmatrix() (in module msm_we.utils)</a>
 </li>
       <li><a href="api.html#msm_we.nmm.NonMarkovModel.populations">populations (msm_we.nmm.NonMarkovModel attribute)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_extension_run">prepare_extension_run() (msm_we.westpa_plugins.restart_driver.RestartDriver method)</a>
+</li>
+      <li><a href="api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we">prepare_new_we() (msm_we.westpa_plugins.restart_driver.RestartDriver method)</a>
 </li>
       <li><a href="api.html#msm_we.utils.pseudo_nm_tmatrix">pseudo_nm_tmatrix() (in module msm_we.utils)</a>
 </li>
@@ -402,6 +478,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#msm_we.westpa_plugins.restart_driver.RestartDriver">RestartDriver (class in msm_we.westpa_plugins.restart_driver)</a>
+</li>
       <li><a href="api.html#msm_we.utils.reverse_sort_lists">reverse_sort_lists() (in module msm_we.utils)</a>
 </li>
   </ul></td>
@@ -411,6 +489,14 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#msm_we.optimization.solve_discrepancy">solve_discrepancy() (in module msm_we.optimization)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.update_westpa_pcoord">update_westpa_pcoord() (msm_we.westpa_plugins.optimization_driver.OptimizationDriver method)</a>
 </li>
   </ul></td>
 </tr></table>

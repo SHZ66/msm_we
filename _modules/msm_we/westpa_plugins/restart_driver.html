@@ -102,6 +102,10 @@
 
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
 <span class="n">EPS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -119,7 +123,7 @@
     <span class="n">md</span><span class="o">.</span><span class="n">formats</span><span class="o">.</span><span class="n">AmberRestartFile</span><span class="p">:</span> <span class="s2">&quot;rst7&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">EXTENSION_LOCKFILE</span> <span class="o">=</span> <span class="s1">&#39;doing_extension&#39;</span>
+<span class="n">EXTENSION_LOCKFILE</span> <span class="o">=</span> <span class="s2">&quot;doing_extension&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">check_target_reached</span><span class="p">(</span><span class="n">h5_filename</span><span class="p">):</span>
@@ -131,13 +135,17 @@
 <span class="sd">    h5_filename: string</span>
 <span class="sd">        Path to a WESTPA HDF5 data file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5_file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5_file</span><span class="p">:</span>
         <span class="c1"># Get the key to the final iteration. Need to do -2 instead of -1 because there&#39;s an empty-ish final iteration</span>
         <span class="c1">#   written.</span>
-        <span class="k">for</span> <span class="n">iteration_key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">h5_file</span><span class="p">[</span><span class="s1">&#39;iterations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">endpoint_types</span> <span class="o">=</span> <span class="n">h5_file</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;iterations/</span><span class="si">{</span><span class="n">iteration_key</span><span class="si">}</span><span class="s1">/seg_index&#39;</span><span class="p">][</span><span class="s1">&#39;endpoint_type&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">iteration_key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">h5_file</span><span class="p">[</span><span class="s2">&quot;iterations&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">endpoint_types</span> <span class="o">=</span> <span class="n">h5_file</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;iterations/</span><span class="si">{</span><span class="n">iteration_key</span><span class="si">}</span><span class="s2">/seg_index&quot;</span><span class="p">][</span>
+                <span class="s2">&quot;endpoint_type&quot;</span>
+            <span class="p">]</span>
             <span class="k">if</span> <span class="n">Segment</span><span class="o">.</span><span class="n">SEG_ENDPOINT_RECYCLED</span> <span class="ow">in</span> <span class="n">endpoint_types</span><span class="p">:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;recycled segment found in file </span><span class="si">{</span><span class="n">h5_filename</span><span class="si">}</span><span class="s2"> at iteration </span><span class="si">{</span><span class="n">iteration_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;recycled segment found in file </span><span class="si">{</span><span class="n">h5_filename</span><span class="si">}</span><span class="s2"> at iteration </span><span class="si">{</span><span class="n">iteration_key</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
 
@@ -152,14 +160,15 @@
 
     <span class="c1"># Some of my initial files had this old-style formatting. Handle it for now, but remove eventually</span>
     <span class="k">for</span> <span class="n">old_key</span><span class="p">,</span> <span class="n">new_key</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s1">&#39;tstate-file&#39;</span><span class="p">,</span> <span class="s1">&#39;tstate_file&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;bstate-file&#39;</span><span class="p">,</span> <span class="s1">&#39;bstate_file&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;sstate-file&#39;</span><span class="p">,</span> <span class="s1">&#39;sstate_file&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;segs-per-state&#39;</span><span class="p">,</span> <span class="s1">&#39;segs_per_state&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;tstate-file&quot;</span><span class="p">,</span> <span class="s2">&quot;tstate_file&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;bstate-file&quot;</span><span class="p">,</span> <span class="s2">&quot;bstate_file&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;sstate-file&quot;</span><span class="p">,</span> <span class="s2">&quot;sstate_file&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;segs-per-state&quot;</span><span class="p">,</span> <span class="s2">&quot;segs_per_state&quot;</span><span class="p">),</span>
     <span class="p">]:</span>
         <span class="k">if</span> <span class="n">old_key</span> <span class="ow">in</span> <span class="n">initialization_state</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;This initialization JSON file uses the deprecated  &quot;</span> <span class="sa">f</span><span class="s2">&quot;hyphenated form for  </span><span class="si">{</span><span class="n">old_key</span><span class="si">}</span><span class="s2">. Replace with underscores.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;This initialization JSON file uses the deprecated  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;hyphenated form for  </span><span class="si">{</span><span class="n">old_key</span><span class="si">}</span><span class="s2">. Replace with underscores.&quot;</span>
             <span class="p">)</span>
 
             <span class="n">value</span> <span class="o">=</span> <span class="n">initialization_state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">old_key</span><span class="p">)</span>
@@ -225,7 +234,9 @@
         <span class="c1"># Use the</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sim_manager</span><span class="p">,</span> <span class="n">plugin_config</span><span class="p">)</span>
         <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">_callback_table</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">_callback_table</span><span class="p">[</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">finalize_run</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;construct_hamsm&#39;</span><span class="p">,</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">construct_hamsm</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">_callback_table</span><span class="p">[</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">finalize_run</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span>
+            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;construct_hamsm&quot;</span><span class="p">,</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">construct_hamsm</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;Restart plugin initialized&quot;</span><span class="p">)</span>
 
@@ -238,46 +249,67 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_config</span> <span class="o">=</span> <span class="n">plugin_config</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;restart_file&#39;</span><span class="p">,</span> <span class="s1">&#39;restart.dat&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initialization_file&#39;</span><span class="p">,</span> <span class="s1">&#39;restart_initialization.json&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;restart_file&quot;</span><span class="p">,</span> <span class="s2">&quot;restart.dat&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;initialization_file&quot;</span><span class="p">,</span> <span class="s2">&quot;restart_initialization.json&quot;</span>
+        <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">extension_iters</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extension_iters&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_total_iterations</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="s1">&#39;west&#39;</span><span class="p">,</span> <span class="s1">&#39;propagation&#39;</span><span class="p">,</span> <span class="s1">&#39;max_total_iterations&#39;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extension_iters</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extension_iters&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_total_iterations</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;west&quot;</span><span class="p">,</span> <span class="s2">&quot;propagation&quot;</span><span class="p">,</span> <span class="s2">&quot;max_total_iterations&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_total_iterations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_total_iterations</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_restarts&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_runs</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_runs&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_restarts&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_runs</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_runs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># May want to be able to disable this, if it causes issues with recalculating new pcoords</span>
+        <span class="c1">#   (i.e. during optimization)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_pcoords</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cache_pcoords&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># .get() might return this as a bool anyways, but be safe</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
             <span class="n">msm_we_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
 
         <span class="c1"># Default to using all restarts</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_restarts_to_use&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Invalid number of restarts to use&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_restarts_to_use&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">),</span> <span class="s2">&quot;Invalid number of restarts to use&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">//</span> <span class="mi">1</span>
             <span class="p">),</span> <span class="s2">&quot;If choosing a decimal restarts_to_use, must be between 0 and 1.&quot;</span>
 
-        <span class="n">struct_filetype</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;struct_filetype&#39;</span><span class="p">,</span> <span class="s1">&#39;mdtraj.formats.PDBTrajectoryFile&#39;</span><span class="p">)</span>
+        <span class="n">struct_filetype</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;struct_filetype&quot;</span><span class="p">,</span> <span class="s2">&quot;mdtraj.formats.PDBTrajectoryFile&quot;</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span> <span class="o">=</span> <span class="n">get_object</span><span class="p">(</span><span class="n">struct_filetype</span><span class="p">)</span>
 
         <span class="c1"># This should be low priority, because it closes the H5 file and starts a new WE run. So it should run LAST</span>
         <span class="c1">#   after any other plugins.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;priority&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># I think a big number is lower priority...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;priority&quot;</span><span class="p">,</span> <span class="mi">100</span>
+        <span class="p">)</span>  <span class="c1"># I think a big number is lower priority...</span>
 
         <span class="c1"># If it&#39;s being used with SynD, the full coordinates must be specified for start-state generation.</span>
         <span class="c1"># TODO: Find a more efficient way to do this than explicitly constructing the inverse dictionary.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;synd_full_coord_map_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;synd_full_coord_map_path&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
 
-        <span class="n">sim_manager</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">finalize_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_new_we</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
+        <span class="n">sim_manager</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+            <span class="n">sim_manager</span><span class="o">.</span><span class="n">finalize_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_new_we</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcoord_cache</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="RestartDriver.get_original_bins"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.get_original_bins">[docs]</a>    <span class="k">def</span> <span class="nf">get_original_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -295,7 +327,9 @@
         <span class="n">we_driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">we_driver</span>
         <span class="n">bins</span> <span class="o">=</span> <span class="n">we_driver</span><span class="o">.</span><span class="n">next_iter_binning</span>
         <span class="n">n_bins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
-        <span class="n">binprobs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">),</span> <span class="n">bins</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">n_bins</span><span class="p">)</span>
+        <span class="n">binprobs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">),</span> <span class="n">bins</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">n_bins</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">bins</span><span class="p">,</span> <span class="n">binprobs</span></div>
 
@@ -346,33 +380,37 @@
         <span class="c1"># Copy traj_segs, seg_logs, and west.h5 for restart0/runXX back into ./</span>
         <span class="c1">#       Later: (May only need to copy the latest iteration traj_segs, to avoid tons of back and forth)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;traj_segs&#39;</span><span class="p">)</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;seg_logs&#39;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;traj_segs&quot;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;seg_logs&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Cannot call rmtree on a symbolic link&#39;</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="s1">&#39;traj_segs&#39;</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="s1">&#39;seg_logs&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Cannot call rmtree on a symbolic link&quot;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="s2">&quot;traj_segs&quot;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="s2">&quot;seg_logs&quot;</span><span class="p">)</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">we_h5filename</span><span class="p">)</span>
 
-        <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;restart0/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s1">/traj_segs&#39;</span><span class="p">,</span> <span class="s1">&#39;traj_segs&#39;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;restart0/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s1">/seg_logs&#39;</span><span class="p">,</span> <span class="s1">&#39;seg_logs&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;restart0/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s2">/traj_segs&quot;</span><span class="p">,</span> <span class="s2">&quot;traj_segs&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;restart0/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s2">/seg_logs&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_logs&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">first_extension</span><span class="p">:</span>
 
             <span class="c1"># Get lines to make a new west.cfg by extending west.propagation.max_total_iterations</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;west.cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">west_config</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;west.cfg&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">west_config</span><span class="p">:</span>
                 <span class="n">lines</span> <span class="o">=</span> <span class="n">west_config</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
                     <span class="c1"># Parse out the number of maximum iterations</span>
-                    <span class="k">if</span> <span class="s1">&#39;max_total_iterations&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                        <span class="n">max_iters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+                    <span class="k">if</span> <span class="s2">&quot;max_total_iterations&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">max_iters</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+                        <span class="p">]</span>
                         <span class="n">new_max_iters</span> <span class="o">=</span> <span class="n">max_iters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_iters</span>
                         <span class="n">new_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">new_max_iters</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
                         <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_line</span>
                         <span class="k">break</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">restart_state</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;First WE extension run ready!&quot;</span><span class="p">)</span>
@@ -393,11 +431,15 @@
         <span class="c1">#   I remain skeptical there&#39;s not something weird under the hood that isn&#39;t being addressed correctly with</span>
         <span class="c1">#   regard to state, but if it works, it&#39;s good enough for now..</span>
         <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;restart0/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s1">/west.h5&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">we_h5filename</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;restart0/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s2">/west.h5&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">we_h5filename</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">open_backing</span><span class="p">()</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sim manager thought n_iter was </span><span class="si">{</span><span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data manager thought current_iteration was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">current_iteration</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Data manager thought current_iteration was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">current_iteration</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">sim_manager</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">run_number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -410,25 +452,36 @@
 
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Producing flux-profile, pseudocommittor, and target flux comparison plots.&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Producing flux-profile, pseudocommittor, and target flux comparison plots.&quot;</span>
+        <span class="p">)</span>
         <span class="n">flux_pcoord_fig</span><span class="p">,</span> <span class="n">flux_pcoord_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
         <span class="n">model</span><span class="o">.</span><span class="n">plot_flux</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">flux_pcoord_ax</span><span class="p">,</span> <span class="n">suppress_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">flux_pcoord_fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="s1">&#39;This flux profile should become flatter after restarting&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">flux_pcoord_fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=-</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="s2">&quot;This flux profile should become flatter after restarting&quot;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">flux_pcoord_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
-        <span class="n">flux_pcoord_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s1">/flux_plot.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">flux_pcoord_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/flux_plot.pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span>
+        <span class="p">)</span>
 
         <span class="n">flux_pseudocomm_fig</span><span class="p">,</span> <span class="n">flux_pseudocomm_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
         <span class="n">model</span><span class="o">.</span><span class="n">plot_flux_committor</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">flux_pseudocomm_ax</span><span class="p">,</span> <span class="n">suppress_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">flux_pseudocomm_fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
             <span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
             <span class="n">y</span><span class="o">=-</span><span class="mf">0.05</span><span class="p">,</span>
-            <span class="n">s</span><span class="o">=</span><span class="s1">&#39;This flux profile should become flatter after restarting.&#39;</span>
+            <span class="n">s</span><span class="o">=</span><span class="s2">&quot;This flux profile should become flatter after restarting.&quot;</span>
             <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The x-axis is a &quot;pseudo&quot;committor, since it may be &#39;</span>
-            <span class="s1">&#39;calculated from WE trajectories in the one-way ensemble.&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;calculated from WE trajectories in the one-way ensemble.&quot;</span><span class="p">,</span>
             <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">flux_pseudocomm_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
-        <span class="n">flux_pseudocomm_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s1">/pseudocomm-flux_plot.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">flux_pseudocomm_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/pseudocomm-flux_plot.pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span>
+        <span class="p">)</span>
 
         <span class="n">flux_comparison_fig</span><span class="p">,</span> <span class="n">flux_comparison_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
         <span class="c1"># Get haMSM flux estimates</span>
@@ -440,8 +493,10 @@
         <span class="k">for</span> <span class="n">_model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
             <span class="n">flux_estimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_model</span><span class="o">.</span><span class="n">JtargetSS</span><span class="p">)</span>
 
-        <span class="n">hamsm_flux_colors</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">])</span>
-        <span class="n">direct_flux_colors</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">fileList</span><span class="p">))))</span>
+        <span class="n">hamsm_flux_colors</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;axes.prop_cycle&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s2">&quot;color&quot;</span><span class="p">])</span>
+        <span class="n">direct_flux_colors</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">fileList</span><span class="p">)))</span>
+        <span class="p">)</span>
 
         <span class="c1"># Get WE direct flux estimate</span>
         <span class="k">for</span> <span class="n">_file</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">fileList</span><span class="p">:</span>
@@ -463,12 +518,15 @@
             <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
                 <span class="n">target_flux</span><span class="p">,</span>
                 <span class="n">color</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">direct_flux_colors</span><span class="p">),</span>
-                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Last iter WE direct </span><span class="si">{</span><span class="n">target_flux</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  (</span><span class="si">{</span><span class="n">short_filename</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-                <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Last iter WE direct </span><span class="si">{</span><span class="n">target_flux</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  (</span><span class="si">{</span><span class="n">short_filename</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
-            <span class="n">flux_estimates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Main model estimate</span><span class="se">\n</span><span class="s2">  </span><span class="si">{</span><span class="n">flux_estimates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">hamsm_flux_colors</span><span class="p">)</span>
+            <span class="n">flux_estimates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Main model estimate</span><span class="se">\n</span><span class="s2">  </span><span class="si">{</span><span class="n">flux_estimates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">hamsm_flux_colors</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_validation_models</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
@@ -477,12 +535,77 @@
                 <span class="n">color</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">hamsm_flux_colors</span><span class="p">),</span>
             <span class="p">)</span>
 
-        <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
-        <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux&#39;</span><span class="p">)</span>
+        <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+        <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux&quot;</span><span class="p">)</span>
         <span class="n">flux_comparison_ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
         <span class="n">flux_comparison_fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">flux_comparison_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s1">/hamsm_vs_direct_flux_comparison_plot.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">flux_comparison_fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/hamsm_vs_direct_flux_comparison_plot.pdf&quot;</span><span class="p">,</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_we</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initialization_state</span><span class="p">,</span> <span class="n">pcoord_cache</span><span class="p">):</span>
+
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+        <span class="n">original_get_pcoord</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">pcoord_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Enabling pcoord cache for new WE run initialization&quot;</span><span class="p">)</span>
+            <span class="n">propagator</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">propagator</span>
+            <span class="n">original_get_pcoord</span> <span class="o">=</span> <span class="n">propagator</span><span class="o">.</span><span class="n">get_pcoord</span>
+
+            <span class="k">def</span> <span class="nf">get_cached_pcoord</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                For the cached pcoords, I&#39;ll be getting a bunch of istate/bstate/sstates, and I need to</span>
+<span class="sd">                    map them to some cached pcoord values.</span>
+
+<span class="sd">                At this point, my start states are just basis states (not initial states)... Because of that,</span>
+<span class="sd">                in order to determine if it&#39;s a start state or an &quot;actual&quot; basis state, we can check if the label\</span>
+<span class="sd">                matches the bX_sY format we use below.</span>
+
+<span class="sd">                This is a little janky and fragile.</span>
+
+<span class="sd">                This function is defined inline because it needs to take only the state argument, and have access to</span>
+<span class="sd">                the cache.</span>
+<span class="sd">                TODO: That could also be done by just adding those as attributes to the state.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+
+                <span class="c1"># If it IS a start-state, then retrieve the pcoord from the cache</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">label</span>
+
+                <span class="n">template</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^b(\d+)_s(\d+)$&#39;</span><span class="p">)</span>
+                <span class="n">is_start_state</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">is_start_state</span><span class="p">:</span>
+
+                    <span class="c1"># This is NOT the &quot;segment index&quot; as WESTPA describes it -- it&#39;s the index of this structure</span>
+                    <span class="c1">#   among structures in this cluster.</span>
+                    <span class="n">cluster_idx</span><span class="p">,</span> <span class="n">cluster_seg_idx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">cluster_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cluster_idx</span><span class="p">)</span>
+                    <span class="n">cluster_seg_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cluster_seg_idx</span><span class="p">)</span>
+
+                    <span class="n">state</span><span class="o">.</span><span class="n">pcoord</span> <span class="o">=</span> <span class="n">pcoord_cache</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_idx</span><span class="p">)][</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_seg_idx</span><span class="p">)]</span>
+
+                <span class="c1"># If it&#39;s not a start state, then apply the normal pcoord calculation</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not using cache for state </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">original_get_pcoord</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+            <span class="n">propagator</span><span class="o">.</span><span class="n">get_pcoord</span> <span class="o">=</span> <span class="n">get_cached_pcoord</span>
+
+        <span class="n">w_init</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span>
+            <span class="o">**</span><span class="n">initialization_state</span><span class="p">,</span>
+            <span class="n">shotgun</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pcoord_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">propagator</span><span class="o">.</span><span class="n">get_pcoord</span> <span class="o">=</span> <span class="n">original_get_pcoord</span>
+
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runtime of w_init was </span><span class="si">{</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RestartDriver.prepare_new_we"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.restart_driver.RestartDriver.prepare_new_we">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_new_we</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -493,18 +616,27 @@
 <span class="sd">        I think for the purposes of this, it&#39;s good to keep the runs completely independent until haMSM model building.</span>
 <span class="sd">        Either that, or I&#39;m just justifying not having known about w_multi_west when I wrote this. TBD.</span>
 
-<span class="sd">        # TODO: Replace all manual path-building with pathlib</span>
-
 <span class="sd">        The algorithm is as follows:</span>
-<span class="sd">            1. Check to see if we&#39;ve just completed the final iteration</span>
-<span class="sd">            2. Handle launching multiple runs, if desired</span>
-<span class="sd">            2. Build haMSM</span>
-<span class="sd">            3. Obtain structures for each haMSM bin</span>
-<span class="sd">            4. Make each structure a start-state, with probability set by (MSM-bin SS prob / # structures in bin)</span>
-<span class="sd">            5. Potentially some renormalization?</span>
-<span class="sd">            6. Start new WE simulation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">            1. Check to see if we&#39;ve just completed the final iteration</span>
+
+<span class="sd">            2. Handle launching multiple runs, if desired</span>
+
+<span class="sd">            3. Build haMSM</span>
+
+<span class="sd">            4. Obtain structures for each haMSM bin</span>
+
+<span class="sd">            5. Make each structure a start-state, with probability set by (MSM-bin SS prob / # structures in bin)</span>
+
+<span class="sd">            6. Potentially some renormalization?</span>
+
+<span class="sd">            7. Start new WE simulation</span>
+
+<span class="sd">        TODO</span>
+<span class="sd">        ----</span>
+<span class="sd">        Replace all manual path-building with pathlib</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Do nothing if it&#39;s not the final iteration</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_last_iteration</span><span class="p">:</span>
@@ -513,18 +645,18 @@
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Final iteration, preparing restart&quot;</span><span class="p">)</span>
 
-        <span class="n">restart_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;runs_completed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">restart_state</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;runs_completed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
 
         <span class="c1"># Check for the existence of the extension lockfile here</span>
         <span class="n">doing_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">EXTENSION_LOCKFILE</span><span class="p">)</span>
 
         <span class="c1"># Look for a restart.dat file to get the current state (how many restarts have been performed already)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">restart_state</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
 
         <span class="c1"># This is the final iteration of a run, so mark this run as completed</span>
-        <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># Make the folder to store data for this marathon</span>
         <span class="n">restart_directory</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;restart</span><span class="si">{</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -535,12 +667,12 @@
         <span class="c1"># Write coordinates to h5</span>
         <span class="c1"># prepare_coordinates(self.plugin_config, self.data_manager.we_h5file, self.data_manager.we_h5filename)</span>
 
-        <span class="k">for</span> <span class="n">data_folder</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;traj_segs&#39;</span><span class="p">,</span> <span class="s1">&#39;seg_logs&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">data_folder</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;traj_segs&quot;</span><span class="p">,</span> <span class="s2">&quot;seg_logs&quot;</span><span class="p">]:</span>
             <span class="n">old_path</span> <span class="o">=</span> <span class="n">data_folder</span>
 
             <span class="c1"># If you&#39;re doing an extension, this will be a symlink. So no need to copy, just unlink it and move on</span>
             <span class="k">if</span> <span class="n">doing_extension</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">old_path</span><span class="p">):</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unlinking symlink&#39;</span><span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unlinking symlink&quot;</span><span class="p">)</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">old_path</span><span class="p">)</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">old_path</span><span class="p">)</span>
                 <span class="k">continue</span>
@@ -556,13 +688,16 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">old_path</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folder </span><span class="si">{</span><span class="n">old_path</span><span class="si">}</span><span class="s2"> was not found.&quot;</span> <span class="s2">&quot;This may be normal, but check your configuration.&quot;</span><span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Folder </span><span class="si">{</span><span class="n">old_path</span><span class="si">}</span><span class="s2"> was not found.&quot;</span>
+                    <span class="s2">&quot;This may be normal, but check your configuration.&quot;</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Make a new data folder for the next run</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">old_path</span><span class="p">)</span>
 
-        <span class="n">last_run</span> <span class="o">=</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_runs</span>
-        <span class="n">last_restart</span> <span class="o">=</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span>
+        <span class="n">last_run</span> <span class="o">=</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_runs</span>
+        <span class="n">last_restart</span> <span class="o">=</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span>
 
         <span class="c1"># We&#39;ve just finished a run. Let&#39;s check if we have to do any more runs in this marathon before doing a restart.</span>
         <span class="c1">#   In the case of n_runs == 1, then we&#39;re just doing a single run and restarting it every so often.</span>
@@ -593,35 +728,38 @@
             <span class="c1"># Basis and target states are unchanged. Can I get the original parameters passed to w_init?</span>
             <span class="c1"># Ideally, I should be able to call w_init with the exact same parameters that went to it the first time</span>
             <span class="n">initialization_state</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;tstate_file&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;bstate_file&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;sstate_file&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;tstates&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;bstates&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;sstates&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;segs_per_state&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;tstate_file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;bstate_file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;sstate_file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;tstates&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;bstates&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;sstates&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;segs_per_state&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">}</span>
 
             <span class="c1"># TODO: Implement this, and get rid of the initialization_file usage right below. Placeholder for now.</span>
-            <span class="k">if</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 
                 <span class="c1"># Get and write basis, target, start states and segs per state for this marathon to disk</span>
                 <span class="k">pass</span>
 
             <span class="c1"># Save the WESTPA h5 data from this run</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">finalize_run</span><span class="p">()</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s1">&#39;west.h5&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">run_directory</span><span class="si">}</span><span class="s2">/west.h5&quot;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s2">&quot;west.h5&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">run_directory</span><span class="si">}</span><span class="s2">/west.h5&quot;</span><span class="p">)</span>
 
             <span class="c1"># If this is a regular, fresh run (not an extension)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">doing_extension</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span><span class="p">):</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                         <span class="n">initialization_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-                        <span class="n">initialization_dict</span> <span class="o">=</span> <span class="n">fix_deprecated_initialization</span><span class="p">(</span><span class="n">initialization_dict</span><span class="p">)</span>
+                        <span class="n">initialization_dict</span> <span class="o">=</span> <span class="n">fix_deprecated_initialization</span><span class="p">(</span>
+                            <span class="n">initialization_dict</span>
+                        <span class="p">)</span>
                         <span class="n">initialization_state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initialization_dict</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                        <span class="s2">&quot;No initialization JSON file provided -- &quot;</span> <span class="s2">&quot;I don&#39;t know how to start new runs in this marathon.&quot;</span>
+                        <span class="s2">&quot;No initialization JSON file provided -- &quot;</span>
+                        <span class="s2">&quot;I don&#39;t know how to start new runs in this marathon.&quot;</span>
                     <span class="p">)</span>
 
                 <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span>
@@ -634,16 +772,13 @@
                 <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Run: </span><span class="se">\n\t</span><span class="s2"> w_init --tstate-file </span><span class="si">{</span><span class="n">initialization_state</span><span class="p">[</span><span class="s1">&#39;tstate_file&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
                     <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;--bstate-file </span><span class="si">{</span><span class="n">initialization_state</span><span class="p">[</span><span class="s1">&#39;bstate_file&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;--sstate-file </span><span class="si">{</span><span class="n">initialization_state</span><span class="p">[</span><span class="s1">&#39;sstate_file&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span> 
+                    <span class="sa">f</span><span class="s2">&quot;--sstate-file </span><span class="si">{</span><span class="n">initialization_state</span><span class="p">[</span><span class="s1">&#39;sstate_file&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;--segs-per-state </span><span class="si">{</span><span class="n">initialization_state</span><span class="p">[</span><span class="s1">&#39;segs_per_state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
-                <span class="n">w_init</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span>
-                    <span class="o">**</span><span class="n">initialization_state</span><span class="p">,</span>
-                    <span class="n">shotgun</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_we</span><span class="p">(</span><span class="n">initialization_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcoord_cache</span><span class="p">)</span>
 
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                     <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">restart_state</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
 
                 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;New WE run ready!&quot;</span><span class="p">)</span>
@@ -659,10 +794,15 @@
             <span class="c1">#   Instead of w_initting a new iteration, copy the files from restart0/runXX back into ./</span>
             <span class="k">elif</span> <span class="n">doing_extension</span><span class="p">:</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_extension_run</span><span class="p">(</span><span class="n">run_number</span><span class="o">=</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">restart_state</span><span class="o">=</span><span class="n">restart_state</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_extension_run</span><span class="p">(</span>
+                    <span class="n">run_number</span><span class="o">=</span><span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="n">restart_state</span><span class="o">=</span><span class="n">restart_state</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="k">return</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span><span class="si">}</span><span class="s2"> restarts completed&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts</span><span class="si">}</span><span class="s2"> restarts completed&quot;</span>
+        <span class="p">)</span>
 
         <span class="c1"># Build the haMSM</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing haMSM&quot;</span><span class="p">)</span>
@@ -670,7 +810,9 @@
         <span class="c1"># Need to write the h5 file and close it out, but I need to get the current bstates first.</span>
         <span class="n">original_bstates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">current_iter_bstates</span>
         <span class="k">if</span> <span class="n">original_bstates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">original_bstates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">get_basis_states</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">original_bstates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">get_basis_states</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">original_bstates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Bstates are none in the current iteration&quot;</span>
 
@@ -691,28 +833,32 @@
 
         <span class="c1"># If set to -1, use all restarts</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span>
+            <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">]</span>
         <span class="c1"># If this is an integer, use the last N restarts</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span>
         <span class="c1"># If it&#39;s a decimal between 0 and 1, use it as a fraction</span>
         <span class="c1"># At restart 1, and a fraction of 0.5, this should just use restart 1</span>
         <span class="k">elif</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]))</span>
+            <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">restarts_to_use</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
 
             <span class="c1"># If this fraction is &lt;1, use all until it&#39;s not</span>
             <span class="k">if</span> <span class="n">last_N_restarts</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span>
+                <span class="n">last_N_restarts</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">]</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Last N is </span><span class="si">{</span><span class="n">last_N_restarts</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">first_restart</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">last_N_restarts</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">usable_restarts</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">first_restart</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">])</span>
+        <span class="n">first_restart</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">last_N_restarts</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">usable_restarts</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">first_restart</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">])</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;At restart </span><span class="si">{</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, building haMSM using data from restarts </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">usable_restarts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">restart_number</span> <span class="ow">in</span> <span class="n">usable_restarts</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">run_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">run_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]):</span>
 
                 <span class="n">west_file_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;restart</span><span class="si">{</span><span class="n">restart_number</span><span class="si">}</span><span class="s2">/run</span><span class="si">{</span><span class="n">run_number</span><span class="si">}</span><span class="s2">/west.h5&quot;</span>
                 <span class="n">marathon_west_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">west_file_path</span><span class="p">)</span>
@@ -721,7 +867,7 @@
 
         <span class="c1">#</span>
         <span class="c1"># If this is the first restart, check to see if you got any target state flux</span>
-        <span class="k">if</span> <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">pass</span>
 
             <span class="c1"># Check to see if you got any target flux in ANY runs</span>
@@ -743,7 +889,9 @@
                     <span class="c1"># Remove the doing_extensions.lck lockfile</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">EXTENSION_LOCKFILE</span><span class="p">)</span>
 
-                    <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">max_total_iterations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_total_iterations</span>
+                    <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">max_total_iterations</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">base_total_iterations</span>
+                    <span class="p">)</span>
 
                 <span class="c1"># Otherwise, just continue as normal</span>
                 <span class="k">pass</span>
@@ -756,20 +904,24 @@
                 <span class="c1"># Create the doing_extensions.lck &quot;lockfile&quot; to indicate we&#39;re in extend mode (or keep if exists)</span>
                 <span class="c1">#   and write the initial number of iterations to it.</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">EXTENSION_LOCKFILE</span><span class="p">):</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">EXTENSION_LOCKFILE</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">lockfile</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">EXTENSION_LOCKFILE</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">lockfile</span><span class="p">:</span>
                         <span class="n">lockfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_total_iterations</span><span class="p">))</span>
 
                 <span class="c1"># Reset runs_completed to 0, and rewrite restart.dat accordingly</span>
-                <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_extension_run</span><span class="p">(</span><span class="n">run_number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">restart_state</span><span class="o">=</span><span class="n">restart_state</span><span class="p">,</span> <span class="n">first_extension</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_extension_run</span><span class="p">(</span>
+                    <span class="n">run_number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">restart_state</span><span class="o">=</span><span class="n">restart_state</span><span class="p">,</span> <span class="n">first_extension</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
                 <span class="k">return</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Building haMSM and computing steady-state&quot;</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cur iter is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cur_iter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">h5file_paths</span> <span class="o">=</span> <span class="n">marathon_west_files</span>
 
-        <span class="c1"># TODO: Why can&#39;t I retrieve this off self.data_manager?</span>
+        <span class="c1"># Wipe out the old pcoord cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcoord_cache</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_hamsm</span><span class="p">()</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Getting built haMSM from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -779,12 +931,13 @@
         <span class="n">ss_flux</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">JtargetSS</span>
         <span class="c1"># model = self.data_manager.model</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Steady-state distribution: </span><span class="si">{</span><span class="n">ss_dist</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Steady-state distribution: </span><span class="si">{</span><span class="n">ss_dist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target steady-state flux is </span><span class="si">{</span><span class="n">ss_flux</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Obtain cluster-structures</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Obtaining cluster-structures&quot;</span><span class="p">)</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">update_cluster_structures</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">update_cluster_structures</span><span class="p">(</span><span class="n">build_pcoord_cache</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_pcoords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcoord_cache</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">pcoord_cache</span><span class="p">)</span>
 
         <span class="c1"># TODO: Do this with pathlib</span>
         <span class="n">struct_directory</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/structs&quot;</span>
@@ -792,14 +945,14 @@
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">struct_directory</span><span class="p">)</span>
 
         <span class="n">flux_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/JtargetSS.txt&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">flux_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">flux_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
 
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing flux to </span><span class="si">{</span><span class="n">flux_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">JtargetSS</span><span class="p">))</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">ss_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/pSS.txt&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ss_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ss_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
 
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing pSS to </span><span class="si">{</span><span class="n">ss_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">pSS</span><span class="p">)</span>
@@ -816,19 +969,23 @@
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing structures&quot;</span><span class="p">)</span>
         <span class="c1"># TODO: Include start states from previous runs</span>
         <span class="n">sstates_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/startstates.txt&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sstates_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sstates_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
 
             <span class="c1"># Track the total number of segments iterated over</span>
             <span class="n">seg_idx</span> <span class="o">=</span> <span class="mi">0</span>
 
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Obtaining potential start structures (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cluster_structures</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2"> bins avail)&quot;</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Obtaining potential start structures (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cluster_structures</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2"> bins avail)&quot;</span>
+            <span class="p">)</span>
 
             <span class="c1"># Can use these for sanity checks</span>
             <span class="n">total_weight</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">total_bin_weights</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="c1"># Loop over each set of (bin index, all the structures in that bin)</span>
-            <span class="k">for</span> <span class="p">(</span><span class="n">msm_bin_idx</span><span class="p">,</span> <span class="n">structures</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cluster_structures</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">msm_bin_idx</span><span class="p">,</span> <span class="n">structures</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">cluster_structures</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">):</span>
 
                 <span class="n">total_bin_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -839,10 +996,14 @@
                 <span class="c1"># The per-segment bin probability.</span>
                 <span class="c1"># Map a cluster number onto a cluster INDEX, because after cleaning the cluster numbers may no longer</span>
                 <span class="c1"># be consecutive.</span>
-                <span class="n">bin_prob</span> <span class="o">=</span> <span class="n">ss_dist</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">cluster_mapping</span><span class="p">[</span><span class="n">msm_bin_idx</span><span class="p">]]</span>  <span class="c1"># / len(structures)</span>
+                <span class="n">bin_prob</span> <span class="o">=</span> <span class="n">ss_dist</span><span class="p">[</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">cluster_mapping</span><span class="p">[</span><span class="n">msm_bin_idx</span><span class="p">]</span>
+                <span class="p">]</span>  <span class="c1"># / len(structures)</span>
 
                 <span class="k">if</span> <span class="n">bin_prob</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MSM-Bin </span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s2">  has probability 0, so not saving any structs from it.&quot;</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;MSM-Bin </span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s2">  has probability 0, so not saving any structs from it.&quot;</span>
+                    <span class="p">)</span>
                     <span class="k">continue</span>
 
                 <span class="c1"># The total amount of WE weight in this MSM microbin</span>
@@ -853,18 +1014,24 @@
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="kn">import</span> <span class="nn">hashlib</span>
+
                     <span class="c1"># Here, we have a bunch of structures that, if we&#39;re using SynD, we need to be able to map back to</span>
                     <span class="c1">#   discrete states.</span>
                     <span class="c1"># Maybe that&#39;s another feature to add to SynD, but in the meantime, we can do the following...</span>
                     <span class="c1"># We can&#39;t make a dictionary mapping structures to discrete states, because lists and arrays aren&#39;t</span>
                     <span class="c1">#   hashable. But, we can explicitly hash the structures, then use that.</span>
                     <span class="c1"># There&#39;s probably a better way of uniquely representing structures, but this will do for now.</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">reverse_coord_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">():</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reverse_coord_map</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">():</span> <span class="n">k</span>
+                        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">}</span>
 
                 <span class="k">for</span> <span class="n">struct_idx</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">structures</span><span class="p">):</span>
 
                     <span class="c1"># One structure per segment</span>
-                    <span class="n">seg_we_weight</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cluster_structure_weights</span><span class="p">[</span><span class="n">msm_bin_idx</span><span class="p">][</span><span class="n">struct_idx</span><span class="p">]</span>
+                    <span class="n">seg_we_weight</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cluster_structure_weights</span><span class="p">[</span><span class="n">msm_bin_idx</span><span class="p">][</span>
+                        <span class="n">struct_idx</span>
+                    <span class="p">]</span>
                     <span class="n">msm_bin_we_weight_tracker</span> <span class="o">+=</span> <span class="n">seg_we_weight</span>
 
                     <span class="c1"># Structure weights are set according to Algorithm 5.3 in</span>
@@ -875,14 +1042,19 @@
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">synd_full_coord_map_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="c1"># If we&#39;re using SynD, the basis state isn&#39;t a structure but a discrete index.</span>
 
-                        <span class="n">structure_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_coord_map</span><span class="p">[</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()]</span>
-                        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;b</span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="n">struct_idx</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">structure_weight</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">structure_index</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">structure_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_coord_map</span><span class="p">[</span>
+                            <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+                        <span class="p">]</span>
+                        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;b</span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s2">_s</span><span class="si">{</span><span class="n">struct_idx</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">structure_weight</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">structure_index</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
                         <span class="n">seg_idx</span> <span class="o">+=</span> <span class="mi">1</span>
 
                     <span class="k">else</span><span class="p">:</span>
 
                         <span class="n">structure_filename</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">struct_directory</span><span class="si">}</span><span class="s2">/bin</span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s2">_&quot;</span> <span class="sa">f</span><span class="s2">&quot;struct</span><span class="si">{</span><span class="n">struct_idx</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">STRUCT_EXTENSIONS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">struct_directory</span><span class="si">}</span><span class="s2">/bin</span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s2">_&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;struct</span><span class="si">{</span><span class="n">struct_idx</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">STRUCT_EXTENSIONS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="p">)</span>
 
                         <span class="n">total_bin_weights</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">structure_weight</span>
@@ -900,15 +1072,28 @@
 
                         <span class="n">coords</span> <span class="o">=</span> <span class="n">structure</span> <span class="o">*</span> <span class="mi">10</span>  <span class="c1"># Correct units</span>
 
-                        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span><span class="p">(</span><span class="n">structure_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">struct_file</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span><span class="p">(</span>
+                            <span class="n">structure_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span>
+                        <span class="p">)</span> <span class="k">as</span> <span class="n">struct_file</span><span class="p">:</span>
 
                             <span class="c1"># Write the structure file</span>
                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span> <span class="ow">is</span> <span class="n">md</span><span class="o">.</span><span class="n">formats</span><span class="o">.</span><span class="n">PDBTrajectoryFile</span><span class="p">:</span>
-                                <span class="n">struct_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">modelIndex</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">unitcell_angles</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span> <span class="n">unitcell_lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">)</span>
+                                <span class="n">struct_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                                    <span class="n">coords</span><span class="p">,</span>
+                                    <span class="n">topology</span><span class="p">,</span>
+                                    <span class="n">modelIndex</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                    <span class="n">unitcell_angles</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span>
+                                    <span class="n">unitcell_lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">,</span>
+                                <span class="p">)</span>
 
                             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">struct_filetype</span> <span class="ow">is</span> <span class="n">md</span><span class="o">.</span><span class="n">formats</span><span class="o">.</span><span class="n">AmberRestartFile</span><span class="p">:</span>
                                 <span class="c1"># AmberRestartFile takes slightly differently named keyword args</span>
-                                <span class="n">struct_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_angles</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span> <span class="n">cell_lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">)</span>
+                                <span class="n">struct_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                                    <span class="n">coords</span><span class="p">,</span>
+                                    <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">cell_angles</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span>
+                                    <span class="n">cell_lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">,</span>
+                                <span class="p">)</span>
 
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="c1"># Otherwise, YOLO just hope all the positional arguments are in the right place</span>
@@ -918,11 +1103,15 @@
                                     <span class="s2">&quot; You should ensure that it takes argument as (coords, topology)&quot;</span>
                                 <span class="p">)</span>
                                 <span class="n">struct_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">topology</span><span class="p">)</span>
-                                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know what extension to use for this filetype&quot;</span><span class="p">)</span>
+                                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                                    <span class="s2">&quot;Don&#39;t know what extension to use for this filetype&quot;</span>
+                                <span class="p">)</span>
 
                         <span class="c1"># Add this start-state to the start-states file</span>
                         <span class="c1"># This path is relative to WEST_SIM_ROOT</span>
-                        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;b</span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="n">struct_idx</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">structure_weight</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">structure_filename</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;b</span><span class="si">{</span><span class="n">msm_bin_idx</span><span class="si">}</span><span class="s2">_s</span><span class="si">{</span><span class="n">struct_idx</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">structure_weight</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">structure_filename</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
                         <span class="n">seg_idx</span> <span class="o">+=</span> <span class="mi">1</span>
 
                 <span class="c1"># log.info(f&quot;WE weight ({msm_bin_we_weight_tracker:.5e} / {msm_bin_we_weight:.5e})&quot;)</span>
@@ -941,7 +1130,7 @@
             <span class="c1">#     f&quot;\n\t pSS (+target, no basis) sum: {sum(model.pSS[:-2]) + model.pSS[-1]}&quot;</span>
             <span class="c1"># )</span>
 
-        <span class="c1">### Start the new simulation</span>
+        <span class="c1"># ## Start the new simulation</span>
 
         <span class="n">bstates_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">original_bstate</span> <span class="ow">in</span> <span class="n">original_bstates</span><span class="p">:</span>
@@ -954,7 +1143,7 @@
             <span class="n">bstates_str</span> <span class="o">+=</span> <span class="n">bstate_str</span>
 
         <span class="n">bstates_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/basisstates.txt&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bstates_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bstates_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bstates_str</span><span class="p">)</span>
 
         <span class="n">tstates_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -966,7 +1155,7 @@
             <span class="n">tstate_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">orig_tstate_label</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">orig_tstate_pcoord</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">tstates_str</span> <span class="o">+=</span> <span class="n">tstate_str</span>
         <span class="n">tstates_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/targetstates.txt&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tstates_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tstates_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tstates_str</span><span class="p">)</span>
 
         <span class="c1"># Pickle the model</span>
@@ -989,10 +1178,10 @@
             <span class="k">return</span>
 
         <span class="c1"># Update restart_file file</span>
-        <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;restarts_completed&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="c1"># If we&#39;re doing a restart, then reset the number of completed runs to 0 for the next marathon.</span>
-        <span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;runs_completed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">restart_state</span><span class="p">[</span><span class="s2">&quot;runs_completed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">restart_state</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing new run&quot;</span><span class="p">)</span>
@@ -1002,21 +1191,24 @@
 
         <span class="n">old_initialization_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span>
         <span class="n">new_initialization_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">restart_directory</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Moving initialization file from </span><span class="si">{</span><span class="n">old_initialization_path</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">new_initialization_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Moving initialization file from </span><span class="si">{</span><span class="n">old_initialization_path</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">new_initialization_path</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">old_initialization_path</span><span class="p">,</span> <span class="n">new_initialization_path</span><span class="p">)</span>
 
         <span class="n">initialization_state</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;tstate_file&#39;</span><span class="p">:</span> <span class="n">tstates_filename</span><span class="p">,</span>
-            <span class="s1">&#39;bstate_file&#39;</span><span class="p">:</span> <span class="n">bstates_filename</span><span class="p">,</span>
-            <span class="s1">&#39;sstate_file&#39;</span><span class="p">:</span> <span class="n">sstates_filename</span><span class="p">,</span>
-            <span class="s1">&#39;tstates&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s1">&#39;bstates&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s1">&#39;sstates&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s1">&#39;segs_per_state&#39;</span><span class="p">:</span> <span class="n">segs_per_state</span><span class="p">,</span>
+            <span class="s2">&quot;tstate_file&quot;</span><span class="p">:</span> <span class="n">tstates_filename</span><span class="p">,</span>
+            <span class="s2">&quot;bstate_file&quot;</span><span class="p">:</span> <span class="n">bstates_filename</span><span class="p">,</span>
+            <span class="s2">&quot;sstate_file&quot;</span><span class="p">:</span> <span class="n">sstates_filename</span><span class="p">,</span>
+            <span class="s2">&quot;tstates&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;bstates&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;sstates&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;segs_per_state&quot;</span><span class="p">:</span> <span class="n">segs_per_state</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initialization_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">initialization_state</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
+
 
         <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
@@ -1028,11 +1220,14 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Run: </span><span class="se">\n\t</span><span class="s2"> w_init --tstate-file </span><span class="si">{</span><span class="n">tstates_filename</span><span class="si">}</span><span class="s2"> &quot;</span>
             <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;--bstate-file </span><span class="si">{</span><span class="n">bstates_filename</span><span class="si">}</span><span class="s2"> --sstate-file </span><span class="si">{</span><span class="n">sstates_filename</span><span class="si">}</span><span class="s2"> --segs-per-state </span><span class="si">{</span><span class="n">segs_per_state</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling init_we with model </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">w_init</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="o">**</span><span class="n">initialization_state</span><span class="p">,</span> <span class="n">shotgun</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_we</span><span class="p">(</span><span class="n">initialization_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcoord_cache</span><span class="p">)</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;New WE run ready!&quot;</span><span class="p">)</span>
-        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">===== Restart </span><span class="si">{</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> running =====</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">===== Restart </span><span class="si">{</span><span class="n">restart_state</span><span class="p">[</span><span class="s1">&#39;restarts_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> running =====</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
         <span class="n">w_run</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">()</span></div></div>
 </pre></div>

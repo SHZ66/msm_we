@@ -105,7 +105,10 @@
 <h1>Welcome to msm_we’s documentation!<a class="headerlink" href="#welcome-to-msm-we-s-documentation" title="Permalink to this heading"></a></h1>
 <section id="msm-we">
 <h2>msm_we<a class="headerlink" href="#msm-we" title="Permalink to this heading"></a></h2>
-<a class="reference external image-reference" href="https://github.com/jdrusso/msm_we/actions/workflows/build_docs.yml"><img alt="https://github.com/jdrusso/msm_we/actions/workflows/build_docs.yml/badge.svg" src="https://github.com/jdrusso/msm_we/actions/workflows/build_docs.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/jdrusso/msm_we/actions/workflows/mamba-test.yml"><img alt="https://github.com/jdrusso/msm_we/actions/workflows/mamba-test.yml/badge.svg?branch=main&amp;event=push" src="https://github.com/jdrusso/msm_we/actions/workflows/mamba-test.yml/badge.svg?branch=main&amp;event=push" /></a>
+<a class="reference external image-reference" href="https://msm-we.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/msm-we/badge/?version=latest" /></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/msm_we"><img alt="https://badge.fury.io/py/msm_we.svg" src="https://badge.fury.io/py/msm_we.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/github/jdrusso/msm_we"><img alt="https://codecov.io/github/jdrusso/msm_we/branch/main/graph/badge.svg?token=BGVJ3BY6S2" src="https://codecov.io/github/jdrusso/msm_we/branch/main/graph/badge.svg?token=BGVJ3BY6S2" /></a>
 <ul class="simple">
 <li><p>Authors: John Russo, Jeremy Copperman</p></li>
 <li><p>Free software: MIT license</p></li>
@@ -131,8 +134,12 @@ This means that a history label can be assigned to every trajectory, and an haMS
 </section>
 <section id="known-issues">
 <h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this heading"></a></h3>
-<p>Sometimes, on Python3.7 (and maybe below) the subprocess calls will fail. This may manifest as a silent failure,
-followed by hanging (which is very fun to debug!) To fix this, upgrade to Python 3.8+.</p>
+<ul class="simple">
+<li><p>Due to H5py version dependencies, this is currently not compatible with Python 3.10.</p></li>
+<li><p>Sometimes, on Python3.7 (and maybe below) the subprocess calls will fail. This may manifest as a silent failure,
+followed by hanging (which is very fun to debug!) To fix this, upgrade to Python 3.8+.</p></li>
+<li><p>If running with <cite>$OMP_NUM_THREADS &gt; 1</cite>, Ray parallelism may occasionally silently hang during clustering / fluxmatrix calculations</p></li>
+</ul>
 </section>
 <section id="credits">
 <h3>Credits<a class="headerlink" href="#credits" title="Permalink to this heading"></a></h3>

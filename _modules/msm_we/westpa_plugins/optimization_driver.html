@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>msm_we.westpa_plugins.optimization_driver &mdash; msm_we 0.1.4 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> msm_we
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">msm_we</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Installation/Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code_todos.html">TODOs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">msm_we</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>msm_we.westpa_plugins.optimization_driver</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for msm_we.westpa_plugins.optimization_driver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Plugin for automated WE hyperparameter optimization.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">msm_we.msm_we</span>
+<span class="kn">import</span> <span class="nn">westpa</span>
+<span class="kn">from</span> <span class="nn">westpa.core</span> <span class="kn">import</span> <span class="n">extloader</span>
+<span class="kn">from</span> <span class="nn">westpa.cli.core</span> <span class="kn">import</span> <span class="n">w_run</span>
+<span class="kn">from</span> <span class="nn">msm_we</span> <span class="kn">import</span> <span class="n">optimization</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">Progress</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">from</span> <span class="nn">synd.westpa.propagator</span> <span class="kn">import</span> <span class="n">get_segment_parent_index</span>
+<span class="kn">from</span> <span class="nn">westpa.core.data_manager</span> <span class="kn">import</span> <span class="n">create_dataset_from_dsopts</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">GlobalModelActor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ray-parallel Actor that loads a model and holds it in memory. Used by the PcoordCalculator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">processCoordinates</span><span class="p">,</span> <span class="n">synd_model</span><span class="p">,</span> <span class="n">original_pcoord_ndim</span><span class="p">):</span>
+        <span class="n">msm_we</span><span class="o">.</span><span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;processCoordinates&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backmap</span> <span class="o">=</span> <span class="n">synd_model</span><span class="o">.</span><span class="n">backmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_pcoord_ndim</span> <span class="o">=</span> <span class="n">original_pcoord_ndim</span>
+
+    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+
+    <span class="k">def</span> <span class="nf">get_original_pcoord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backmap</span><span class="p">(</span><span class="n">state_index</span><span class="p">)[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_pcoord_ndim</span><span class="p">]</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">PcoordCalculator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ray-parallel Actor that computes the extended progress coordinate</span>
+<span class="sd">    (original progress coordinate + dimensionality-reduce MSM features) for a structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_actor</span><span class="p">,</span> <span class="n">processCoordinates</span><span class="p">):</span>
+        <span class="n">msm_we</span><span class="o">.</span><span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">processCoordinates</span> <span class="o">=</span> <span class="n">processCoordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_actor</span> <span class="o">=</span> <span class="n">model_actor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_actor</span><span class="o">.</span><span class="n">get_model</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">compute_new_structure_pcoord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">state_index</span><span class="p">):</span>
+        <span class="n">reduceCoordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">reduceCoordinates</span>
+
+        <span class="c1"># Take the zero index, because we&#39;re just passing a single structure</span>
+        <span class="n">reduced_coords</span> <span class="o">=</span> <span class="n">reduceCoordinates</span><span class="p">(</span><span class="n">structure</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">original_pcoord</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_actor</span><span class="o">.</span><span class="n">get_original_pcoord</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">state_index</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">new_pcoord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">original_pcoord</span><span class="p">,</span> <span class="n">reduced_coords</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">new_pcoord</span><span class="p">,</span> <span class="n">state_index</span>
+
+
+<div class="viewcode-block" id="OptimizationDriver"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver">[docs]</a><span class="k">class</span> <span class="nc">OptimizationDriver</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    WESTPA plugin to automatically handle performing optimization.</span>
+
+<span class="sd">    Using an haMSM, updates binning and allocation according to user-specified optimization algorithms.</span>
+<span class="sd">    An OptimizedBinMapper is constructed from the optimized binning and allocation, and WE is continued with the new</span>
+<span class="sd">    mapper.</span>
+
+<span class="sd">    Can be used by including the following entries in your west.cfg::</span>
+
+<span class="sd">        west:</span>
+<span class="sd">            plugins:</span>
+<span class="sd">            - plugin: msm_we.westpa_plugins.optimization_driver.OptimizationDriver</span>
+<span class="sd">              full_coord_map: A pickled dictionary mapping discrete states to full-coordinate structures</span>
+<span class="sd">              max_iters: Number of total iterations. WE will run for west.system.max_iters, perform optimization, and</span>
+<span class="sd">                        continue for another west.system.max_iters, up to this value.</span>
+<span class="sd">              # The following parameters are optional, and provided as an example.</span>
+<span class="sd">              binning_strategy: An arbitrary python function defining a bin optimization scheme.</span>
+<span class="sd">                    Takes in an msm_we.msm_we.modelWE and returns an array-like of length n_msm_states, where each</span>
+<span class="sd">                    element is the index of the WE bin that MSM state will be assigned to by the OptimizedMapper.</span>
+<span class="sd">              allocation_strategy: An arbitrary python function defining an allocation optimization scheme.</span>
+<span class="sd">                    Takes in an msm_we.msm_we.modelWE and returns an array of integer walker allocations for the WE bins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim_manager</span><span class="p">,</span> <span class="n">plugin_config</span><span class="p">):</span>
+
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;Initializing optimization plugin&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sim_manager</span><span class="o">.</span><span class="n">work_manager</span><span class="o">.</span><span class="n">is_master</span><span class="p">:</span>
+            <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;Not running on the master process, skipping&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span> <span class="o">=</span> <span class="n">sim_manager</span><span class="o">.</span><span class="n">data_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span> <span class="o">=</span> <span class="n">sim_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">we_driver</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">get_we_driver</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagator</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">get_propagator</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">synd_model</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">get_propagator</span><span class="p">()</span><span class="o">.</span><span class="n">synd_model</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_config</span> <span class="o">=</span> <span class="n">plugin_config</span>
+
+        <span class="n">coord_map_path</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_coord_map&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">coord_map_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+
+        <span class="c1"># Big number is low priority -- this should run before anything else</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;priority&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_pcoord_dim</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;west&quot;</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;system_options&quot;</span><span class="p">,</span> <span class="s2">&quot;pcoord_ndim&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">sim_manager</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+            <span class="n">sim_manager</span><span class="o">.</span><span class="n">finalize_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_optimization</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="OptimizationDriver.do_optimization"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.do_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">do_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update WESTPA with an optimized bin mapper, bin allocation, and extend the progress coordinate. Then, continue</span>
+<span class="sd">        the WE for more iterations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># 1. Discrepancy calculation</span>
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;Updating bin mapper&quot;</span><span class="p">)</span>
+        <span class="n">we_bin_mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_optimized_bins</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">we_driver</span><span class="o">.</span><span class="n">bin_mapper</span> <span class="o">=</span> <span class="n">we_bin_mapper</span>
+
+        <span class="c1"># 2. Update allocation</span>
+        <span class="c1"># &quot;This is where I&#39;d put my updated allocation... IF I HAD ONE&quot;</span>
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;Updating allocation&quot;</span><span class="p">)</span>
+        <span class="n">we_allocation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_optimized_allocation</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">we_driver</span><span class="o">.</span><span class="n">bin_target_counts</span> <span class="o">=</span> <span class="n">we_allocation</span>
+
+        <span class="c1"># 3. Update pcoord</span>
+        <span class="c1"># TODO: This is SynMD specific -- how can I make extending the progress coordinate generic?</span>
+        <span class="c1">#   Maybe I could wrap the progress coordinate calculation as the original progress coordinate calculation,</span>
+        <span class="c1">#   whatever it may be, and then additionally the result of `model.reduceCoordinates` on the full-coord</span>
+        <span class="c1">#   structure (not sure the best way to get that, it is eventually stored in auxdata)</span>
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;Updating pcoord map&quot;</span><span class="p">)</span>
+        <span class="n">new_pcoord_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_new_pcoord_map</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_westpa_pcoord</span><span class="p">(</span><span class="n">new_pcoord_map</span><span class="p">)</span>
+
+        <span class="c1"># 4. Continue WE, with optimized parameters</span>
+        <span class="c1"># No need to re-initialize/restart, just extend max iterations and continue</span>
+        <span class="n">remaining_iters</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_iters&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">max_total_iterations</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">remaining_iters</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">new_iters</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                <span class="n">remaining_iters</span><span class="p">,</span>
+                <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="s2">&quot;west&quot;</span><span class="p">,</span> <span class="s2">&quot;propagation&quot;</span><span class="p">,</span> <span class="s2">&quot;max_total_iterations&quot;</span><span class="p">]),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">max_total_iterations</span> <span class="o">+=</span> <span class="n">new_iters</span>
+
+            <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">=== Applying optimization and continuing for </span><span class="si">{</span><span class="n">new_iters</span><span class="si">}</span><span class="s2"> more iterations ===</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">w_run</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;No more iterations for optimization, completing.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OptimizationDriver.default_allocation_optimizer"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.default_allocation_optimizer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_allocation_optimizer</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A (trivial) example allocation optimization function, which returns an array with the target number of</span>
+<span class="sd">        walkers in each bin.&quot;&quot;&quot;</span>
+
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Not updating allocation&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">we_driver</span><span class="o">.</span><span class="n">bin_target_counts</span></div>
+
+<div class="viewcode-block" id="OptimizationDriver.compute_optimized_allocation"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.compute_optimized_allocation">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimized_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the optimal allocation.</span>
+
+<span class="sd">        If `plugin.allocation_strategy` is None or not provided, the allocation is not updated.</span>
+
+<span class="sd">        Otherwise, the constructed haMSM is passed to an arbitrary function that returns an array-like describing the</span>
+<span class="sd">        new walker allocation over the WE bins.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">allocation_strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allocation_strategy&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">allocation_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Not updating allocation&quot;</span><span class="p">)</span>
+            <span class="n">allocation_optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_allocation_optimizer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Using </span><span class="si">{</span><span class="n">allocation_strategy</span><span class="si">}</span><span class="s2"> to update allocation&quot;</span><span class="p">)</span>
+            <span class="n">allocation_optimizer</span> <span class="o">=</span> <span class="n">extloader</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">allocation_strategy</span><span class="p">)</span>
+
+        <span class="n">new_target_counts</span> <span class="o">=</span> <span class="n">allocation_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">hamsm_model</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_target_counts</span></div>
+
+<div class="viewcode-block" id="OptimizationDriver.default_bin_optimizer"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.default_bin_optimizer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_bin_optimizer</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Example bin optimization function, which assigns microstates to WE bins.&quot;&quot;&quot;</span>
+
+        <span class="n">n_active_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">we_driver</span><span class="o">.</span><span class="n">bin_target_counts</span><span class="p">)</span>
+
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Using default k-means MFPT optimization (optimization.get_clustered_mfpt_bins) &quot;</span>
+            <span class="s2">&quot;for bin optimization&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">discrepancy</span><span class="p">,</span> <span class="n">variance</span> <span class="o">=</span> <span class="n">optimization</span><span class="o">.</span><span class="n">solve_discrepancy</span><span class="p">(</span>
+            <span class="n">tmatrix</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">Tmatrix</span><span class="p">,</span> <span class="n">pi</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">pSS</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">indTargets</span>
+        <span class="p">)</span>
+
+        <span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">optimization</span><span class="o">.</span><span class="n">get_clustered_mfpt_bins</span><span class="p">(</span>
+            <span class="n">variance</span><span class="p">,</span> <span class="n">discrepancy</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">pSS</span><span class="p">,</span> <span class="n">n_active_bins</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">microstate_assignments</span></div>
+
+<div class="viewcode-block" id="OptimizationDriver.compute_optimized_bins"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.compute_optimized_bins">[docs]</a>    <span class="k">def</span> <span class="nf">compute_optimized_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes discrepancy and variance, and returns the resulting optimized bin mapper.</span>
+
+<span class="sd">        If `plugin.binning_strategy` is None or not provided, :code:`optimization.get_clustered_mfpt_bins()` is used.</span>
+
+<span class="sd">        Otherwise, the constructed haMSM is passed to an arbitrary function that returns an array-like with the WE bin</span>
+<span class="sd">        index of all MSM microbins excluding the basis/target (model.indBasis and model.indTargets).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        An OptimizedBinMapper</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">hamsm_model</span>
+        <span class="n">binning_strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;binning_strategy&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">n_active_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">we_driver</span><span class="o">.</span><span class="n">bin_target_counts</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">binning_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bin_optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_bin_optimizer</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Using </span><span class="si">{</span><span class="n">binning_strategy</span><span class="si">}</span><span class="s2"> for bin optimization&quot;</span><span class="p">)</span>
+            <span class="n">bin_optimizer</span> <span class="o">=</span> <span class="n">extloader</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">binning_strategy</span><span class="p">)</span>
+
+        <span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">bin_optimizer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">microstate_assignments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">microstate_assignments</span><span class="p">,</span> <span class="p">[</span><span class="n">n_active_bins</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_active_bins</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span>
+        <span class="p">)</span>
+
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Microstate assignments are </span><span class="si">{</span><span class="n">microstate_assignments</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 3. Update binning</span>
+        <span class="n">base_mapper</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">bin_mapper</span>
+
+        <span class="n">n_pcoord_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_pcoord_dim</span>
+
+        <span class="n">we_bin_mapper</span> <span class="o">=</span> <span class="n">optimization</span><span class="o">.</span><span class="n">OptimizedBinMapper</span><span class="p">(</span>
+            <span class="n">n_active_bins</span><span class="p">,</span>
+            <span class="c1"># In case the pcoord is extended, this is the original pcoord dimensionality</span>
+            <span class="n">n_pcoord_dims</span><span class="p">,</span>
+            <span class="c1"># If the pcoord was extended, pcoord boundaries are in the original pcoord space</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">basis_pcoord_bounds</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">target_pcoord_bounds</span><span class="p">,</span>
+            <span class="c1"># The original, non-Optimized BinMapper that WESTPA was run with.</span>
+            <span class="c1">#   Used for stratified clustering</span>
+            <span class="n">base_mapper</span><span class="p">,</span>
+            <span class="n">microstate_assignments</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">clusters</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">we_bin_mapper</span></div>
+
+<div class="viewcode-block" id="OptimizationDriver.compute_new_pcoord_map"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.compute_new_pcoord_map">[docs]</a>    <span class="k">def</span> <span class="nf">compute_new_pcoord_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        SynD specific: Compute a new progress coordinate mapping.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        A dictionary of {state indices : extended progress coordinates}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">hamsm_model</span>
+        <span class="n">processCoordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">processCoordinates</span>
+
+        <span class="n">new_pcoord_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># TODO: is this robust if you don&#39;t already have a ray cluster started?</span>
+        <span class="n">n_actors</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">available_resources</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CPU&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">model_actor</span> <span class="o">=</span> <span class="n">GlobalModelActor</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">processCoordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">synd_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_pcoord_dim</span>
+        <span class="p">)</span>
+        <span class="n">pcoord_calculators</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">PcoordCalculator</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">model_actor</span><span class="p">,</span> <span class="n">processCoordinates</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_actors</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="n">msm_we</span><span class="o">.</span><span class="n">msm_we</span><span class="o">.</span><span class="n">modelWE</span><span class="o">.</span><span class="n">check_connect_ray</span><span class="p">()</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="n">Progress</span><span class="p">()</span> <span class="k">as</span> <span class="n">progress</span><span class="p">:</span>
+            <span class="n">submit_task</span> <span class="o">=</span> <span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span>
+                <span class="s2">&quot;Submitting structures for pcoord calculation&quot;</span><span class="p">,</span>
+                <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">retrieve_task</span> <span class="o">=</span> <span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Retrieving structure pcoords from </span><span class="si">{</span><span class="n">n_actors</span><span class="si">}</span><span class="s2"> workers&quot;</span><span class="p">,</span>
+                <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">state_index</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">_id</span> <span class="o">=</span> <span class="n">pcoord_calculators</span><span class="p">[</span>
+                    <span class="n">state_index</span> <span class="o">%</span> <span class="n">n_actors</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">compute_new_structure_pcoord</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">state_index</span><span class="p">)</span>
+                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_id</span><span class="p">)</span>
+
+                <span class="n">progress</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">submit_task</span><span class="p">)</span>
+
+            <span class="k">while</span> <span class="n">ids</span><span class="p">:</span>
+                <span class="n">finished</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">num_returns</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)),</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">finished</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">pcoord</span><span class="p">,</span> <span class="n">state_index</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                    <span class="n">new_pcoord_map</span><span class="p">[</span><span class="n">state_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcoord</span>
+                    <span class="n">progress</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">retrieve_task</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_pcoord_map</span></div>
+
+<div class="viewcode-block" id="OptimizationDriver.update_westpa_pcoord"><a class="viewcode-back" href="../../../api.html#msm_we.westpa_plugins.optimization_driver.OptimizationDriver.update_westpa_pcoord">[docs]</a>    <span class="k">def</span> <span class="nf">update_westpa_pcoord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pcoord_map</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changing a progress coordinate during a WE run requires a number of changes in WESTPA&#39;s internal state.</span>
+<span class="sd">        This handles making those, so you can call w_run and continue with the new, changed pcoord</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_pcoord_map: A dictionary mapping discrete states to the new, extended pcoord</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># TODO: Replace this with propagator.get_pcoord</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagator</span><span class="o">.</span><span class="n">synd_model</span><span class="o">.</span><span class="n">_backmapper</span> <span class="o">=</span> <span class="n">new_pcoord_map</span><span class="o">.</span><span class="n">get</span>
+        <span class="n">new_pcoord_dim</span> <span class="o">=</span> <span class="n">new_pcoord_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New pcoord dimensionality is </span><span class="si">{</span><span class="n">new_pcoord_dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">system</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">get_system_driver</span><span class="p">()</span>
+        <span class="n">data_manager</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">get_data_manager</span><span class="p">()</span>
+        <span class="n">sim_manager</span> <span class="o">=</span> <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">get_sim_manager</span><span class="p">()</span>
+
+        <span class="c1"># This function causes problems when extending pcoords, and isn&#39;t actually used for anything, so just skip it</span>
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">get_new_weight_data</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span>
+
+        <span class="c1">#  # Update system driver</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">pcoord_ndim</span> <span class="o">=</span> <span class="n">new_pcoord_dim</span>
+
+        <span class="c1">#  # Update the pcoord dataset in west.h5</span>
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">open_backing</span><span class="p">()</span>
+
+        <span class="n">iter_group</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">get_iter_group</span><span class="p">(</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span><span class="p">)</span>
+        <span class="n">n_iter</span> <span class="o">=</span> <span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">get_segments</span><span class="p">(</span>
+            <span class="n">n_iter</span><span class="o">=</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">load_pcoords</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">we_h5file</span><span class="p">[</span>
+            <span class="s2">&quot;/iterations/iter_{:0</span><span class="si">{prec}</span><span class="s2">d}/pcoord&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">n_iter</span><span class="p">),</span> <span class="n">prec</span><span class="o">=</span><span class="n">data_manager</span><span class="o">.</span><span class="n">iter_prec</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">flush_backing</span><span class="p">()</span>
+
+        <span class="n">pcoord_opts</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">dataset_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;pcoord&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pcoord&quot;</span><span class="p">,</span> <span class="s2">&quot;h5path&quot;</span><span class="p">:</span> <span class="s2">&quot;pcoord&quot;</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="c1">#  # Update the currently held segments</span>
+        <span class="n">westpa</span><span class="o">.</span><span class="n">rc</span><span class="o">.</span><span class="n">pstatus</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attempting to fetch segments for iter </span><span class="si">{</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+
+            <span class="c1"># TODO: This is SynD specific, but should be easy to port over to something generic.</span>
+            <span class="c1">#       Use propagator.get_pcoord directly</span>
+            <span class="n">parent_state_index</span> <span class="o">=</span> <span class="n">get_segment_parent_index</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span>
+
+            <span class="n">segment</span><span class="o">.</span><span class="n">pcoord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="p">[</span><span class="n">new_pcoord_map</span><span class="p">[</span><span class="n">parent_state_index</span><span class="p">]],</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">pcoord_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">pcoord_ndim</span><span class="p">)),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">create_dataset_from_dsopts</span><span class="p">(</span>
+            <span class="n">iter_group</span><span class="p">,</span>
+            <span class="n">pcoord_opts</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">segment</span><span class="o">.</span><span class="n">pcoord</span> <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">]),</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">segments</span><span class="p">),</span>
+                <span class="n">system</span><span class="o">.</span><span class="n">pcoord_len</span><span class="p">,</span>
+                <span class="n">system</span><span class="o">.</span><span class="n">pcoord_ndim</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">pcoord_dtype</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">update_segments</span><span class="p">(</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
+
+        <span class="c1"># The initial states that were computed for the next iteration are using the old-style pcoord,</span>
+        <span class="c1">#   so we can&#39;t bin them correctly with the OptimizedBinMapper unless we update them.</span>
+        <span class="c1"># Although the old istates won&#39;t be used if you have gen_istate enabled, we still have to</span>
+        <span class="c1">#   recreate the dataset. Otherwise, it&#39;ll be the wrong shape for the new istates.</span>
+        <span class="n">initial_states</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">get_initial_states</span><span class="p">(</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">n_iter</span><span class="p">)</span>
+        <span class="n">n_initial_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_states</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">we_h5file</span><span class="p">[</span>
+            <span class="s2">&quot;/iterations/iter_{:0</span><span class="si">{prec}</span><span class="s2">d}/ibstates/istate_pcoord&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">n_iter</span><span class="p">),</span> <span class="n">prec</span><span class="o">=</span><span class="n">data_manager</span><span class="o">.</span><span class="n">iter_prec</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">del</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">we_h5file</span><span class="p">[</span>
+            <span class="s2">&quot;/iterations/iter_{:0</span><span class="si">{prec}</span><span class="s2">d}/ibstates/istate_index&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">n_iter</span><span class="p">),</span> <span class="n">prec</span><span class="o">=</span><span class="n">data_manager</span><span class="o">.</span><span class="n">iter_prec</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="n">new_istates</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">create_initial_states</span><span class="p">(</span>
+            <span class="n">n_states</span><span class="o">=</span><span class="n">n_initial_states</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="n">n_iter</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">old_istate</span><span class="p">,</span> <span class="n">new_istate</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">initial_states</span><span class="p">,</span> <span class="n">new_istates</span><span class="p">):</span>
+            <span class="n">new_istate</span> <span class="o">=</span> <span class="n">old_istate</span>
+            <span class="n">bstate_id</span> <span class="o">=</span> <span class="n">old_istate</span><span class="o">.</span><span class="n">basis_state_id</span>
+            <span class="n">parent_state_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sim_manager</span><span class="o">.</span><span class="n">next_iter_bstates</span><span class="p">[</span><span class="n">bstate_id</span><span class="p">]</span><span class="o">.</span><span class="n">auxref</span><span class="p">)</span>
+            <span class="n">new_istate</span><span class="o">.</span><span class="n">pcoord</span> <span class="o">=</span> <span class="n">new_pcoord_map</span><span class="p">[</span><span class="n">parent_state_index</span><span class="p">]</span>
+
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">flush_backing</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">sim_manager</span><span class="o">.</span><span class="n">segments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">parent_state</span> <span class="o">=</span> <span class="n">get_segment_parent_index</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">pcoord</span> <span class="o">=</span> <span class="n">new_pcoord_map</span><span class="p">[</span><span class="n">parent_state</span><span class="p">]</span>
+
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">flush_backing</span><span class="p">()</span>
+        <span class="n">data_manager</span><span class="o">.</span><span class="n">close_backing</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, John Russo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
